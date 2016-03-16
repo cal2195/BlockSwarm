@@ -13,6 +13,7 @@ import net.tomp2p.p2p.Peer;
 import net.tomp2p.p2p.PeerMaker;
 import net.tomp2p.peers.Number160;
 import net.tomp2p.storage.Data;
+import net.tomp2p.storage.StorageDisk;
 
 /**
  *
@@ -28,7 +29,7 @@ public class PeerTest
         
         createMaster();
         createPeer();
-        createPeerToCheck();
+        //createPeerToCheck();
     }
 
     public void createMaster()
@@ -37,7 +38,7 @@ public class PeerTest
         {
             Random r = new Random();
             // create a peer with a random peerID, on port 4000, listening
-            Peer peer = new PeerMaker(new Number160(r)).setPorts(4000).makeAndListen();
+            Peer peer = new PeerMaker(new Number160(r)).setPorts(4000).setStorage(new StorageDisk("heap2/")).makeAndListen();
             System.out.println("Master up!");
         } catch (IOException ex)
         {
@@ -51,7 +52,7 @@ public class PeerTest
         {
             Random r = new Random();
             // create a peer with a random peerID, on port 4000, listening
-            Peer peer = new PeerMaker(new Number160(r)).setPorts(4001).makeAndListen();
+            Peer peer = new PeerMaker(new Number160(r)).setPorts(4001).setStorage(new StorageDisk("heap/")).makeAndListen();
             InetAddress address = Inet4Address.getByName("localhost");
             FutureDiscover futureDiscover = peer.discover().setInetAddress(address).setPorts(4000).start();
             futureDiscover.awaitUninterruptibly();
@@ -60,7 +61,7 @@ public class PeerTest
             System.out.println("Peer looks good!");
 
             Number160 nr = new Number160(0x123);
-            for (int i = 0; i < 10; i++)
+            for (int i = 0; i < 100; i++)
             {
                 Data data = new Data(new byte[1024*1024]);
                 FutureDHT futureDHT = peer.put(nr).setData(new Number160(i), data).start();
