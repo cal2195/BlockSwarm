@@ -7,9 +7,12 @@ package blockswarm;
  */
 public class BlockSwarm
 {
+    
 
     public static void main(String[] args)
     {
-        // TODO code application logic here
+        // Here we go!
+        //new PeerTest();
+        new FileTest();
     }
 }
