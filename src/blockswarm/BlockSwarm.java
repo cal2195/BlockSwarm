@@ -19,7 +19,8 @@ public class BlockSwarm
             // Here we go!
             //new PeerTest();
             //new FileTest(); 
-            new TestEchoServerMultiClient().testTwoClients();
+            //new TestFileSendServer(65321);
+            new TestFileReceiveServer().testGetFile();
         } catch (Exception ex)
         {
             Logger.getLogger(BlockSwarm.class.getName()).log(Level.SEVERE, null, ex);
