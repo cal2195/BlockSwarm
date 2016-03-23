@@ -3,6 +3,11 @@
 
 **Please note, that until version v1.0 anything may change with no backwards compatibility, so all information on the network may be wiped!**
 
+### Don't forget:
+* Keep it simple.
+* Use **objects**.
+* You're making it too complicated. :)
+
 ERROR 404:
 README not found...
 
