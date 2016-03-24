@@ -11,6 +11,43 @@
 ERROR 404:
 README not found...
 
+### BlockSwarm - Principles
+
+#### Mission Statement
+
+##### Core:
+* Should be very object oriented.
+
+##### Files:
+* Should be encrypted, hashed and then stored as 1MB blocks.
+* Shouldn't be able to decrypt without all blocks.
+* Reassembled files must match hash before decrypting.
+* Individual blocks should mean nothing - just *encrypted garbage*.
+
+##### Peers:
+* Adding a new peer should increase the health of the network.
+* Caching should be set up so a new peer immediately helps others.
+* A *no user* mode should be the default. **ie.** A node should default to just helping the network as soon as it joins - no config necessary.
+* Abusive peers should be blocked from the network.
+
+##### Networking:
+* New files should be duplicated at least once as quickly as possible.
+* New files should be distributed in a **super seeder** fashion.
+* All connections should be encrypted.
+
+##### Caching:
+* Blocks should not be deleted unless necessary.
+* Having a *full* cache at all times is the goal.
+* Deleting the last copy of a block on the network should be avoided, as this would render the whole file useless.
+* There should be **at least** two copies of a block at any point in time for redundancy.
+* You shouldn't be able to tell if you've downloaded a file, or if you've just randomly cached it.
+
+##### Encryption
+* All blocks should be encrypted using keys.
+* Private files should only be accessible by knowing the hash name and having the secret key.
+* Blocks should only be decryptible once you have the entire file.
+
+
 #### F.A.Q.
 
 ##### What is BlockSwarm?
