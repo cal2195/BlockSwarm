@@ -67,6 +67,6 @@ Files will be stored in the cache of every user, and complex algorithms will mai
 The beauty of blockswarm is that there is no central server to which all users must connect to, to find what files they can access. It's stored on every node, and as long as at least one other user is online, files can be downloaded.
 
 ##### When will BlockSwarm be ready for use?
-As of writing this (March 18th 2016), BlockSwarm is very much in its infancy stages. There is currently no time frame assigned to the projects completion, but we promise we are passionate about this project and somethign will be made of it!
+As of writing this (March 18th 2016), BlockSwarm is very much in its infancy stages. There is currently no time frame assigned to the projects completion, but we promise we are passionate about this project and something will be made of it!
 
 
