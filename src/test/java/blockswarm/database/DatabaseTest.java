@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package blockswarm.test;
+package blockswarm.database;
 
 import blockswarm.database.Database;
 import org.junit.Test;
