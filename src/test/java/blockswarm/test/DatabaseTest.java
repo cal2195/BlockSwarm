@@ -30,6 +30,6 @@ public class DatabaseTest
     @Test
     public void checkCache()
     {
-        assertTrue("Checking cache table exists!", database.tableExists("cache"));
+        assertTrue("Checking cache table exists!", database.tableExists("cach"));
     }
 }
