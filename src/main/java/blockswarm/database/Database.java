@@ -66,7 +66,7 @@ public class Database
                 try (Statement stmt = conn.createStatement())
                 {
                     String sql = "CREATE TABLE cache "
-                            + "(file_hash BINARY not NULL, "
+                            + "(file_hash BINARY(20) not NULL, "
                             + " block_id INTEGER,"
                             + " block_data BLOB,"
                             + " id INTEGER,"
