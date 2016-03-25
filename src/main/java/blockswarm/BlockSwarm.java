@@ -16,6 +16,7 @@ public class BlockSwarm
         //Here we go!
         Database database = new Database();
         database.connect();
+        database.initialise();
         database.disconnect();
     }
 }

@@ -1,7 +1,9 @@
 package blockswarm.database;
 
 import java.sql.Connection;
+import java.sql.DatabaseMetaData;
 import java.sql.DriverManager;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.logging.Level;
@@ -13,6 +15,7 @@ import java.util.logging.Logger;
  */
 public class Database
 {
+
     private static final Logger LOGGER = Logger.getLogger(Database.class.getName());
     private Connection conn;
 
@@ -58,20 +61,37 @@ public class Database
         try
         {
             LOGGER.info("Creating cache table if needed...");
-            try (Statement stmt = conn.createStatement())
+            if (!tableExists("cache"))
             {
-                String sql = "CREATE TABLE cache IF NOT EXISTS"
-                        + "(file_hash BINARY not NULL, "
-                        + " block_id INTEGER,"
-                        + " block_data BLOB,"
-                        + " PRIMARY KEY ( id ))";
-                stmt.executeUpdate(sql);
-                sql = "ALTER TABLE cache ADD CONSTRAINT unique_block UNIQUE(file_hash, block_id)";
-                stmt.executeUpdate(sql);
+                try (Statement stmt = conn.createStatement())
+                {
+                    String sql = "CREATE TABLE cache "
+                            + "(file_hash BINARY not NULL, "
+                            + " block_id INTEGER,"
+                            + " block_data BLOB,"
+                            + " id INTEGER,"
+                            + " PRIMARY KEY ( id ))";
+                    stmt.executeUpdate(sql);
+                    sql = "ALTER TABLE cache ADD CONSTRAINT unique_block UNIQUE(file_hash, block_id)";
+                    stmt.executeUpdate(sql);
+                }
             }
         } catch (SQLException ex)
         {
             Logger.getLogger(Database.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    public boolean tableExists(String table)
+    {
+        try (Statement stmt = conn.createStatement())
+        {
+            String sql = "SELECT * FROM " + table + " LIMIT 1";
+            stmt.executeQuery(sql);
+            return true;
+        } catch (SQLException ex)
+        {
+            return false;
         }
     }
 }

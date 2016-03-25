@@ -1,0 +1,15 @@
+2016-03-25 19:21:46 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLException: Table "CACHE" not found; SQL statement:
+SELECT id FROM cache [42102-191]
+2016-03-25 19:21:54 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLException: Table "CACHE" not found; SQL statement:
+SELECT id FROM cache [42102-191]
+2016-03-25 19:24:15 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLException: Table "CACHE" not found; SQL statement:
+SELECT * FROM cache LIMIT 1 [42102-191]
+2016-03-25 19:24:15 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLException: Table "CACHE" not found; SQL statement:
+SELECT id FROM cache [42102-191]
+2016-03-25 19:24:47 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLException: Table "CACHE" not found; SQL statement:
+SELECT * FROM cache LIMIT 1 [42102-191]
