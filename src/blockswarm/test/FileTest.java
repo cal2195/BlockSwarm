@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package blockswarm;
+package blockswarm.test;
 
 import blockswarm.files.blocks.Blocker;
 import java.io.File;

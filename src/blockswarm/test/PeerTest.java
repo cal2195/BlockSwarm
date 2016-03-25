@@ -1,4 +1,4 @@
-package blockswarm;
+package blockswarm.test;
 
 import java.io.IOException;
 import java.net.Inet4Address;

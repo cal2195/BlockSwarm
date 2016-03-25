@@ -1,4 +1,4 @@
-package blockswarm;
+package blockswarm.test;
 
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
