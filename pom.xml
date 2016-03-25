@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>cal.martin</groupId>
+    <artifactId>BlockSwarm</artifactId>
+    <version>prealpha-0.01</version>
+    <packaging>jar</packaging>
+    <repositories>
+        <repository>
+            <id>tomp2p.net</id>
+            <url>http://tomp2p.net/dev/mvn/</url>
+        </repository>
+    </repositories>
+    <dependencies>
+        <dependency>
+            <groupId>com.h2database</groupId>
+            <artifactId>h2</artifactId>
+            <version>1.4.191</version>
+        </dependency>
+        <dependency>
+            <groupId>net.tomp2p</groupId>
+            <artifactId>tomp2p-all</artifactId>
+            <version>5.0-Beta8</version>
+        </dependency>
+    </dependencies>
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <maven.compiler.source>1.8</maven.compiler.source>
+        <maven.compiler.target>1.8</maven.compiler.target>
+    </properties>
+</project>
