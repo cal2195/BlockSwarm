@@ -9,7 +9,6 @@ import blockswarm.database.Database;
  */
 public class BlockSwarm
 {
-    
 
     public static void main(String[] args)
     {
