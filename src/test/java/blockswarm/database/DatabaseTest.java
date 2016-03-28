@@ -5,7 +5,9 @@
  */
 package blockswarm.database;
 
+import blockswarm.BlockSwarm;
 import java.io.File;
+import java.util.Arrays;
 import org.junit.Test;
 import static org.junit.Assert.*;
 import org.junit.Before;
@@ -21,6 +23,7 @@ public class DatabaseTest
 
     public DatabaseTest()
     {
+        BlockSwarm.configureLogger();
         database = new Database();
         database.connect();
         database.initialise();
@@ -55,6 +58,8 @@ public class DatabaseTest
     public void checkCache()
     {
         assertTrue("Checking cache table exists!", database.tableExists("cache"));
-        database.getCache().putBlock("1234567891234567891", 0, new byte[1024 * 1024]);
+        database.getCache().putBlock("1234567891234567891", 0, "Hello world".getBytes());
+        assertEquals("Testing putBlock()!", "[72, 101, 108, 108, 111, 32, 119, 111, 114, 108, 100]", Arrays.toString(database.getCache().getBlock("1234567891234567891", 0)));
+        assertNull("Testing non existant block!", database.getCache().getBlock("1234567891234567891", 12));
     }
 }

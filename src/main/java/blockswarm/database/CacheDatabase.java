@@ -5,8 +5,10 @@
  */
 package blockswarm.database;
 
+import java.io.IOException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.logging.Level;
@@ -31,8 +33,12 @@ public class CacheDatabase
     public void putBlock(String filehash, int blockid, byte[] blockdata)
     {
         String sql = "INSERT INTO cache "
-                    + "(file_hash, block_id, block_data) "
-                    + "VALUES (?,?,?)";
+                + "(file_hash, block_id, block_data) "
+                + "VALUES (?,?,?)";
+        LOGGER.log(Level.FINE, "Adding block {0}:{1} to cache!", new Object[]
+        {
+            filehash, blockid
+        });
         try (PreparedStatement stmt = conn.prepareStatement(sql))
         {
             stmt.setBytes(1, filehash.getBytes());
@@ -43,6 +49,28 @@ public class CacheDatabase
         {
             Logger.getLogger(CacheDatabase.class.getName()).log(Level.SEVERE, null, ex);
         }
+    }
+
+    public byte[] getBlock(String filehash, int blockid)
+    {
+        String sql = "SELECT block_data FROM cache "
+                + "WHERE file_hash = ? AND "
+                + "block_id = ?";
+        try (PreparedStatement stmt = conn.prepareStatement(sql))
+        {
+            stmt.setBytes(1, filehash.getBytes());
+            stmt.setInt(2, blockid);
+            ResultSet resultSet = stmt.executeQuery();
+            resultSet.next();
+            return resultSet.getBytes("block_data");
+        } catch (SQLException ex)
+        {
+            LOGGER.log(Level.FINE, "Cache miss for block {0}:{1}!", new Object[]
+            {
+                filehash, blockid
+            });
+        }
+        return null;
     }
 
     private void setup()
