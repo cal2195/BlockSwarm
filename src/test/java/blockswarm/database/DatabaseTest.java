@@ -8,6 +8,7 @@ package blockswarm.database;
 import blockswarm.BlockSwarm;
 import java.io.File;
 import java.util.Arrays;
+import java.util.logging.Level;
 import org.junit.Test;
 import static org.junit.Assert.*;
 import org.junit.Before;
@@ -23,7 +24,7 @@ public class DatabaseTest
 
     public DatabaseTest()
     {
-        BlockSwarm.configureLogger();
+        BlockSwarm.configureLogger(Level.FINEST);
         database = new Database();
         database.connect();
         database.initialise();

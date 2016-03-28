@@ -15,7 +15,7 @@ public class BlockSwarm
 
     public static void main(String[] args)
     {
-        configureLogger();
+        configureLogger(Level.FINEST);
         //Here we go!
         Database database = new Database();
         database.connect();
@@ -23,7 +23,7 @@ public class BlockSwarm
         database.disconnect();
     }
 
-    public static void configureLogger()
+    public static void configureLogger(Level logLevel)
     {
         //get the top Logger:
         Logger topLogger = java.util.logging.Logger.getLogger("");
@@ -49,7 +49,7 @@ public class BlockSwarm
         }
         
         //set the console handler to fine:
-        topLogger.setLevel(Level.FINEST);
-        consoleHandler.setLevel(Level.FINEST);
+        topLogger.setLevel(logLevel);
+        consoleHandler.setLevel(logLevel);
     }
 }
