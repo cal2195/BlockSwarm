@@ -30,7 +30,7 @@ public class CacheDatabase
         setup();
     }
 
-    public void putBlock(String filehash, int blockid, byte[] blockdata)
+    public boolean putBlock(String filehash, int blockid, byte[] blockdata)
     {
         String sql = "INSERT INTO cache "
                 + "(file_hash, block_id, block_data) "
@@ -45,10 +45,15 @@ public class CacheDatabase
             stmt.setInt(2, blockid);
             stmt.setBytes(3, blockdata);
             stmt.execute();
+            return true;
         } catch (SQLException ex)
         {
-            Logger.getLogger(CacheDatabase.class.getName()).log(Level.SEVERE, null, ex);
+            LOGGER.log(Level.FINE, "Error adding block {0}:{1} to cache!", new Object[]
+            {
+                filehash, blockid
+            });
         }
+        return false;
     }
 
     public byte[] getBlock(String filehash, int blockid)

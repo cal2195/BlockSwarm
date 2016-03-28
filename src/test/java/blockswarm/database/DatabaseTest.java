@@ -58,7 +58,8 @@ public class DatabaseTest
     public void checkCache()
     {
         assertTrue("Checking cache table exists!", database.tableExists("cache"));
-        database.getCache().putBlock("1234567891234567891", 0, "Hello world".getBytes());
+        assertTrue("Testing adding block to cache!" ,database.getCache().putBlock("1234567891234567891", 0, "Hello world".getBytes()));
+        assertFalse("Testing adding duplicate block to cache!", database.getCache().putBlock("1234567891234567891", 0, "Don't put me there!".getBytes()));
         assertEquals("Testing putBlock()!", "[72, 101, 108, 108, 111, 32, 119, 111, 114, 108, 100]", Arrays.toString(database.getCache().getBlock("1234567891234567891", 0)));
         assertNull("Testing non existant block!", database.getCache().getBlock("1234567891234567891", 12));
     }
