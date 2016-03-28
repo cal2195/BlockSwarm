@@ -51,9 +51,7 @@ README not found...
 #### F.A.Q.
 
 ##### What is BlockSwarm?
-Blockswarm is the new face on online P2P filesharing! As demonstrated in recent years, torrenting websites are gaining in popularity in unforseen ways; but are still at the mercy of governments and corporations such and the Music and Film industry.
-
-Centralised trackers such as The Pirate Bay and KickAss torrents hold the network together, but the entire system crumbles when one of these vital pieces of infastructure fails... this makes us sad :'(
+Blockswarm is... **needs rewrite!**
 
 ##### So what does BlockSwarm do?
 BlockSwarm is the brain-child of Cal Martin (With random bits of idea input from Cillian). It's inspired by the node based P2P network of FreeNet. BlockSwarm will be a new answer to sharing and downloading.
