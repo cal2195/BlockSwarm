@@ -5,9 +5,10 @@
  */
 package blockswarm.database;
 
-import blockswarm.database.Database;
+import java.io.File;
 import org.junit.Test;
 import static org.junit.Assert.*;
+import org.junit.Before;
 
 /**
  *
@@ -15,6 +16,7 @@ import static org.junit.Assert.*;
  */
 public class DatabaseTest
 {
+
     private final Database database;
 
     public DatabaseTest()
@@ -24,9 +26,35 @@ public class DatabaseTest
         database.initialise();
     }
 
+    @Before
+    public void deleteFiles()
+    {
+        deleteFolder(new File("database"));
+    }
+
+    public static void deleteFolder(File folder)
+    {
+        File[] files = folder.listFiles();
+        if (files != null)
+        { //some JVMs return null for empty dirs
+            for (File f : files)
+            {
+                if (f.isDirectory())
+                {
+                    deleteFolder(f);
+                } else
+                {
+                    f.delete();
+                }
+            }
+        }
+        folder.delete();
+    }
+
     @Test
     public void checkCache()
     {
         assertTrue("Checking cache table exists!", database.tableExists("cache"));
+        database.getCache().putBlock("1234567891234567891", 0, new byte[1024 * 1024]);
     }
 }

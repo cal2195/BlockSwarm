@@ -1,3 +1,5 @@
 /build/
 /heap/
 /database/
+/nbproject/
+/target/

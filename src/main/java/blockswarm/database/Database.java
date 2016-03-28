@@ -1,9 +1,7 @@
 package blockswarm.database;
 
 import java.sql.Connection;
-import java.sql.DatabaseMetaData;
 import java.sql.DriverManager;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.logging.Level;
@@ -18,10 +16,11 @@ public class Database
 
     private static final Logger LOGGER = Logger.getLogger(Database.class.getName());
     private Connection conn;
+    private CacheDatabase cacheDatabase;
 
     public Database()
     {
-
+        
     }
 
     public void connect()
@@ -53,33 +52,12 @@ public class Database
 
     public void initialise()
     {
-        setupCache();
+        cacheDatabase = new CacheDatabase(conn);
     }
-
-    private void setupCache()
+    
+    public CacheDatabase getCache()
     {
-        try
-        {
-            LOGGER.info("Creating cache table if needed...");
-            if (!tableExists("cache"))
-            {
-                try (Statement stmt = conn.createStatement())
-                {
-                    String sql = "CREATE TABLE cache "
-                            + "(file_hash BINARY(20) not NULL, "
-                            + " block_id INTEGER,"
-                            + " block_data BLOB,"
-                            + " id INTEGER,"
-                            + " PRIMARY KEY ( id ))";
-                    stmt.executeUpdate(sql);
-                    sql = "ALTER TABLE cache ADD CONSTRAINT unique_block UNIQUE(file_hash, block_id)";
-                    stmt.executeUpdate(sql);
-                }
-            }
-        } catch (SQLException ex)
-        {
-            Logger.getLogger(Database.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        return cacheDatabase;
     }
 
     public boolean tableExists(String table)
