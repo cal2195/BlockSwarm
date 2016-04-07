@@ -1,10 +1,6 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package blockswarm.database;
 
+import blockswarm.database.entries.FileEntry;
 import blockswarm.info.NodeFileInfo;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -18,61 +14,59 @@ import java.util.logging.Logger;
  *
  * @author cal
  */
-public class CacheDatabase
+public class FileDatabase
 {
 
-    private static final Logger LOGGER = Logger.getLogger(CacheDatabase.class.getName());
+    private static final Logger LOGGER = Logger.getLogger(FileDatabase.class.getName());
     private final Connection conn;
 
-    public CacheDatabase(Connection databaseConnection)
+    public FileDatabase(Connection databaseConnection)
     {
         conn = databaseConnection;
         setup();
     }
 
-    public boolean putBlock(String filehash, int blockid, byte[] blockdata)
+    public boolean putFile(FileEntry file)
     {
-        String sql = "INSERT INTO cache "
-                + "(file_hash, block_id, block_data) "
+        String sql = "INSERT INTO files "
+                + "(file_hash, file_name, total_blocks) "
                 + "VALUES (?,?,?)";
-        LOGGER.log(Level.FINE, "Adding block {0}:{1} to cache!", new Object[]
+        LOGGER.log(Level.FINE, "Adding file {0}({1}) to database!", new Object[]
         {
-            filehash, blockid
+            file.filename, file.filehash
         });
         try (PreparedStatement stmt = conn.prepareStatement(sql))
         {
-            stmt.setBytes(1, filehash.getBytes());
-            stmt.setInt(2, blockid);
-            stmt.setBytes(3, blockdata);
+            stmt.setBytes(1, file.filehash.getBytes());
+            stmt.setString(2, file.filename);
+            stmt.setInt(3, file.totalBlocks);
             stmt.execute();
             return true;
         } catch (SQLException ex)
         {
-            LOGGER.log(Level.FINE, "Error adding block {0}:{1} to cache!", new Object[]
+            LOGGER.log(Level.FINE, "Error adding file {0}({1}) to database!", new Object[]
             {
-                filehash, blockid
+                file.filename, file.filehash
             });
         }
         return false;
     }
 
-    public byte[] getBlock(String filehash, int blockid)
+    public FileEntry getFile(String filehash)
     {
-        String sql = "SELECT block_data FROM cache "
-                + "WHERE file_hash = ? AND "
-                + "block_id = ?";
+        String sql = "SELECT * FROM files "
+                + "WHERE file_hash = ?";
         try (PreparedStatement stmt = conn.prepareStatement(sql))
         {
             stmt.setBytes(1, filehash.getBytes());
-            stmt.setInt(2, blockid);
             ResultSet resultSet = stmt.executeQuery();
             resultSet.next();
-            return resultSet.getBytes("block_data");
+            return new FileEntry(resultSet.getString("file_hash"), resultSet.getString("file_name"), resultSet.getInt("total_blocks"));
         } catch (SQLException ex)
         {
-            LOGGER.log(Level.FINE, "Cache miss for block {0}:{1}!", new Object[]
+            LOGGER.log(Level.FINE, "File miss for file {0}!", new Object[]
             {
-                filehash, blockid
+                filehash
             });
         }
         return null;
@@ -106,19 +100,17 @@ public class CacheDatabase
     {
         try
         {
-            LOGGER.info("Creating cache table if needed...");
-            if (!tableExists("cache"))
+            LOGGER.info("Creating files table if needed...");
+            if (!tableExists("files"))
             {
                 try (Statement stmt = conn.createStatement())
                 {
-                    String sql = "CREATE TABLE cache "
-                            + "(file_hash BINARY(20) not NULL, "
-                            + " block_id INTEGER not NULL,"
-                            + " block_data BLOB,"
+                    String sql = "CREATE TABLE files "
+                            + "(file_hash BINARY(20) not NULL UNIQUE, "
+                            + " file_name VARCHAR(255),"
+                            + " total_blocks INTEGER not NULL,"
                             + " `id` INT NOT NULL AUTO_INCREMENT PRIMARY KEY,"
                             + " PRIMARY KEY ( id ))";
-                    stmt.executeUpdate(sql);
-                    sql = "ALTER TABLE cache ADD CONSTRAINT unique_block UNIQUE(file_hash, block_id)";
                     stmt.executeUpdate(sql);
                 }
             }
