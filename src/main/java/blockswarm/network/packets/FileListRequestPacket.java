@@ -1,5 +1,6 @@
 package blockswarm.network.packets;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import net.tomp2p.peers.PeerAddress;
 
@@ -7,14 +8,12 @@ import net.tomp2p.peers.PeerAddress;
  *
  * @author cal
  */
-public class FileListRequestPacket
+public class FileListRequestPacket implements Serializable
 {
     public final ArrayList<String> ignore;
-    public final PeerAddress requester;
 
-    public FileListRequestPacket(ArrayList<String> ignore, PeerAddress requester)
+    public FileListRequestPacket(ArrayList<String> ignore)
     {
         this.ignore = ignore;
-        this.requester = requester;
     }
 }

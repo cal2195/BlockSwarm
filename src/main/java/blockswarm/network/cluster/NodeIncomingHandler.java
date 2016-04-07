@@ -46,7 +46,7 @@ public class NodeIncomingHandler implements ObjectDataReply
         else if (packet instanceof FileListRequestPacket)
         {
             LOG.fine("Received file list request packet!");
-            node.database.getDatabasePool().addWorker(new FileListWorker(((FileListRequestPacket) packet).ignore, ((FileListRequestPacket) packet).requester, node));
+            node.database.getDatabasePool().addWorker(new FileListWorker(((FileListRequestPacket) packet).ignore, pa, node));
         }
         return null;
     }

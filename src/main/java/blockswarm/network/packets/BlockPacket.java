@@ -1,10 +1,12 @@
 package blockswarm.network.packets;
 
+import java.io.Serializable;
+
 /**
  *
  * @author cal
  */
-public class BlockPacket
+public class BlockPacket implements Serializable
 {
     public final String fileHash;
     public final int blockID;

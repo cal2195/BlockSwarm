@@ -1,12 +1,13 @@
 package blockswarm.database.entries;
 
+import java.io.Serializable;
 import java.util.Objects;
 
 /**
  *
  * @author cal
  */
-public class FileEntry
+public class FileEntry implements Serializable
 {
     public final String filehash, filename;
     public final int totalBlocks;

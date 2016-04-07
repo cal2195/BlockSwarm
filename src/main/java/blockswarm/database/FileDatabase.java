@@ -38,7 +38,7 @@ public class FileDatabase
         });
         try (PreparedStatement stmt = conn.prepareStatement(sql))
         {
-            stmt.setBytes(1, file.filehash.getBytes());
+            stmt.setString(1, file.filehash);
             stmt.setString(2, file.filename);
             stmt.setInt(3, file.totalBlocks);
             stmt.execute();
@@ -49,6 +49,7 @@ public class FileDatabase
             {
                 file.filename, file.filehash
             });
+            //ex.printStackTrace();
         }
         return false;
     }
@@ -67,10 +68,10 @@ public class FileDatabase
                 + "WHERE file_hash = ?";
         try (PreparedStatement stmt = conn.prepareStatement(sql))
         {
-            stmt.setBytes(1, filehash.getBytes());
+            stmt.setString(1, filehash);
             ResultSet resultSet = stmt.executeQuery();
             resultSet.next();
-            return new FileEntry(new String(resultSet.getBytes("file_hash")), resultSet.getString("file_name"), resultSet.getInt("total_blocks"));
+            return new FileEntry(resultSet.getString("file_hash"), resultSet.getString("file_name"), resultSet.getInt("total_blocks"));
         } catch (SQLException ex)
         {
             LOGGER.log(Level.FINE, "File miss for file {0}!", new Object[]
@@ -90,9 +91,9 @@ public class FileDatabase
             ResultSet resultSet = stmt.executeQuery();
             while (resultSet.next())
             {
-                if (!except.contains(new String(resultSet.getBytes("file_hash"))))
+                if (!except.contains(resultSet.getString("file_hash")))
                 {
-                    files.add(new FileEntry(new String(resultSet.getBytes("file_hash")), resultSet.getString("file_name"), resultSet.getInt("total_blocks")));
+                    files.add(new FileEntry(resultSet.getString("file_hash"), resultSet.getString("file_name"), resultSet.getInt("total_blocks")));
                 }
             }
             return files;
@@ -106,11 +107,11 @@ public class FileDatabase
     public NodeFileInfo getFileInfo(String filehash)
     {
         NodeFileInfo fileInfo = new NodeFileInfo(filehash);
-        String sql = "SELECT block_id FROM cache "
+        String sql = "SELECT block_id FROM files "
                 + "WHERE file_hash = ?";
         try (PreparedStatement stmt = conn.prepareStatement(sql))
         {
-            stmt.setBytes(1, filehash.getBytes());
+            stmt.setString(1, filehash);
             ResultSet resultSet = stmt.executeQuery();
             while (resultSet.next())
             {
@@ -137,7 +138,7 @@ public class FileDatabase
                 try (Statement stmt = conn.createStatement())
                 {
                     String sql = "CREATE TABLE files "
-                            + "(file_hash BINARY(20) not NULL UNIQUE, "
+                            + "(file_hash CHAR(40) not NULL UNIQUE, "
                             + " file_name VARCHAR(255),"
                             + " total_blocks INTEGER not NULL,"
                             + " `id` INT NOT NULL AUTO_INCREMENT PRIMARY KEY,"

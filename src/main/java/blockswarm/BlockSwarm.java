@@ -1,7 +1,9 @@
 package blockswarm;
 
+import blockswarm.files.FileHandler;
 import blockswarm.network.cluster.Node;
 import blockswarm.network.cluster.SuperNode;
+import java.io.File;
 import java.util.logging.ConsoleHandler;
 import java.util.logging.Handler;
 import java.util.logging.Level;
@@ -16,7 +18,7 @@ public class BlockSwarm
 
     public static void main(String[] args)
     {
-        configureLogger(Level.INFO);
+        configureLogger(Level.FINE);
         //Here we go!
 //        Database database = new Database();
 //        database.connect();
@@ -30,6 +32,8 @@ public class BlockSwarm
         {
             Node node = new Node();
             node.setupNode();
+            FileHandler fileHandler = new FileHandler(node);
+            fileHandler.uploadFile(new File("test.mp3"));
         }
     }
 

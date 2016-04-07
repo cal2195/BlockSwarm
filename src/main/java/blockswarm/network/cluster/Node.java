@@ -134,5 +134,7 @@ public class Node
     public void send(PeerAddress pa, Object o)
     {
         FutureDirect futureData = peer.sendDirect(pa).object(o).start();
+        futureData.awaitUninterruptibly();
+        System.out.println("result:" + futureData.failedReason());
     }
 }

@@ -26,6 +26,7 @@ public class DatabaseTest
     public DatabaseTest()
     {
         BlockSwarm.configureLogger(Level.FINEST);
+        deleteFiles();
         database = new Database();
         database.connect();
         database.initialise();
@@ -70,9 +71,9 @@ public class DatabaseTest
     public void testFile()
     {
         assertTrue("Checking file table exists!", database.tableExists("files"));
-        assertTrue("Testing adding file to database!", database.getFiles().putFile(new FileEntry("1234567891234567891", "testfile.avi", 12453)));
-        assertFalse("Testing adding duplicate file to database!", database.getFiles().putFile(new FileEntry("1234567891234567891", "testfile.avi", 12453)));
-        assertEquals("Testing get file!", new FileEntry("1234567891234567891", "testfile.avi", 12453), database.getFiles().getFile("1234567891234567891"));
+        assertTrue("Testing adding file to database!", database.getFiles().putFile(new FileEntry("12345678912345678912", "testfile.avi", 12453)));
+        assertFalse("Testing adding duplicate file to database!", database.getFiles().putFile(new FileEntry("12345678912345678912", "testfile.avi", 12453)));
+        assertEquals("Testing get file!", new FileEntry("12345678912345678912", "testfile.avi", 12453), database.getFiles().getFile("12345678912345678912"));
         assertNull("Testing getting no existant file!", database.getFiles().getFile("this doesn't exist!"));
     }
 }

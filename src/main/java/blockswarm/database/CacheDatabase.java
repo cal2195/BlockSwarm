@@ -41,7 +41,7 @@ public class CacheDatabase
         });
         try (PreparedStatement stmt = conn.prepareStatement(sql))
         {
-            stmt.setBytes(1, filehash.getBytes());
+            stmt.setString(1, filehash);
             stmt.setInt(2, blockid);
             stmt.setBytes(3, blockdata);
             stmt.execute();
@@ -52,6 +52,7 @@ public class CacheDatabase
             {
                 filehash, blockid
             });
+            ex.printStackTrace();
         }
         return false;
     }
@@ -63,7 +64,7 @@ public class CacheDatabase
                 + "block_id = ?";
         try (PreparedStatement stmt = conn.prepareStatement(sql))
         {
-            stmt.setBytes(1, filehash.getBytes());
+            stmt.setString(1, filehash);
             stmt.setInt(2, blockid);
             ResultSet resultSet = stmt.executeQuery();
             resultSet.next();
@@ -85,7 +86,7 @@ public class CacheDatabase
                 + "WHERE file_hash = ?";
         try (PreparedStatement stmt = conn.prepareStatement(sql))
         {
-            stmt.setBytes(1, filehash.getBytes());
+            stmt.setString(1, filehash);
             ResultSet resultSet = stmt.executeQuery();
             while (resultSet.next())
             {
@@ -112,7 +113,7 @@ public class CacheDatabase
                 try (Statement stmt = conn.createStatement())
                 {
                     String sql = "CREATE TABLE cache "
-                            + "(file_hash BINARY(20) not NULL, "
+                            + "(file_hash CHAR(40) not NULL, "
                             + " block_id INTEGER not NULL,"
                             + " block_data BLOB,"
                             + " `id` INT NOT NULL AUTO_INCREMENT PRIMARY KEY,"

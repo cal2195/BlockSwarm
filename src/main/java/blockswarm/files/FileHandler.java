@@ -18,20 +18,20 @@ import java.util.logging.Logger;
  */
 public class FileHandler
 {
-
+    
     Node node;
-
+    
     public FileHandler(Node node)
     {
         this.node = node;
     }
-
+    
     public void uploadFile(File file)
     {
         try
         {
             String hash = hashFile(file, "SHA-1");
-            
+            LOG.fine(hash);
             int totalBlocks = Blocker.insertBlocks(file, hash, node.getDatabase());
             
             FileEntry fileEntry = new FileEntry(hash, file.getName(), totalBlocks);
@@ -47,23 +47,23 @@ public class FileHandler
             Logger.getLogger(FileHandler.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-
+    
     private static String hashFile(File file, String algorithm)
     {
         try (FileInputStream inputStream = new FileInputStream(file))
         {
             MessageDigest digest = MessageDigest.getInstance(algorithm);
-
+            
             byte[] bytesBuffer = new byte[1024];
             int bytesRead = -1;
-
+            
             while ((bytesRead = inputStream.read(bytesBuffer)) != -1)
             {
                 digest.update(bytesBuffer, 0, bytesRead);
             }
-
+            
             byte[] hashedBytes = digest.digest();
-
+            
             return convertByteArrayToHexString(hashedBytes);
         } catch (NoSuchAlgorithmException | IOException ex)
         {
@@ -71,7 +71,7 @@ public class FileHandler
         }
         return "";
     }
-
+    
     private static String convertByteArrayToHexString(byte[] arrayBytes)
     {
         StringBuffer stringBuffer = new StringBuffer();
@@ -81,4 +81,5 @@ public class FileHandler
         }
         return stringBuffer.toString();
     }
+    private static final Logger LOG = Logger.getLogger(FileHandler.class.getName());
 }
