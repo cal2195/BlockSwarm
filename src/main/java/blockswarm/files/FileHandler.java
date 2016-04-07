@@ -8,6 +8,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -35,6 +36,11 @@ public class FileHandler
             
             FileEntry fileEntry = new FileEntry(hash, file.getName(), totalBlocks);
             node.getDatabase().getFiles().putFile(fileEntry);
+            
+            ArrayList<FileEntry> fileList = new ArrayList<>();
+            fileList.add(fileEntry);
+            
+            node.getCluster().notifyAllOfNewFiles(fileList);
             
         } catch (IOException ex)
         {

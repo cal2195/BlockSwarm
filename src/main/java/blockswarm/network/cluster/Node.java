@@ -1,7 +1,6 @@
 package blockswarm.network.cluster;
 
 import blockswarm.database.Database;
-import blockswarm.network.packets.FileListRequestPacket;
 import java.io.IOException;
 import java.net.Inet4Address;
 import java.net.InetAddress;
@@ -30,6 +29,7 @@ public class Node
     NodeIncomingHandler incomingHandler;
     Tracker tracker;
     Database database;
+    Cluster cluster;
 
     public Node()
     {
@@ -45,6 +45,8 @@ public class Node
         bootstrap("morebetterengineering.com");
         
         setupTracker();
+        
+        setupCluster();
     }
     
     protected void setupIncomingHandler()
@@ -55,6 +57,11 @@ public class Node
     protected void setupTracker()
     {
         tracker = new Tracker(peer);
+    }
+    
+    protected void setupCluster()
+    {
+        cluster = new Cluster(this);
     }
     
     protected void setupDatabase()
@@ -69,6 +76,21 @@ public class Node
         return database;
     }
 
+    public Peer getPeer()
+    {
+        return peer;
+    }
+
+    public Tracker getTracker()
+    {
+        return tracker;
+    }
+
+    public Cluster getCluster()
+    {
+        return cluster;
+    }
+    
     public void bootstrap(String supernode)
     {
         try

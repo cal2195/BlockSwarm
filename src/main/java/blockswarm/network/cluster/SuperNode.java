@@ -34,6 +34,8 @@ public class SuperNode extends Node
         serve();
 
         setupTracker();
+        
+        setupCluster();
     }
 
     @Override
