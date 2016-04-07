@@ -5,6 +5,7 @@
  */
 package blockswarm.database;
 
+import blockswarm.info.NodeFileInfo;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -72,6 +73,30 @@ public class CacheDatabase
             LOGGER.log(Level.FINE, "Cache miss for block {0}:{1}!", new Object[]
             {
                 filehash, blockid
+            });
+        }
+        return null;
+    }
+
+    public NodeFileInfo getFileInfo(String filehash)
+    {
+        NodeFileInfo fileInfo = new NodeFileInfo(filehash);
+        String sql = "SELECT block_id FROM cache "
+                + "WHERE file_hash = ?";
+        try (PreparedStatement stmt = conn.prepareStatement(sql))
+        {
+            stmt.setBytes(1, filehash.getBytes());
+            ResultSet resultSet = stmt.executeQuery();
+            while (resultSet.next())
+            {
+                fileInfo.blocks.set(resultSet.getInt("block_id"));
+            }
+            return fileInfo;
+        } catch (SQLException ex)
+        {
+            LOGGER.log(Level.FINE, "Cache miss for file {0}!", new Object[]
+            {
+                filehash
             });
         }
         return null;
