@@ -1,27 +1,28 @@
 package blockswarm.database.handlers;
 
 import blockswarm.database.Database;
+import blockswarm.network.cluster.Node;
 import blockswarm.network.packets.BlockPacket;
 
 /**
  *
  * @author cal
  */
-public class BlockWorker extends Worker implements Runnable
+public class InsertBlockWorker extends Worker implements Runnable
 {
     final BlockPacket blockPacket;
-    Database database;
+    Node node;
     
-    public BlockWorker(BlockPacket blockPacket, Database database)
+    public InsertBlockWorker(BlockPacket blockPacket, Node node)
     {
         this.blockPacket = blockPacket;
-        this.database = database;
+        this.node = node;
     }
 
     @Override
     public void run()
     {
-        database.getCache().putBlock(blockPacket.fileHash, blockPacket.blockID, blockPacket.block);
+        node.getDatabase().getCache().putBlock(blockPacket.fileHash, blockPacket.blockID, blockPacket.block);
     }
 
     @Override

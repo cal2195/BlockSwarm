@@ -15,8 +15,8 @@ public class DatabasePool
     PriorityBlockingQueue queue = new PriorityBlockingQueue();
     ThreadPoolExecutor databasePool = new ThreadPoolExecutor(10, 20, 0, TimeUnit.DAYS, queue);
     
-    public void addBlock(BlockWorker blockWorker)
+    public void addWorker(Worker worker)
     {
-        databasePool.execute(blockWorker);
+        databasePool.execute(worker);
     }
 }

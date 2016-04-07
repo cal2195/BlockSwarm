@@ -63,6 +63,11 @@ public class Node
         database.initialise();
     }
 
+    public Database getDatabase()
+    {
+        return database;
+    }
+
     public void bootstrap(String supernode)
     {
         try
