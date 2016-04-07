@@ -7,6 +7,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -68,6 +69,28 @@ public class FileDatabase
             {
                 filehash
             });
+        }
+        return null;
+    }
+
+    public ArrayList<FileEntry> getAllFiles(ArrayList<String> except)
+    {
+        ArrayList<FileEntry> files = new ArrayList<>();
+        String sql = "SELECT * FROM files";
+        try (PreparedStatement stmt = conn.prepareStatement(sql))
+        {
+            ResultSet resultSet = stmt.executeQuery();
+            while (resultSet.next())
+            {
+                if (!except.contains(new String(resultSet.getBytes("file_hash"))))
+                {
+                    files.add(new FileEntry(new String(resultSet.getBytes("file_hash")), resultSet.getString("file_name"), resultSet.getInt("total_blocks")));
+                }
+            }
+            return files;
+        } catch (SQLException ex)
+        {
+            LOGGER.log(Level.FINE, "Error generating file list!");
         }
         return null;
     }
