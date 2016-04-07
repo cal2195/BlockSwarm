@@ -1,6 +1,8 @@
 package blockswarm;
 
 import blockswarm.database.Database;
+import blockswarm.network.cluster.Node;
+import blockswarm.network.cluster.SuperNode;
 import java.util.logging.ConsoleHandler;
 import java.util.logging.Handler;
 import java.util.logging.Level;
@@ -15,12 +17,14 @@ public class BlockSwarm
 
     public static void main(String[] args)
     {
-        configureLogger(Level.FINEST);
+        configureLogger(Level.INFO);
         //Here we go!
-        Database database = new Database();
-        database.connect();
-        database.initialise();
-        database.disconnect();
+//        Database database = new Database();
+//        database.connect();
+//        database.initialise();
+//        database.disconnect();
+        //new SuperNode();
+        new Node();
     }
 
     public static void configureLogger(Level logLevel)
