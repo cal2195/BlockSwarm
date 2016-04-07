@@ -1,5 +1,6 @@
 package blockswarm.network.cluster;
 
+import blockswarm.database.Database;
 import java.io.IOException;
 import java.net.Inet4Address;
 import java.net.InetAddress;
@@ -27,6 +28,7 @@ public class Node
     Peer peer;
     NodeIncomingHandler incomingHandler;
     Tracker tracker;
+    Database database;
 
     public Node()
     {
@@ -35,26 +37,30 @@ public class Node
 
     public void setupNode()
     {
-        incomingHandler = new NodeIncomingHandler();
+        setupDatabase();
+        
+        setupIncomingHandler();
+        
         bootstrap("morebetterengineering.com");
+        
         setupTracker();
-        tracker.add(Number160.createHash("this is awesome!"));
-        while (true)
-        {
-            tracker.get(Number160.createHash("this is awesome!"));
-            try
-            {
-                Thread.sleep(1000);
-            } catch (InterruptedException ex)
-            {
-                Logger.getLogger(Node.class.getName()).log(Level.SEVERE, null, ex);
-            }
-        }
+    }
+    
+    public void setupIncomingHandler()
+    {
+        incomingHandler = new NodeIncomingHandler();
     }
 
     public void setupTracker()
     {
         tracker = new Tracker(peer);
+    }
+    
+    public void setupDatabase()
+    {
+        database = new Database();
+        database.connect();
+        database.initialise();
     }
 
     public void bootstrap(String supernode)

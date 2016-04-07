@@ -1,5 +1,6 @@
 package blockswarm.network.cluster;
 
+import blockswarm.database.Database;
 import java.io.IOException;
 import java.util.Random;
 import java.util.logging.Level;
@@ -22,25 +23,31 @@ public class SuperNode extends Node
 
     public SuperNode()
     {
-        
+
     }
 
     public void setupSuperNode()
     {
-        incomingHandler = new SuperNodeIncomingHandler();
+        setupDatabase();
+        
+        setupIncomingHandler();
+
         serve();
+
         setupTracker();
-        while (true)
-        {
-            tracker.get(Number160.createHash("this is awesome!"));
-            try
-            {
-                Thread.sleep(1000);
-            } catch (InterruptedException ex)
-            {
-                Logger.getLogger(Node.class.getName()).log(Level.SEVERE, null, ex);
-            }
-        }
+    }
+
+    @Override
+    public void setupIncomingHandler()
+    {
+        incomingHandler = new SuperNodeIncomingHandler();
+    }
+
+    public void setupDatabase()
+    {
+        database = new Database();
+        database.connect();
+        database.initialise();
     }
 
     public void serve()
