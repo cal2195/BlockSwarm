@@ -1,5 +1,6 @@
 package blockswarm.network.cluster;
 
+import blockswarm.database.Database;
 import java.io.IOException;
 import java.net.Inet4Address;
 import java.net.InetAddress;
@@ -26,6 +27,8 @@ import net.tomp2p.peers.PeerAddress;
  */
 public class Node
 {
+    private static final Logger LOGGER = Logger.getLogger(Node.class.getName());
+    
     Peer peer;
     NodeIncomingHandler incomingHandler;
 
@@ -49,14 +52,14 @@ public class Node
             
             InetAddress address = Inet4Address.getByName(supernode);
             FutureDiscover futureDiscover = peer.discover().inetAddress(address).ports(44444).start();
-            System.out.println("Discovering...");
+            LOGGER.info("Discovering...");
             futureDiscover.awaitUninterruptibly();
-            System.out.println("Found! " + futureDiscover.failedReason());
+            LOGGER.info("Found! " + futureDiscover.failedReason());
             FutureBootstrap futureBootstrap = peer.bootstrap().inetAddress(address).ports(44444).start();
-            System.out.println("Bootstrapping...");
+            LOGGER.info("Bootstrapping...");
             futureBootstrap.awaitUninterruptibly();
-            System.out.println("Bootstrapped!" + futureBootstrap.failedReason());
-            System.out.println("Peers: " + peer.peerBean().peerMap().all() + " unverified: " + peer.peerBean().peerMap().allOverflow());
+            LOGGER.info("Bootstrapped!" + futureBootstrap.failedReason());
+            LOGGER.info("Peers: " + peer.peerBean().peerMap().all() + " unverified: " + peer.peerBean().peerMap().allOverflow());
         } catch (IOException ex)
         {
             Logger.getLogger(Node.class.getName()).log(Level.SEVERE, null, ex);

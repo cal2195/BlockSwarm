@@ -16,6 +16,8 @@ import net.tomp2p.rpc.ObjectDataReply;
  */
 public class SuperNode
 {
+    private static final Logger LOGGER = Logger.getLogger(SuperNode.class.getName());
+    
     Peer peer;
     SuperNodeIncomingHandler incomingHandler;
 
@@ -36,7 +38,7 @@ public class SuperNode
         {
             Random r = new Random();
             Peer peer = new PeerBuilder(new Number160(r)).ports(44444).start();
-            System.out.println("Listening for connections...");
+            LOGGER.info("Listening for connections...");
             peer.objectDataReply(incomingHandler);
 //            while (true)
 //            {
