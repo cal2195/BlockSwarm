@@ -40,16 +40,15 @@ public class Blocker
         return Arrays.asList(files);
     }
 
-    public static void insertBlocks(File f, Database database) throws IOException
+    public static int insertBlocks(File f, String hash, Database database) throws IOException
     {
         int sizeOfFiles = 1024 * 1024; // 1MB
         byte[] buffer = new byte[sizeOfFiles];
 
-        String hash = hashFile(f, "SHA-1");
+        
 
         try (BufferedInputStream bis = new BufferedInputStream(new FileInputStream(f)))
         {   //try-with-resources to ensure closing stream
-            String name = f.getName();
 
             int tmp = 0, block = 0;
             while ((tmp = bis.read(buffer)) > 0)
@@ -62,41 +61,7 @@ public class Blocker
 //                }
                 database.getCache().putBlock(hash, block++, buffer);
             }
+            return block;
         }
-    }
-
-    private static String hashFile(File file, String algorithm)
-    {
-        try (FileInputStream inputStream = new FileInputStream(file))
-        {
-            MessageDigest digest = MessageDigest.getInstance(algorithm);
-
-            byte[] bytesBuffer = new byte[1024];
-            int bytesRead = -1;
-
-            while ((bytesRead = inputStream.read(bytesBuffer)) != -1)
-            {
-                digest.update(bytesBuffer, 0, bytesRead);
-            }
-
-            byte[] hashedBytes = digest.digest();
-
-            return convertByteArrayToHexString(hashedBytes);
-        } catch (NoSuchAlgorithmException | IOException ex)
-        {
-            System.out.println("Could not generate hash from file");
-        }
-        return "";
-    }
-
-    private static String convertByteArrayToHexString(byte[] arrayBytes)
-    {
-        StringBuffer stringBuffer = new StringBuffer();
-        for (int i = 0; i < arrayBytes.length; i++)
-        {
-            stringBuffer.append(Integer.toString((arrayBytes[i] & 0xff) + 0x100, 16)
-                    .substring(1));
-        }
-        return stringBuffer.toString();
     }
 }
