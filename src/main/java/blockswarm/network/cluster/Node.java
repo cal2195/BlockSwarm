@@ -3,6 +3,7 @@ package blockswarm.network.cluster;
 import java.io.IOException;
 import java.net.Inet4Address;
 import java.net.InetAddress;
+import java.util.Collection;
 import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -20,19 +21,40 @@ import net.tomp2p.peers.PeerAddress;
  */
 public class Node
 {
+
     private static final Logger LOGGER = Logger.getLogger(Node.class.getName());
-    
+
     Peer peer;
     NodeIncomingHandler incomingHandler;
+    Tracker tracker;
 
     public Node()
     {
-        bootstrap("morebetterengineering.com");
+
     }
-    
-    public void setup()
+
+    public void setupNode()
     {
         incomingHandler = new NodeIncomingHandler();
+        bootstrap("morebetterengineering.com");
+        setupTracker();
+        tracker.add(Number160.createHash("this is awesome!"));
+        while (true)
+        {
+            tracker.get(Number160.createHash("this is awesome!"));
+            try
+            {
+                Thread.sleep(1000);
+            } catch (InterruptedException ex)
+            {
+                Logger.getLogger(Node.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+    }
+
+    public void setupTracker()
+    {
+        tracker = new Tracker(peer);
     }
 
     public void bootstrap(String supernode)
@@ -40,19 +62,35 @@ public class Node
         try
         {
             Random r = new Random();
-            peer = new PeerBuilder(new Number160(r)).ports(44445).start();
+            peer = new PeerBuilder(new Number160(r)).ports(44444).start();
             peer.objectDataReply(incomingHandler);
-            
             InetAddress address = Inet4Address.getByName(supernode);
-            FutureDiscover futureDiscover = peer.discover().inetAddress(address).ports(44444).start();
-            LOGGER.info("Discovering...");
+
+            System.out.println("address visible to outside is " + peer.peerAddress());
+
+            int masterPort = 44444;
+            PeerAddress pa = new PeerAddress(Number160.ZERO, address, masterPort, masterPort, masterPort + 1);
+
+            System.out.println("PeerAddress: " + pa);
+
+            // Future Discover
+            FutureDiscover futureDiscover = peer.discover().expectManualForwarding().inetAddress(address).ports(masterPort).start();
             futureDiscover.awaitUninterruptibly();
-            LOGGER.log(Level.INFO, "Found! {0}", futureDiscover.failedReason());
-            FutureBootstrap futureBootstrap = peer.bootstrap().inetAddress(address).ports(44444).start();
-            LOGGER.info("Bootstrapping...");
+
+            // Future Bootstrap - slave
+            FutureBootstrap futureBootstrap = peer.bootstrap().inetAddress(address).ports(masterPort).start();
             futureBootstrap.awaitUninterruptibly();
-            LOGGER.log(Level.INFO, "Bootstrapped!{0}", futureBootstrap.failedReason());
-            LOGGER.log(Level.INFO, "Peers: {0} unverified: {1}", new Object[]{peer.peerBean().peerMap().all(), peer.peerBean().peerMap().allOverflow()});
+
+            Collection<PeerAddress> addressList = peer.peerBean().peerMap().all();
+            System.out.println(addressList.size());
+
+            if (futureDiscover.isSuccess())
+            {
+                System.out.println("found that my outside address is " + futureDiscover.peerAddress());
+            } else
+            {
+                System.out.println("failed " + futureDiscover.failedReason());
+            }
         } catch (IOException ex)
         {
             Logger.getLogger(Node.class.getName()).log(Level.SEVERE, null, ex);

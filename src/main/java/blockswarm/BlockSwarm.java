@@ -1,6 +1,7 @@
 package blockswarm;
 
 import blockswarm.network.cluster.Node;
+import blockswarm.network.cluster.SuperNode;
 import java.util.logging.ConsoleHandler;
 import java.util.logging.Handler;
 import java.util.logging.Level;
@@ -21,8 +22,13 @@ public class BlockSwarm
 //        database.connect();
 //        database.initialise();
 //        database.disconnect();
-        //new SuperNode();
-        new Node();
+        if (args.length > 0)
+        {
+            new SuperNode().setupSuperNode();
+        } else
+        {
+            new Node().setupNode();
+        }
     }
 
     public static void configureLogger(Level logLevel)
@@ -49,7 +55,7 @@ public class BlockSwarm
             consoleHandler = new ConsoleHandler();
             topLogger.addHandler(consoleHandler);
         }
-        
+
         //set the console handler to fine:
         topLogger.setLevel(logLevel);
         consoleHandler.setLevel(logLevel);
