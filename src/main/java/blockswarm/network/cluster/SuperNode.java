@@ -7,18 +7,15 @@ import java.util.logging.Logger;
 import net.tomp2p.p2p.Peer;
 import net.tomp2p.p2p.PeerBuilder;
 import net.tomp2p.peers.Number160;
-import net.tomp2p.peers.PeerAddress;
-import net.tomp2p.rpc.ObjectDataReply;
 
 /**
  *
  * @author cal
  */
-public class SuperNode
+public class SuperNode extends Node
 {
     private static final Logger LOGGER = Logger.getLogger(SuperNode.class.getName());
     
-    Peer peer;
     SuperNodeIncomingHandler incomingHandler;
 
     public SuperNode()
