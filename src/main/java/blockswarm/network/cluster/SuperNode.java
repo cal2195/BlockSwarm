@@ -6,7 +6,6 @@ import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import net.tomp2p.connection.Bindings;
-import net.tomp2p.p2p.Peer;
 import net.tomp2p.p2p.PeerBuilder;
 import net.tomp2p.peers.Number160;
 
@@ -43,6 +42,7 @@ public class SuperNode extends Node
         incomingHandler = new SuperNodeIncomingHandler();
     }
 
+    @Override
     public void setupDatabase()
     {
         database = new Database();

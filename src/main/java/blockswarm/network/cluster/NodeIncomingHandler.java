@@ -1,5 +1,6 @@
 package blockswarm.network.cluster;
 
+import blockswarm.network.packets.BlockPacket;
 import net.tomp2p.peers.PeerAddress;
 import net.tomp2p.rpc.ObjectDataReply;
 
@@ -10,8 +11,12 @@ import net.tomp2p.rpc.ObjectDataReply;
 public class NodeIncomingHandler implements ObjectDataReply
 {
     @Override
-    public Object reply(PeerAddress pa, Object o) throws Exception
+    public Object reply(PeerAddress pa, Object packet) throws Exception
     {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        if (packet instanceof BlockPacket)
+        {
+            
+        }
+        return null;
     }
 }

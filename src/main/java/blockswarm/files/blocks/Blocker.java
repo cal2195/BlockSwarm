@@ -1,5 +1,6 @@
 package blockswarm.files.blocks;
 
+import blockswarm.database.Database;
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.File;
@@ -39,10 +40,8 @@ public class Blocker
         return Arrays.asList(files);
     }
 
-    public static void splitFile(File f) throws IOException
+    public static void insertBlocks(File f, Database database) throws IOException
     {
-        int partCounter = 1;
-
         int sizeOfFiles = 1024 * 1024; // 1MB
         byte[] buffer = new byte[sizeOfFiles];
 
@@ -52,15 +51,16 @@ public class Blocker
         {   //try-with-resources to ensure closing stream
             String name = f.getName();
 
-            int tmp = 0;
+            int tmp = 0, block = 0;
             while ((tmp = bis.read(buffer)) > 0)
             {
                 //write each chunk of data into separate file with different number in name
-                File newFile = new File("heap/", hash + "." + String.format("%03d", partCounter++));
-                try (FileOutputStream out = new FileOutputStream(newFile))
-                {
-                    out.write(buffer, 0, tmp);//tmp is chunk size
-                }
+//                File newFile = new File("heap/", hash + "." + String.format("%03d", partCounter++));
+//                try (FileOutputStream out = new FileOutputStream(newFile))
+//                {
+//                    out.write(buffer, 0, tmp);//tmp is chunk size
+//                }
+                database.getCache().putBlock(hash, block++, buffer);
             }
         }
     }
