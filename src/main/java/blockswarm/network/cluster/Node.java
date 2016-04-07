@@ -48,7 +48,7 @@ public class Node
     
     public void setupIncomingHandler()
     {
-        incomingHandler = new NodeIncomingHandler();
+        incomingHandler = new NodeIncomingHandler(this);
     }
 
     public void setupTracker()

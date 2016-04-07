@@ -6,9 +6,9 @@ package blockswarm.network.packets;
  */
 public class BlockPacket
 {
-    final String fileHash;
-    final int blockID;
-    final byte[] block;
+    public final String fileHash;
+    public final int blockID;
+    public final byte[] block;
     
     public BlockPacket(String fileHash, int blockID, byte[] block)
     {

@@ -39,7 +39,7 @@ public class SuperNode extends Node
     @Override
     public void setupIncomingHandler()
     {
-        incomingHandler = new SuperNodeIncomingHandler();
+        incomingHandler = new SuperNodeIncomingHandler(this);
     }
 
     @Override

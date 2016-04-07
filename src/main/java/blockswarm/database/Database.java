@@ -1,5 +1,6 @@
 package blockswarm.database;
 
+import blockswarm.database.handlers.DatabasePool;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
@@ -17,6 +18,7 @@ public class Database
     private static final Logger LOGGER = Logger.getLogger(Database.class.getName());
     private Connection conn;
     private CacheDatabase cacheDatabase;
+    private DatabasePool databasePool;
 
     public Database()
     {
@@ -52,6 +54,12 @@ public class Database
     public void initialise()
     {
         cacheDatabase = new CacheDatabase(conn);
+        databasePool = new DatabasePool();
+    }
+
+    public DatabasePool getDatabasePool()
+    {
+        return databasePool;
     }
     
     public CacheDatabase getCache()

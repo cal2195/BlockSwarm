@@ -1,5 +1,7 @@
 package blockswarm.network.cluster;
 
+import blockswarm.database.handlers.BlockWorker;
+import blockswarm.network.packets.BlockPacket;
 import net.tomp2p.peers.PeerAddress;
 import net.tomp2p.rpc.ObjectDataReply;
 
@@ -9,9 +11,20 @@ import net.tomp2p.rpc.ObjectDataReply;
  */
 public class SuperNodeIncomingHandler implements ObjectDataReply
 {
-    @Override
-    public Object reply(PeerAddress pa, Object o) throws Exception
+    SuperNode node;
+
+    public SuperNodeIncomingHandler(SuperNode node)
     {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        this.node = node;
+    }
+    
+    @Override
+    public Object reply(PeerAddress pa, Object packet) throws Exception
+    {
+        if (packet instanceof BlockPacket)
+        {
+            node.database.getDatabasePool().addBlock(new BlockWorker((BlockPacket) packet, node.database));
+        }
+        return null;
     }
 }
