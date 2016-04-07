@@ -15,4 +15,10 @@ public class FileEntry
         this.filename = filename;
         this.totalBlocks = totalBlocks;
     }
+
+    @Override
+    public String toString()
+    {
+        return "FileEntry{" + "filehash=" + filehash + ", filename=" + filename + ", totalBlocks=" + totalBlocks + '}';
+    }
 }

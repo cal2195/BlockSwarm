@@ -61,7 +61,7 @@ public class FileDatabase
             stmt.setBytes(1, filehash.getBytes());
             ResultSet resultSet = stmt.executeQuery();
             resultSet.next();
-            return new FileEntry(resultSet.getString("file_hash"), resultSet.getString("file_name"), resultSet.getInt("total_blocks"));
+            return new FileEntry(new String(resultSet.getBytes("file_hash")), resultSet.getString("file_name"), resultSet.getInt("total_blocks"));
         } catch (SQLException ex)
         {
             LOGGER.log(Level.FINE, "File miss for file {0}!", new Object[]

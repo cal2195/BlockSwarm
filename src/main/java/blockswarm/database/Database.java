@@ -18,6 +18,7 @@ public class Database
     private static final Logger LOGGER = Logger.getLogger(Database.class.getName());
     private Connection conn;
     private CacheDatabase cacheDatabase;
+    private FileDatabase fileDatabase;
     private DatabasePool databasePool;
 
     public Database()
@@ -53,6 +54,7 @@ public class Database
 
     public void initialise()
     {
+        fileDatabase = new FileDatabase(conn);
         cacheDatabase = new CacheDatabase(conn);
         databasePool = new DatabasePool();
     }
@@ -61,10 +63,15 @@ public class Database
     {
         return databasePool;
     }
-    
+
     public CacheDatabase getCache()
     {
         return cacheDatabase;
+    }
+
+    public FileDatabase getFiles()
+    {
+        return fileDatabase;
     }
 
     public boolean tableExists(String table)
