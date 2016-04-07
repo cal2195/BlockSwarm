@@ -1,6 +1,7 @@
 package blockswarm.network.cluster;
 
 import blockswarm.database.Database;
+import blockswarm.network.packets.FileListRequestPacket;
 import java.io.IOException;
 import java.net.Inet4Address;
 import java.net.InetAddress;
@@ -46,17 +47,17 @@ public class Node
         setupTracker();
     }
     
-    public void setupIncomingHandler()
+    protected void setupIncomingHandler()
     {
         incomingHandler = new NodeIncomingHandler(this);
     }
 
-    public void setupTracker()
+    protected void setupTracker()
     {
         tracker = new Tracker(peer);
     }
     
-    public void setupDatabase()
+    protected void setupDatabase()
     {
         database = new Database();
         database.connect();

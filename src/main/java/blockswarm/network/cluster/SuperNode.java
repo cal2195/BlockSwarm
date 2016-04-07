@@ -37,17 +37,9 @@ public class SuperNode extends Node
     }
 
     @Override
-    public void setupIncomingHandler()
+    protected void setupIncomingHandler()
     {
         incomingHandler = new SuperNodeIncomingHandler(this);
-    }
-
-    @Override
-    public void setupDatabase()
-    {
-        database = new Database();
-        database.connect();
-        database.initialise();
     }
 
     public void serve()

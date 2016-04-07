@@ -52,6 +52,14 @@ public class FileDatabase
         }
         return false;
     }
+    
+    public void putAllFiles(ArrayList<FileEntry> files)
+    {
+        for (FileEntry file : files)
+        {
+            putFile(file);
+        }
+    }
 
     public FileEntry getFile(String filehash)
     {

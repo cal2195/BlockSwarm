@@ -24,10 +24,12 @@ public class BlockSwarm
 //        database.disconnect();
         if (args.length > 0)
         {
-            new SuperNode().setupSuperNode();
+            SuperNode superNode = new SuperNode();
+            superNode.setupSuperNode();
         } else
         {
-            new Node().setupNode();
+            Node node = new Node();
+            node.setupNode();
         }
     }
 

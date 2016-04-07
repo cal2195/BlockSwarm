@@ -9,7 +9,7 @@ import java.util.ArrayList;
  */
 public class FileListPacket
 {
-    final ArrayList<FileEntry> files;
+    public final ArrayList<FileEntry> files;
 
     public FileListPacket(ArrayList<FileEntry> files)
     {
