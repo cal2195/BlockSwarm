@@ -16,10 +16,18 @@ import net.tomp2p.rpc.ObjectDataReply;
  */
 public class SuperNode
 {
+    Peer peer;
+    SuperNodeIncomingHandler incomingHandler;
 
     public SuperNode()
     {
+        setup();
         serve();
+    }
+    
+    public void setup()
+    {
+        incomingHandler = new SuperNodeIncomingHandler();
     }
 
     public void serve()
@@ -29,25 +37,14 @@ public class SuperNode
             Random r = new Random();
             Peer peer = new PeerBuilder(new Number160(r)).ports(44444).start();
             System.out.println("Listening for connections...");
-            peer.objectDataReply(new ObjectDataReply()
-            {
-                @Override
-                public Object reply(PeerAddress sender, Object request) throws Exception
-                {
-                    System.out.println("request [" + request + "]");
-                    return "world!";
-                }
-            });
-            while (true)
-            {
-                System.out.println("Peers: " + peer.peerBean().peerMap().all() + " unverified: "
-                        + peer.peerBean().peerMap().allOverflow());
-                Thread.sleep(1000);
-            }
+            peer.objectDataReply(incomingHandler);
+//            while (true)
+//            {
+//                System.out.println("Peers: " + peer.peerBean().peerMap().all() + " unverified: "
+//                        + peer.peerBean().peerMap().allOverflow());
+//                Thread.sleep(1000);
+//            }
         } catch (IOException ex)
-        {
-            Logger.getLogger(SuperNode.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (InterruptedException ex)
         {
             Logger.getLogger(SuperNode.class.getName()).log(Level.SEVERE, null, ex);
         }

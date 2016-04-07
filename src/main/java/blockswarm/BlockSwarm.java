@@ -1,8 +1,6 @@
 package blockswarm;
 
-import blockswarm.database.Database;
 import blockswarm.network.cluster.Node;
-import blockswarm.network.cluster.SuperNode;
 import java.util.logging.ConsoleHandler;
 import java.util.logging.Handler;
 import java.util.logging.Level;

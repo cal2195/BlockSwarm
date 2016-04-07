@@ -26,21 +26,28 @@ import net.tomp2p.peers.PeerAddress;
  */
 public class Node
 {
-
     Peer peer;
+    NodeIncomingHandler incomingHandler;
 
     public Node()
     {
-        bootstrap();
+        bootstrap("morebetterengineering.com");
+    }
+    
+    public void setup()
+    {
+        incomingHandler = new NodeIncomingHandler();
     }
 
-    public void bootstrap()
+    public void bootstrap(String supernode)
     {
         try
         {
             Random r = new Random();
             peer = new PeerBuilder(new Number160(r)).ports(44445).start();
-            InetAddress address = Inet4Address.getByName("194.71.225.152");
+            peer.objectDataReply(incomingHandler);
+            
+            InetAddress address = Inet4Address.getByName(supernode);
             FutureDiscover futureDiscover = peer.discover().inetAddress(address).ports(44444).start();
             System.out.println("Discovering...");
             futureDiscover.awaitUninterruptibly();
@@ -49,8 +56,7 @@ public class Node
             System.out.println("Bootstrapping...");
             futureBootstrap.awaitUninterruptibly();
             System.out.println("Bootstrapped!" + futureBootstrap.failedReason());
-            System.out.println("Peers: " + peer.peerBean().peerMap().all() + " unverified: "
-                    + peer.peerBean().peerMap().allOverflow());
+            System.out.println("Peers: " + peer.peerBean().peerMap().all() + " unverified: " + peer.peerBean().peerMap().allOverflow());
         } catch (IOException ex)
         {
             Logger.getLogger(Node.class.getName()).log(Level.SEVERE, null, ex);
