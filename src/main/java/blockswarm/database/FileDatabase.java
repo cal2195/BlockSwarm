@@ -137,6 +137,25 @@ public class FileDatabase
         }
         return null;
     }
+    
+    public ArrayList<String> getAllFileHashes()
+    {
+        ArrayList<String> files = new ArrayList<>();
+        String sql = "SELECT * FROM files";
+        try (PreparedStatement stmt = conn.prepareStatement(sql))
+        {
+            ResultSet resultSet = stmt.executeQuery();
+            while (resultSet.next())
+            {
+                files.add(resultSet.getString("file_hash"));
+            }
+            return files;
+        } catch (SQLException ex)
+        {
+            LOGGER.log(Level.FINE, "Error generating filehash list!");
+        }
+        return null;
+    }
 
     public ArrayList<FileEntry> getAllFiles()
     {

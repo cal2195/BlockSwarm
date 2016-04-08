@@ -11,11 +11,12 @@ package blockswarm.gui;
  */
 public class FileRow
 {
-    private String filename, blocks, availability, filesize, peers;
+    private String filename, filehash, blocks, availability, filesize, peers;
 
-    public FileRow(String filename, String blocks, String availability, String filesize, String peers)
+    public FileRow(String filename, String filehash, String blocks, String availability, String filesize, String peers)
     {
         this.filename = filename;
+        this.filehash = filehash;
         this.blocks = blocks;
         this.availability = availability;
         this.filesize = filesize;
@@ -30,6 +31,16 @@ public class FileRow
     public void setFilename(String filename)
     {
         this.filename = filename;
+    }
+
+    public String getFilehash()
+    {
+        return filehash;
+    }
+
+    public void setFilehash(String filehash)
+    {
+        this.filehash = filehash;
     }
 
     public String getBlocks()

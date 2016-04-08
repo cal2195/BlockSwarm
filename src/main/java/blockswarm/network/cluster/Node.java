@@ -65,7 +65,7 @@ public class Node
     
     protected void setupGui()
     {
-        gui.setDatabase(getDatabase());
+        gui.setNode(this);
         gui.updateFileList();
     }
     

@@ -2,6 +2,7 @@ package blockswarm.gui;
 
 import blockswarm.database.Database;
 import blockswarm.database.entries.FileEntry;
+import blockswarm.network.cluster.Node;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -24,14 +25,14 @@ public class FXMLController implements Initializable
     @FXML
     TableView<Map> searchTable;
     
-    Database database;
+    Node node;
 
     public void addFiles(ArrayList<FileEntry> files)
     {
         List list = new ArrayList();
         for (FileEntry file : files)
         {
-            list.add(new FileRow(file.filename, "" + file.totalBlocks, "0", "0", "0"));
+            list.add(new FileRow(file.filename, file.filehash, "" + file.totalBlocks, "0", "0", "0"));
         }
         searchTable.setItems(FXCollections.observableList(list));
     }
@@ -46,12 +47,19 @@ public class FXMLController implements Initializable
     
     public void updateFileList()
     {
-        addFiles(database.getFiles().getAllFiles());
+        addFiles(node.getDatabase().getFiles().getAllFiles());
     }
 
-    public void setDatabase(Database database)
+    public void setNode(Node node)
     {
-        this.database = database;
+        this.node = node;
+    }
+    
+    @FXML
+    public void download()
+    {
+        FileRow file = (FileRow) searchTable.getSelectionModel().getSelectedItem();
+        node.getCluster().downloadFile(file.getFilehash());
     }
 
     @Override

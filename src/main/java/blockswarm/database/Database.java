@@ -19,6 +19,7 @@ public class Database
     private Connection conn;
     private CacheDatabase cacheDatabase;
     private FileDatabase fileDatabase;
+    private PeerDatabase peerDatabase;
     private DatabasePool databasePool;
 
     public Database()
@@ -56,6 +57,7 @@ public class Database
     {
         fileDatabase = new FileDatabase(conn);
         cacheDatabase = new CacheDatabase(conn);
+        peerDatabase = new PeerDatabase(conn);
         databasePool = new DatabasePool();
     }
 
@@ -72,6 +74,11 @@ public class Database
     public FileDatabase getFiles()
     {
         return fileDatabase;
+    }
+
+    public PeerDatabase getPeers()
+    {
+        return peerDatabase;
     }
 
     public boolean tableExists(String table)
