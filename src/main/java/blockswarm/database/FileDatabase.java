@@ -53,7 +53,7 @@ public class FileDatabase
         }
         return false;
     }
-    
+
     public void putAllFiles(ArrayList<FileEntry> files)
     {
         for (FileEntry file : files)
@@ -61,7 +61,7 @@ public class FileDatabase
             putFile(file);
         }
     }
-    
+
     public int getTotalBlocks(String filehash)
     {
         String sql = "SELECT total_blocks FROM files "
@@ -81,7 +81,7 @@ public class FileDatabase
         }
         return -1;
     }
-    
+
     public boolean hasFullFile(String filehash)
     {
         int totalBlocks = -1, haveBlocks = 0;
@@ -134,6 +134,25 @@ public class FileDatabase
             {
                 filehash
             });
+        }
+        return null;
+    }
+
+    public ArrayList<FileEntry> getAllFiles()
+    {
+        ArrayList<FileEntry> files = new ArrayList<>();
+        String sql = "SELECT * FROM files";
+        try (PreparedStatement stmt = conn.prepareStatement(sql))
+        {
+            ResultSet resultSet = stmt.executeQuery();
+            while (resultSet.next())
+            {
+                files.add(new FileEntry(resultSet.getString("file_hash"), resultSet.getString("file_name"), resultSet.getInt("total_blocks")));
+            }
+            return files;
+        } catch (SQLException ex)
+        {
+            LOGGER.log(Level.FINE, "Error generating file list!");
         }
         return null;
     }

@@ -42,8 +42,9 @@ public class FileEntryWorker extends Worker implements Runnable
     public void run()
     {
         node.getDatabase().getFiles().putAllFiles(files);
-        NodeFileInfo file = node.getDatabase().getFiles().getFileInfo(files.get(0).filehash);
-        file.blocks.flip(0, files.get(0).totalBlocks);
-        node.send(pa, new BlockRequestPacket(file));
+        node.getGui().updateFileList();
+//        NodeFileInfo file = node.getDatabase().getFiles().getFileInfo(files.get(0).filehash);
+//        file.blocks.flip(0, files.get(0).totalBlocks);
+//        node.send(pa, new BlockRequestPacket(file));
     }
 }

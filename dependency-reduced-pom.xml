@@ -3,7 +3,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>cal.martin</groupId>
   <artifactId>BlockSwarm</artifactId>
-  <version>prealpha-0.01</version>
+  <version>prealpha-0.02</version>
   <build>
     <plugins>
       <plugin>

@@ -1,6 +1,7 @@
 package blockswarm.network.cluster;
 
 import blockswarm.database.Database;
+import blockswarm.gui.FXMLController;
 import java.io.IOException;
 import java.net.Inet4Address;
 import java.net.InetAddress;
@@ -30,15 +31,28 @@ public class Node
     Tracker tracker;
     Database database;
     Cluster cluster;
+    FXMLController gui;
 
     public Node()
     {
 
     }
+    
+    public Node(FXMLController gui)
+    {
+        this.gui = gui;
+    }
+
+    public FXMLController getGui()
+    {
+        return gui;
+    }
 
     public void setupNode()
     {
         setupDatabase();
+        
+        setupGui();
         
         setupIncomingHandler();
         
@@ -47,6 +61,12 @@ public class Node
         setupTracker();
         
         setupCluster();
+    }
+    
+    protected void setupGui()
+    {
+        gui.setDatabase(getDatabase());
+        gui.updateFileList();
     }
     
     protected void setupIncomingHandler()
