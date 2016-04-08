@@ -52,7 +52,6 @@ public class CacheDatabase
             {
                 filehash, blockid
             });
-            ex.printStackTrace();
         }
         return false;
     }

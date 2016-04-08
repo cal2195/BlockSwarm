@@ -103,7 +103,7 @@ public class Node
             System.out.println("address visible to outside is " + peer.peerAddress());
 
             int masterPort = 44444;
-            PeerAddress pa = new PeerAddress(Number160.ZERO, address, masterPort, masterPort, masterPort + 1);
+            PeerAddress pa = new PeerAddress(Number160.ZERO, address, masterPort, masterPort);
 
             System.out.println("PeerAddress: " + pa);
 
@@ -131,10 +131,11 @@ public class Node
         }
     }
 
-    public void send(PeerAddress pa, Object o)
+    public boolean send(PeerAddress pa, Object o)
     {
         FutureDirect futureData = peer.sendDirect(pa).object(o).start();
         futureData.awaitUninterruptibly();
         System.out.println("result:" + futureData.failedReason());
+        return futureData.isSuccess();
     }
 }

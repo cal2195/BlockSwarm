@@ -4,6 +4,7 @@ import blockswarm.database.handlers.FileEntryWorker;
 import blockswarm.database.handlers.FileListWorker;
 import blockswarm.database.handlers.InsertBlockWorker;
 import blockswarm.database.handlers.RequestWorker;
+import blockswarm.info.NodeFileInfo;
 import blockswarm.network.packets.BlockPacket;
 import blockswarm.network.packets.BlockRequestPacket;
 import blockswarm.network.packets.FileListPacket;
@@ -26,7 +27,7 @@ public class SuperNodeIncomingHandler implements ObjectDataReply
     }
     
     @Override
-    public Object reply(PeerAddress pa, Object packet) throws Exception
+    public Object reply(PeerAddress pa, Object packet)
     {
         if (packet instanceof BlockPacket)
         {
@@ -41,14 +42,14 @@ public class SuperNodeIncomingHandler implements ObjectDataReply
         else if (packet instanceof FileListPacket)
         {
             LOG.fine("Received file list packet!");
-            node.database.getDatabasePool().addWorker(new FileEntryWorker(((FileListPacket) packet).files, node));
+            node.database.getDatabasePool().addWorker(new FileEntryWorker(((FileListPacket) packet).files, node, pa));
         }
         else if (packet instanceof FileListRequestPacket)
         {
             LOG.fine("Received file list request packet!");
             node.database.getDatabasePool().addWorker(new FileListWorker(((FileListRequestPacket) packet).ignore, pa, node));
         }
-        return null;
+        return true;
     }
     private static final Logger LOG = Logger.getLogger(SuperNodeIncomingHandler.class.getName());
 }

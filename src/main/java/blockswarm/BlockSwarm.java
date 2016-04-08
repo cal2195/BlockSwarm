@@ -18,22 +18,26 @@ public class BlockSwarm
 
     public static void main(String[] args)
     {
-        configureLogger(Level.FINE);
+        configureLogger(Level.ALL);
         //Here we go!
 //        Database database = new Database();
 //        database.connect();
 //        database.initialise();
 //        database.disconnect();
-        if (args.length > 0)
+        if (args.length == 0)
+        {
+            Node node = new Node();
+            node.setupNode();
+        } else if (args[0].equals("super"))
         {
             SuperNode superNode = new SuperNode();
             superNode.setupSuperNode();
-        } else
+        } else if (args[0].equals("upload"))
         {
             Node node = new Node();
             node.setupNode();
             FileHandler fileHandler = new FileHandler(node);
-            fileHandler.uploadFile(new File("test.mp3"));
+            fileHandler.uploadFile(new File(args[1]));
         }
     }
 

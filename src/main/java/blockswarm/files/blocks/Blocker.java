@@ -1,6 +1,8 @@
 package blockswarm.files.blocks;
 
 import blockswarm.database.Database;
+import blockswarm.database.entries.FileEntry;
+import blockswarm.info.NodeFileInfo;
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.File;
@@ -12,6 +14,8 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -40,12 +44,29 @@ public class Blocker
         return Arrays.asList(files);
     }
 
+    public static void assembleBlocks(String filehash, Database database) throws IOException
+    {
+        FileEntry info = database.getFiles().getFile(filehash);
+        LOG.log(Level.INFO, "Assembling file {0} to {1}!", new Object[]
+        {
+            filehash, info.filename
+        });
+
+        try (FileOutputStream fos = new FileOutputStream(info.filename))
+        {
+            for (int i = 0; i < info.totalBlocks; i++)
+            {
+                fos.write(database.getCache().getBlock(filehash, i));
+            }
+            fos.close();
+        }
+    }
+    private static final Logger LOG = Logger.getLogger(Blocker.class.getName());
+
     public static int insertBlocks(File f, String hash, Database database) throws IOException
     {
         int sizeOfFiles = 1024 * 1024; // 1MB
         byte[] buffer = new byte[sizeOfFiles];
-
-        
 
         try (BufferedInputStream bis = new BufferedInputStream(new FileInputStream(f)))
         {   //try-with-resources to ensure closing stream
@@ -59,6 +80,12 @@ public class Blocker
 //                {
 //                    out.write(buffer, 0, tmp);//tmp is chunk size
 //                }
+                if (tmp < sizeOfFiles)
+                {
+                    byte[] smallerData = new byte[tmp];
+                    System.arraycopy(buffer, 0, smallerData, 0, tmp);
+                    buffer = smallerData;
+                }
                 database.getCache().putBlock(hash, block++, buffer);
             }
             return block;

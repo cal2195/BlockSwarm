@@ -61,6 +61,62 @@ public class FileDatabase
             putFile(file);
         }
     }
+    
+    public int getTotalBlocks(String filehash)
+    {
+        String sql = "SELECT total_blocks FROM files "
+                + "WHERE file_hash = ?";
+        try (PreparedStatement stmt = conn.prepareStatement(sql))
+        {
+            stmt.setString(1, filehash);
+            ResultSet resultSet = stmt.executeQuery();
+            resultSet.next();
+            return resultSet.getInt("total_blocks");
+        } catch (SQLException ex)
+        {
+            LOGGER.log(Level.FINE, "File miss for file {0}!", new Object[]
+            {
+                filehash
+            });
+        }
+        return -1;
+    }
+    
+    public boolean hasFullFile(String filehash)
+    {
+        int totalBlocks = -1, haveBlocks = 0;
+        String sql = "SELECT total_blocks FROM files "
+                + "WHERE file_hash = ?";
+        try (PreparedStatement stmt = conn.prepareStatement(sql))
+        {
+            stmt.setString(1, filehash);
+            ResultSet resultSet = stmt.executeQuery();
+            resultSet.next();
+            totalBlocks = resultSet.getInt("total_blocks");
+        } catch (SQLException ex)
+        {
+            LOGGER.log(Level.FINE, "File miss for file {0}!", new Object[]
+            {
+                filehash
+            });
+        }
+        sql = "SELECT COUNT(*) FROM cache "
+                + "WHERE file_hash = ?";
+        try (PreparedStatement stmt = conn.prepareStatement(sql))
+        {
+            stmt.setString(1, filehash);
+            ResultSet resultSet = stmt.executeQuery();
+            resultSet.next();
+            haveBlocks = resultSet.getInt(1);
+        } catch (SQLException ex)
+        {
+            LOGGER.log(Level.FINE, "File miss for file {0}!", new Object[]
+            {
+                filehash
+            });
+        }
+        return totalBlocks == haveBlocks;
+    }
 
     public FileEntry getFile(String filehash)
     {
@@ -107,7 +163,7 @@ public class FileDatabase
     public NodeFileInfo getFileInfo(String filehash)
     {
         NodeFileInfo fileInfo = new NodeFileInfo(filehash);
-        String sql = "SELECT block_id FROM files "
+        String sql = "SELECT block_id FROM cache "
                 + "WHERE file_hash = ?";
         try (PreparedStatement stmt = conn.prepareStatement(sql))
         {

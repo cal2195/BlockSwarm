@@ -1,12 +1,13 @@
 package blockswarm.info;
 
+import java.io.Serializable;
 import java.util.BitSet;
 
 /**
  *
  * @author cal
  */
-public class NodeFileInfo
+public class NodeFileInfo implements Serializable
 {
 
     public final String hash;
@@ -16,5 +17,11 @@ public class NodeFileInfo
     {
         this.hash = hash;
         blocks = new BitSet();
+    }
+    
+    public NodeFileInfo(String hash, int totalBlocks)
+    {
+        this.hash = hash;
+        blocks = new BitSet(totalBlocks);
     }
 }

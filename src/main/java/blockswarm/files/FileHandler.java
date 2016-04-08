@@ -48,6 +48,17 @@ public class FileHandler
         }
     }
     
+    public void assembleFile(String filehash)
+    {
+        try
+        {
+            Blocker.assembleBlocks(filehash, node.getDatabase());
+        } catch (IOException ex)
+        {
+            Logger.getLogger(FileHandler.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
     private static String hashFile(File file, String algorithm)
     {
         try (FileInputStream inputStream = new FileInputStream(file))
