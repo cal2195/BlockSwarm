@@ -1,5 +1,5 @@
 # BlockSwarm [![Build Status](https://travis-ci.com/cal2195/BlockSwarm.svg?token=5T1yEDqMHWZzKFskCP5i&branch=master)](https://travis-ci.com/cal2195/BlockSwarm)
-© Cal Martin & Cillian Roe 2016
+© Cal Martin & Nicole Diamond & Cillian Roe 2016
 
 **Please note, that until version v1.0 anything may change with no backwards compatibility, so all information on the network may be wiped!**
 
