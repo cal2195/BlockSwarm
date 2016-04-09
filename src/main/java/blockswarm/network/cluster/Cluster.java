@@ -3,6 +3,7 @@ package blockswarm.network.cluster;
 import blockswarm.database.entries.FileEntry;
 import blockswarm.info.NodeFileInfo;
 import blockswarm.network.packets.BlockRequestPacket;
+import blockswarm.network.packets.FileInfoRequestPacket;
 import blockswarm.network.packets.FileListPacket;
 import blockswarm.network.packets.FileListRequestPacket;
 import java.util.ArrayList;
@@ -24,23 +25,47 @@ public class Cluster
         this.node = node;
         initialise();
     }
-    
+
     public void initialise()
     {
         collectFileLists();
+        askAboutAllFiles();
     }
-    
+
     public void downloadFile(String filehash)
     {
         for (PeerAddress pa : node.peer.peerBean().peerMap().all())
         {
-            LOG.log(Level.FINE, "Asking {0} for {1}!", new Object[]{pa, filehash});
+            LOG.log(Level.FINE, "Asking {0} for {1}!", new Object[]
+            {
+                pa, filehash
+            });
             NodeFileInfo info = node.getDatabase().getFiles().getFileInfo(filehash);
             info.blocks.flip(0, node.getDatabase().getFiles().getTotalBlocks(filehash));
             node.send(pa, new BlockRequestPacket(info));
         }
     }
+
+    public void requestInfoAbout(String filehash)
+    {
+        for (PeerAddress pa : node.peer.peerBean().peerMap().all())
+        {
+            LOG.log(Level.FINE, "Asking {0} about {1}!", new Object[]
+            {
+                pa, filehash
+            });
+            node.send(pa, new FileInfoRequestPacket(filehash));
+        }
+    }
     
+    public void askAboutAllFiles()
+    {
+        for (FileEntry file : node.getDatabase().getFiles().getAllFiles())
+        {
+            requestInfoAbout(file.filehash);
+        }
+    }
+
     public void collectFileLists()
     {
         ArrayList<String> files = node.getDatabase().getFiles().getAllFileHashes();

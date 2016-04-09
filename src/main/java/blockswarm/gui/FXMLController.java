@@ -32,7 +32,7 @@ public class FXMLController implements Initializable
         List list = new ArrayList();
         for (FileEntry file : files)
         {
-            list.add(new FileRow(file.filename, file.filehash, "" + file.totalBlocks, "0", "0", "0"));
+            list.add(new FileRow(file.filename, file.filehash, "" + file.totalBlocks, "" + file.availability, "0", "0"));
         }
         searchTable.setItems(FXCollections.observableList(list));
     }
@@ -41,7 +41,7 @@ public class FXMLController implements Initializable
     public void updateSearch()
     {
         ArrayList<FileEntry> files = new ArrayList<>();
-        files.add(new FileEntry("test", "test", 1000));
+        files.add(new FileEntry("test", "test", 1000, -1));
         addFiles(files);
     }
     

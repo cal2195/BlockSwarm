@@ -11,12 +11,14 @@ public class FileEntry implements Serializable
 {
     public final String filehash, filename;
     public final int totalBlocks;
+    public final double availability;
 
-    public FileEntry(String filehash, String filename, int totalBlocks)
+    public FileEntry(String filehash, String filename, int totalBlocks, double availability)
     {
         this.filehash = filehash;
         this.filename = filename;
         this.totalBlocks = totalBlocks;
+        this.availability = availability;
     }
 
     @Override

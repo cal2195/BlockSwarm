@@ -10,8 +10,6 @@ import java.util.logging.Handler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.application.Application;
-import javafx.application.Platform;
-import javafx.concurrent.Task;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -26,7 +24,7 @@ public class BlockSwarm extends Application
     
     public static void main(String[] args)
     {
-        configureLogger(Level.ALL);
+        configureLogger(Level.FINE);
         //Here we go!
 //        Database database = new Database();
 //        database.connect();

@@ -1,6 +1,7 @@
 package blockswarm.database;
 
 import blockswarm.database.handlers.DatabasePool;
+import blockswarm.network.cluster.Node;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
@@ -21,9 +22,11 @@ public class Database
     private FileDatabase fileDatabase;
     private PeerDatabase peerDatabase;
     private DatabasePool databasePool;
+    Node node;
 
-    public Database()
+    public Database(Node node)
     {
+        this.node = node;
     }
 
     public void connect()
@@ -55,9 +58,9 @@ public class Database
 
     public void initialise()
     {
-        fileDatabase = new FileDatabase(conn);
-        cacheDatabase = new CacheDatabase(conn);
-        peerDatabase = new PeerDatabase(conn);
+        fileDatabase = new FileDatabase(conn, node);
+        cacheDatabase = new CacheDatabase(conn, node);
+        peerDatabase = new PeerDatabase(conn, node);
         databasePool = new DatabasePool();
     }
 

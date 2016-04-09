@@ -34,7 +34,7 @@ public class FileHandler
             LOG.fine(hash);
             int totalBlocks = Blocker.insertBlocks(file, hash, node.getDatabase());
             
-            FileEntry fileEntry = new FileEntry(hash, file.getName(), totalBlocks);
+            FileEntry fileEntry = new FileEntry(hash, file.getName(), totalBlocks, -1);
             node.getDatabase().getFiles().putFile(fileEntry);
             
             ArrayList<FileEntry> fileList = new ArrayList<>();

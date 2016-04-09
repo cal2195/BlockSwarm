@@ -2,6 +2,7 @@ package blockswarm.database;
 
 import blockswarm.database.entries.FileEntry;
 import blockswarm.info.NodeFileInfo;
+import blockswarm.network.cluster.Node;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -20,10 +21,12 @@ public class FileDatabase
 
     private static final Logger LOGGER = Logger.getLogger(FileDatabase.class.getName());
     private final Connection conn;
+    Node node;
 
-    public FileDatabase(Connection databaseConnection)
+    public FileDatabase(Connection databaseConnection, Node node)
     {
         conn = databaseConnection;
+        this.node = node;
         setup();
     }
 
@@ -127,7 +130,7 @@ public class FileDatabase
             stmt.setString(1, filehash);
             ResultSet resultSet = stmt.executeQuery();
             resultSet.next();
-            return new FileEntry(resultSet.getString("file_hash"), resultSet.getString("file_name"), resultSet.getInt("total_blocks"));
+            return new FileEntry(resultSet.getString("file_hash"), resultSet.getString("file_name"), resultSet.getInt("total_blocks"), (node == null) ? -1 : node.getDatabase().getPeers().getAvailability(resultSet.getString("file_hash")));
         } catch (SQLException ex)
         {
             LOGGER.log(Level.FINE, "File miss for file {0}!", new Object[]
@@ -166,7 +169,7 @@ public class FileDatabase
             ResultSet resultSet = stmt.executeQuery();
             while (resultSet.next())
             {
-                files.add(new FileEntry(resultSet.getString("file_hash"), resultSet.getString("file_name"), resultSet.getInt("total_blocks")));
+                files.add(new FileEntry(resultSet.getString("file_hash"), resultSet.getString("file_name"), resultSet.getInt("total_blocks"), node.getDatabase().getPeers().getAvailability(resultSet.getString("file_hash"))));
             }
             return files;
         } catch (SQLException ex)
@@ -187,7 +190,7 @@ public class FileDatabase
             {
                 if (!except.contains(resultSet.getString("file_hash")))
                 {
-                    files.add(new FileEntry(resultSet.getString("file_hash"), resultSet.getString("file_name"), resultSet.getInt("total_blocks")));
+                    files.add(new FileEntry(resultSet.getString("file_hash"), resultSet.getString("file_name"), resultSet.getInt("total_blocks"), node.getDatabase().getPeers().getAvailability(resultSet.getString("file_hash"))));
                 }
             }
             return files;

@@ -31,5 +31,6 @@ public class PutFileInfoWorker extends Worker implements Runnable
     public void run()
     {
         node.getDatabase().getPeers().putFileInfo(peer, info.hash, info);
+        node.getGui().updateFileList();
     }
 }

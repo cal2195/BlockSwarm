@@ -2,6 +2,7 @@ package blockswarm.database;
 
 import blockswarm.database.entries.FileEntry;
 import blockswarm.info.NodeFileInfo;
+import blockswarm.network.cluster.Node;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -22,16 +23,18 @@ public class PeerDatabase
 
     private static final Logger LOGGER = Logger.getLogger(PeerDatabase.class.getName());
     private final Connection conn;
+    Node node;
 
-    public PeerDatabase(Connection databaseConnection)
+    public PeerDatabase(Connection databaseConnection, Node node)
     {
         conn = databaseConnection;
+        this.node = node;
         setup();
     }
     
     public boolean putFileInfo(PeerAddress pa, String filehash, NodeFileInfo info)
     {
-        String sql = "REPLACE into peers (peer_address, file_hash, file_info) VALUES (?,?,?)";
+        String sql = "MERGE into peers (peer_address, file_hash, file_info) KEY(peer_address, file_hash) VALUES (?,?,?)";
         try (PreparedStatement stmt = conn.prepareStatement(sql))
         {
             stmt.setObject(1, pa);
@@ -45,12 +48,31 @@ public class PeerDatabase
         }
         return false;
     }
+    
+    public double getAvailability(String filehash)
+    {
+        HashMap<PeerAddress, NodeFileInfo> nodes = getFileInfo(filehash);
+        int totalBlocks = node.getDatabase().getFiles().getTotalBlocks(filehash);
+        NodeFileInfo clusterFileInfo = new NodeFileInfo(filehash, totalBlocks);
+        if (nodes == null)
+        {
+            return -1;
+        }
+        LOGGER.fine("Found " + nodes.size() + " who have this file!");
+        for (NodeFileInfo nodeFile : nodes.values())
+        {
+            LOGGER.fine(nodeFile.blocks.toString());
+            clusterFileInfo.blocks.or(nodeFile.blocks);
+        }
+        LOGGER.log(Level.FINE, "Found {0} out of {1}", new Object[]{clusterFileInfo.blocks.cardinality(), totalBlocks});
+        return (double) clusterFileInfo.blocks.cardinality() / (double) totalBlocks;
+    }
 
     public HashMap<PeerAddress, NodeFileInfo> getFileInfo(String filehash)
     {
         HashMap<PeerAddress, NodeFileInfo> nodes = new HashMap<>();
-        String sql = "SELECT file_info FROM peers "
-                   + "WHERE filehash = ?";
+        String sql = "SELECT * FROM peers "
+                   + "WHERE file_hash = ?";
         try (PreparedStatement stmt = conn.prepareStatement(sql))
         {
             stmt.setString(1, filehash);
@@ -62,7 +84,8 @@ public class PeerDatabase
             return nodes;
         } catch (SQLException ex)
         {
-            LOGGER.log(Level.FINE, "Cache miss for file {0}!", new Object[]
+            ex.printStackTrace();
+            LOGGER.log(Level.FINE, "Cache miss for peer file {0}!", new Object[]
             {
                 filehash
             });
@@ -81,10 +104,12 @@ public class PeerDatabase
                 {
                     String sql = "CREATE TABLE peers "
                             + "(peer_address OTHER,"
-                            + " file_hash CHAR(40) not NULL UNIQUE, "
+                            + " file_hash CHAR(40) not NULL, "
                             + " file_info OTHER,"
                             + " `id` INT NOT NULL AUTO_INCREMENT PRIMARY KEY,"
                             + " PRIMARY KEY ( id ))";
+                    stmt.executeUpdate(sql);
+                    sql = "ALTER TABLE peers ADD CONSTRAINT unique_block_peers UNIQUE(peer_address, file_hash)";
                     stmt.executeUpdate(sql);
                 }
             }

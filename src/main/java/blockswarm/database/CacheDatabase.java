@@ -6,6 +6,7 @@
 package blockswarm.database;
 
 import blockswarm.info.NodeFileInfo;
+import blockswarm.network.cluster.Node;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -23,10 +24,12 @@ public class CacheDatabase
 
     private static final Logger LOGGER = Logger.getLogger(CacheDatabase.class.getName());
     private final Connection conn;
+    Node node;
 
-    public CacheDatabase(Connection databaseConnection)
+    public CacheDatabase(Connection databaseConnection, Node node)
     {
         conn = databaseConnection;
+        this.node = node;
         setup();
     }
 

@@ -86,7 +86,7 @@ public class Node
     
     protected void setupDatabase()
     {
-        database = new Database();
+        database = new Database(this);
         database.connect();
         database.initialise();
     }
