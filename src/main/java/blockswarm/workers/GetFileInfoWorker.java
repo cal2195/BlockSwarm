@@ -1,4 +1,4 @@
-package blockswarm.database.handlers;
+package blockswarm.workers;
 
 import blockswarm.database.entries.FileEntry;
 import blockswarm.info.NodeFileInfo;

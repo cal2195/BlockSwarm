@@ -1,4 +1,4 @@
-package blockswarm.database.handlers;
+package blockswarm.workers;
 
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -10,7 +10,7 @@ import java.util.concurrent.TimeUnit;
  *
  * @author cal
  */
-public class DatabasePool
+public class WorkerPool
 {
     PriorityBlockingQueue queue = new PriorityBlockingQueue();
     ThreadPoolExecutor databasePool = new ThreadPoolExecutor(10, 20, 0, TimeUnit.DAYS, queue);

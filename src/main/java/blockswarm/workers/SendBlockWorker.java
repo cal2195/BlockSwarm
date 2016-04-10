@@ -1,4 +1,4 @@
-package blockswarm.database.handlers;
+package blockswarm.workers;
 
 import blockswarm.database.Database;
 import blockswarm.network.cluster.Node;

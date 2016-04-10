@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package blockswarm.database.handlers;
+package blockswarm.workers;
 
 import blockswarm.database.entries.FileEntry;
 import blockswarm.info.NodeFileInfo;

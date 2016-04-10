@@ -2,6 +2,7 @@ package blockswarm.network.cluster;
 
 import blockswarm.database.Database;
 import blockswarm.gui.FXMLController;
+import blockswarm.workers.WorkerPool;
 import java.io.IOException;
 import java.net.Inet4Address;
 import java.net.InetAddress;
@@ -26,6 +27,7 @@ public class Node
 
     private static final Logger LOGGER = Logger.getLogger(Node.class.getName());
 
+    WorkerPool workerPool;
     Peer peer;
     NodeIncomingHandler incomingHandler;
     Tracker tracker;
@@ -37,7 +39,7 @@ public class Node
     {
 
     }
-    
+
     public Node(FXMLController gui)
     {
         this.gui = gui;
@@ -52,23 +54,35 @@ public class Node
     {
         setupDatabase();
         
+        setupWorkerPool();
+
         setupGui();
-        
+
         setupIncomingHandler();
-        
+
         bootstrap("morebetterengineering.com");
-        
+
         setupTracker();
-        
+
         setupCluster();
     }
     
+    public void setupWorkerPool()
+    {
+        workerPool = new WorkerPool();
+    }
+
+    public WorkerPool getWorkerPool()
+    {
+        return workerPool;
+    }
+
     protected void setupGui()
     {
         gui.setNode(this);
         gui.updateFileList();
     }
-    
+
     protected void setupIncomingHandler()
     {
         incomingHandler = new NodeIncomingHandler(this);
@@ -78,12 +92,12 @@ public class Node
     {
         tracker = new Tracker(peer);
     }
-    
+
     protected void setupCluster()
     {
         cluster = new Cluster(this);
     }
-    
+
     protected void setupDatabase()
     {
         database = new Database(this);
@@ -110,7 +124,7 @@ public class Node
     {
         return cluster;
     }
-    
+
     public void bootstrap(String supernode)
     {
         try

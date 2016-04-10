@@ -1,11 +1,11 @@
 package blockswarm.network.cluster;
 
-import blockswarm.database.handlers.FileEntryWorker;
-import blockswarm.database.handlers.FileListWorker;
-import blockswarm.database.handlers.GetFileInfoWorker;
-import blockswarm.database.handlers.InsertBlockWorker;
-import blockswarm.database.handlers.PutFileInfoWorker;
-import blockswarm.database.handlers.RequestWorker;
+import blockswarm.workers.FileEntryWorker;
+import blockswarm.workers.FileListWorker;
+import blockswarm.workers.GetFileInfoWorker;
+import blockswarm.workers.InsertBlockWorker;
+import blockswarm.workers.PutFileInfoWorker;
+import blockswarm.workers.RequestWorker;
 import blockswarm.info.NodeFileInfo;
 import blockswarm.network.packets.BlockPacket;
 import blockswarm.network.packets.BlockRequestPacket;
@@ -36,32 +36,32 @@ public class SuperNodeIncomingHandler implements ObjectDataReply
         if (packet instanceof BlockPacket)
         {
             LOG.fine("Received block packet!");
-            node.getDatabase().getDatabasePool().addWorker(new InsertBlockWorker((BlockPacket) packet, node));
+            node.getWorkerPool().addWorker(new InsertBlockWorker((BlockPacket) packet, node));
         }
         else if (packet instanceof BlockRequestPacket)
         {
             LOG.fine("Received block request packet!");
-            node.getDatabase().getDatabasePool().addWorker(new RequestWorker(pa, ((BlockRequestPacket) packet).nodeFileInfo, node));
+            node.getWorkerPool().addWorker(new RequestWorker(pa, ((BlockRequestPacket) packet).nodeFileInfo, node));
         }
         else if (packet instanceof FileListPacket)
         {
             LOG.fine("Received file list packet!");
-            node.getDatabase().getDatabasePool().addWorker(new FileEntryWorker(((FileListPacket) packet).files, node, pa));
+            node.getWorkerPool().addWorker(new FileEntryWorker(((FileListPacket) packet).files, node, pa));
         }
         else if (packet instanceof FileListRequestPacket)
         {
             LOG.fine("Received file list request packet!");
-            node.getDatabase().getDatabasePool().addWorker(new FileListWorker(((FileListRequestPacket) packet).ignore, pa, node));
+            node.getWorkerPool().addWorker(new FileListWorker(((FileListRequestPacket) packet).ignore, pa, node));
         }
         else if (packet instanceof FileInfoPacket)
         {
             LOG.fine("Received a file info packet!");
-            node.getDatabase().getDatabasePool().addWorker(new PutFileInfoWorker(pa, ((FileInfoPacket) packet).info, node));
+            node.getWorkerPool().addWorker(new PutFileInfoWorker(pa, ((FileInfoPacket) packet).info, node));
         }
         else if (packet instanceof FileInfoRequestPacket)
         {
             LOG.fine("Received a file info request packet!");
-            node.getDatabase().getDatabasePool().addWorker(new GetFileInfoWorker(((FileInfoRequestPacket) packet).filehash, pa, node));
+            node.getWorkerPool().addWorker(new GetFileInfoWorker(((FileInfoRequestPacket) packet).filehash, pa, node));
         }
         return null;
     }

@@ -1,4 +1,4 @@
-package blockswarm.database.handlers;
+package blockswarm.workers;
 
 import blockswarm.database.Database;
 import blockswarm.info.NodeFileInfo;
@@ -36,7 +36,7 @@ public class RequestWorker extends Worker implements Runnable
         for (int i = myBlocks.blocks.nextSetBit(0); i >= 0; i = myBlocks.blocks.nextSetBit(i + 1))
         {
             LOG.log(Level.FINE, "Queued sending block {0}:{1} to {2}", new Object[]{nodeFileInfo.hash, i, requester.inetAddress()});
-            node.getDatabase().getDatabasePool().addWorker(new SendBlockWorker(nodeFileInfo.hash, i, requester, node));
+            node.getWorkerPool().addWorker(new SendBlockWorker(nodeFileInfo.hash, i, requester, node));
             if (i == Integer.MAX_VALUE)
             {
                 break; // or (i+1) would overflow

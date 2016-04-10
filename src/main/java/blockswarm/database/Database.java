@@ -1,6 +1,6 @@
 package blockswarm.database;
 
-import blockswarm.database.handlers.DatabasePool;
+import blockswarm.workers.WorkerPool;
 import blockswarm.network.cluster.Node;
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -21,7 +21,6 @@ public class Database
     private CacheDatabase cacheDatabase;
     private FileDatabase fileDatabase;
     private PeerDatabase peerDatabase;
-    private DatabasePool databasePool;
     Node node;
 
     public Database(Node node)
@@ -61,14 +60,9 @@ public class Database
         fileDatabase = new FileDatabase(conn, node);
         cacheDatabase = new CacheDatabase(conn, node);
         peerDatabase = new PeerDatabase(conn, node);
-        databasePool = new DatabasePool();
+        
     }
-
-    public DatabasePool getDatabasePool()
-    {
-        return databasePool;
-    }
-
+    
     public CacheDatabase getCache()
     {
         return cacheDatabase;
