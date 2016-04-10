@@ -21,6 +21,7 @@ public class Database
     private CacheDatabase cacheDatabase;
     private FileDatabase fileDatabase;
     private PeerDatabase peerDatabase;
+    private DownloadDatabase downloadDatabase;
     Node node;
 
     public Database(Node node)
@@ -60,7 +61,12 @@ public class Database
         fileDatabase = new FileDatabase(conn, node);
         cacheDatabase = new CacheDatabase(conn, node);
         peerDatabase = new PeerDatabase(conn, node);
-        
+        downloadDatabase = new DownloadDatabase(conn, node);
+    }
+
+    public DownloadDatabase getDownloadDatabase()
+    {
+        return downloadDatabase;
     }
     
     public CacheDatabase getCache()

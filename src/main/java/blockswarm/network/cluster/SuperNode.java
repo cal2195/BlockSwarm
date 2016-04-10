@@ -33,6 +33,8 @@ public class SuperNode extends Node
     public void setupSuperNode()
     {
         setupDatabase();
+        
+        setupWorkerPool();
 
         setupIncomingHandler();
 

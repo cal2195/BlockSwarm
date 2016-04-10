@@ -24,4 +24,10 @@ public class NodeFileInfo implements Serializable
         this.hash = hash;
         blocks = new BitSet(totalBlocks);
     }
+    
+    public NodeFileInfo(String hash, BitSet blocks)
+    {
+        this.hash = hash;
+        this.blocks = blocks;
+    }
 }

@@ -109,7 +109,7 @@
                                  <bottom>
                                     <ToolBar prefHeight="40.0" prefWidth="200.0" BorderPane.alignment="CENTER">
                                       <items>
-                                        <Button mnemonicParsing="false" text="Add file..." />
+                                        <Button mnemonicParsing="false" onAction="#uploadFile" text="Add file..." />
                                       </items>
                                     </ToolBar>
                                  </bottom>

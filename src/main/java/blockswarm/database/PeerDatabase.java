@@ -1,6 +1,6 @@
 package blockswarm.database;
 
-import blockswarm.database.entries.FileEntry;
+import blockswarm.info.ClusterFileInfo;
 import blockswarm.info.NodeFileInfo;
 import blockswarm.network.cluster.Node;
 import java.sql.Connection;
@@ -8,7 +8,6 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -66,6 +65,24 @@ public class PeerDatabase
         }
         LOGGER.log(Level.FINE, "Found {0} out of {1}", new Object[]{clusterFileInfo.blocks.cardinality(), totalBlocks});
         return (double) clusterFileInfo.blocks.cardinality() / (double) totalBlocks;
+    }
+    
+    public ClusterFileInfo getClusterFileInfo(String filehash)
+    {
+        int totalBlocks = node.getDatabase().getFiles().getTotalBlocks(filehash);
+        HashMap<PeerAddress, NodeFileInfo> nodes = getFileInfo(filehash);
+        ClusterFileInfo clusterFileInfo = new ClusterFileInfo(filehash, totalBlocks);
+        if (nodes == null)
+        {
+            return null;
+        }
+        LOGGER.fine("Found " + nodes.size() + " who have this file!");
+        for (NodeFileInfo nodeFile : nodes.values())
+        {
+            LOGGER.fine(nodeFile.blocks.toString());
+            clusterFileInfo.add(nodeFile);
+        }
+        return clusterFileInfo;
     }
 
     public HashMap<PeerAddress, NodeFileInfo> getFileInfo(String filehash)

@@ -1,12 +1,14 @@
 package blockswarm.network.cluster;
 
 import blockswarm.database.entries.FileEntry;
+import blockswarm.info.ClusterFileInfo;
 import blockswarm.info.NodeFileInfo;
 import blockswarm.network.packets.BlockRequestPacket;
 import blockswarm.network.packets.FileInfoRequestPacket;
 import blockswarm.network.packets.FileListPacket;
 import blockswarm.network.packets.FileListRequestPacket;
 import java.util.ArrayList;
+import java.util.BitSet;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import net.tomp2p.peers.PeerAddress;
@@ -44,6 +46,23 @@ public class Cluster
             info.blocks.flip(0, node.getDatabase().getFiles().getTotalBlocks(filehash));
             node.send(pa, new BlockRequestPacket(info));
         }
+    }
+    
+    public void download(NodeFileInfo file)
+    {
+        for (PeerAddress pa : node.peer.peerBean().peerMap().all())
+        {
+            node.send(pa, new BlockRequestPacket(file));
+        }
+    }
+    
+    public void cache(NodeFileInfo file)
+    {
+        ClusterFileInfo clusterInfo = node.getDatabase().getPeers().getClusterFileInfo(file.hash);
+        NodeFileInfo toCache = clusterInfo.getBlocksUnder(2);
+        NodeFileInfo iHave = node.getDatabase().getCache().getFileInfo(file.hash);
+        toCache.blocks.andNot(iHave.blocks);
+        download(toCache);
     }
 
     public void requestInfoAbout(String filehash)

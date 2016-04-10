@@ -30,7 +30,7 @@ public class NodeIncomingHandler implements ObjectDataReply
     }
     
     @Override
-    public Object reply(PeerAddress pa, Object packet) throws Exception
+    public Object reply(PeerAddress pa, Object packet)
     {
         if (packet instanceof BlockPacket)
         {

@@ -1,5 +1,6 @@
 package blockswarm.database;
 
+import blockswarm.database.entries.FileEntry;
 import blockswarm.info.NodeFileInfo;
 import blockswarm.network.cluster.Node;
 import java.sql.Connection;
@@ -7,6 +8,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -14,109 +16,98 @@ import java.util.logging.Logger;
  *
  * @author cal
  */
-public class CacheDatabase
+public class DownloadDatabase
 {
 
-    private static final Logger LOGGER = Logger.getLogger(CacheDatabase.class.getName());
+    private static final Logger LOGGER = Logger.getLogger(DownloadDatabase.class.getName());
     private final Connection conn;
     Node node;
 
-    public CacheDatabase(Connection databaseConnection, Node node)
+    public DownloadDatabase(Connection databaseConnection, Node node)
     {
         conn = databaseConnection;
         this.node = node;
         setup();
     }
 
-    public boolean putBlock(String filehash, int blockid, byte[] blockdata)
+    public boolean queueDownload(String filehash)
     {
-        String sql = "INSERT INTO cache "
-                + "(file_hash, block_id, block_data) "
-                + "VALUES (?,?,?)";
-        LOGGER.log(Level.FINE, "Adding block {0}:{1} to cache!", new Object[]
+        String sql = "INSERT INTO downloads "
+                + "(file_hash, date) "
+                + "VALUES (?,NOW())";
+        LOGGER.log(Level.FINE, "Queueing {0} for download!", new Object[]
         {
-            filehash, blockid
+            filehash
         });
         try (PreparedStatement stmt = conn.prepareStatement(sql))
         {
             stmt.setString(1, filehash);
-            stmt.setInt(2, blockid);
-            stmt.setBytes(3, blockdata);
             stmt.execute();
             return true;
         } catch (SQLException ex)
         {
-            LOGGER.log(Level.FINE, "Error adding block {0}:{1} to cache!", new Object[]
+            LOGGER.log(Level.FINE, "Error queueing {0} for download!", new Object[]
             {
-                filehash, blockid
+                filehash
             });
+            //ex.printStackTrace();
         }
         return false;
     }
 
-    public byte[] getBlock(String filehash, int blockid)
+    public boolean flaggedForDownload(String filehash)
     {
-        String sql = "SELECT block_data FROM cache "
-                + "WHERE file_hash = ? AND "
-                + "block_id = ?";
-        try (PreparedStatement stmt = conn.prepareStatement(sql))
-        {
-            stmt.setString(1, filehash);
-            stmt.setInt(2, blockid);
-            ResultSet resultSet = stmt.executeQuery();
-            resultSet.next();
-            return resultSet.getBytes("block_data");
-        } catch (SQLException ex)
-        {
-            LOGGER.log(Level.FINE, "Cache miss for block {0}:{1}!", new Object[]
-            {
-                filehash, blockid
-            });
-        }
-        return null;
-    }
-
-    public NodeFileInfo getFileInfo(String filehash)
-    {
-        NodeFileInfo fileInfo = new NodeFileInfo(filehash);
-        String sql = "SELECT block_id FROM cache "
+        String sql = "SELECT COUNT(*) FROM downloads "
                 + "WHERE file_hash = ?";
         try (PreparedStatement stmt = conn.prepareStatement(sql))
         {
             stmt.setString(1, filehash);
             ResultSet resultSet = stmt.executeQuery();
-            while (resultSet.next())
-            {
-                fileInfo.blocks.set(resultSet.getInt("block_id"));
-            }
-            return fileInfo;
+            resultSet.next();
+            return (resultSet.getInt(0) == 1);
         } catch (SQLException ex)
         {
-            LOGGER.log(Level.FINE, "Cache miss for file {0}!", new Object[]
+            LOGGER.log(Level.FINE, "Download miss for file {0}!", new Object[]
             {
                 filehash
             });
+            return false;
         }
-        return null;
+    }
+
+    public boolean removeDownload(String filehash)
+    {
+        String sql = "DELETE FROM downloads "
+                + "WHERE file_hash = ?";
+        try (PreparedStatement stmt = conn.prepareStatement(sql))
+        {
+            stmt.setString(1, filehash);
+            stmt.execute();
+            return true;
+        } catch (SQLException ex)
+        {
+            LOGGER.log(Level.FINE, "Error removing download {0}!", new Object[]
+            {
+                filehash
+            });
+            return false;
+        }
     }
 
     private void setup()
     {
         try
         {
-            LOGGER.info("Creating cache table if needed...");
-            if (!tableExists("cache"))
+            LOGGER.info("Creating downloads table if needed...");
+            if (!tableExists("downloads"))
             {
                 try (Statement stmt = conn.createStatement())
                 {
-                    String sql = "CREATE TABLE cache "
-                            + "(file_hash CHAR(40) not NULL, "
-                            + " block_id INTEGER not NULL,"
-                            + " block_data BLOB,"
+                    String sql = "CREATE TABLE downloads "
+                            + "(file_hash CHAR(40) not NULL UNIQUE, "
+                            + " date TIMESTAMP, "
                             + " `id` INT NOT NULL AUTO_INCREMENT PRIMARY KEY,"
                             + " PRIMARY KEY ( id ))";
-                    stmt.executeUpdate(sql);
-                    sql = "ALTER TABLE cache ADD CONSTRAINT unique_block UNIQUE(file_hash, block_id)";
                     stmt.executeUpdate(sql);
                 }
             }

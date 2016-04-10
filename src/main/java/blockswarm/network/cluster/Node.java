@@ -2,6 +2,7 @@ package blockswarm.network.cluster;
 
 import blockswarm.database.Database;
 import blockswarm.gui.FXMLController;
+import blockswarm.workers.CacheWorker;
 import blockswarm.workers.WorkerPool;
 import java.io.IOException;
 import java.net.Inet4Address;
@@ -96,6 +97,7 @@ public class Node
     protected void setupCluster()
     {
         cluster = new Cluster(this);
+        workerPool.addWorker(new CacheWorker(this), 30);
     }
 
     protected void setupDatabase()

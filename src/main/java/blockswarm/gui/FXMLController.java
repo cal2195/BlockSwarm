@@ -2,7 +2,9 @@ package blockswarm.gui;
 
 import blockswarm.database.Database;
 import blockswarm.database.entries.FileEntry;
+import blockswarm.files.FileHandler;
 import blockswarm.network.cluster.Node;
+import java.io.File;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -18,6 +20,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javax.swing.JFileChooser;
 
 public class FXMLController implements Initializable
 {
@@ -53,6 +56,15 @@ public class FXMLController implements Initializable
     public void setNode(Node node)
     {
         this.node = node;
+    }
+    
+    @FXML
+    public void uploadFile()
+    {
+        FileHandler fileHandler = new FileHandler(node);
+        JFileChooser file = new JFileChooser();
+        file.showOpenDialog(null);
+        fileHandler.uploadFile(file.getSelectedFile());
     }
     
     @FXML
