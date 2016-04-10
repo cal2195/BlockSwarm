@@ -7,8 +7,9 @@ import blockswarm.network.packets.BlockRequestPacket;
 import blockswarm.network.packets.FileInfoRequestPacket;
 import blockswarm.network.packets.FileListPacket;
 import blockswarm.network.packets.FileListRequestPacket;
+import blockswarm.workers.DownloadWorker;
+import blockswarm.workers.FileAssemblyWorker;
 import java.util.ArrayList;
-import java.util.BitSet;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import net.tomp2p.peers.PeerAddress;
@@ -47,7 +48,19 @@ public class Cluster
             node.send(pa, new BlockRequestPacket(info));
         }
     }
-    
+
+    public void queueForDownload(String filehash)
+    {
+        if (node.getDatabase().getFiles().hasFullFile(filehash))
+        {
+            node.getWorkerPool().addWorker(new FileAssemblyWorker(filehash, node));
+        } else
+        {
+            node.getDatabase().getDownloads().queueDownload(filehash);
+            node.getWorkerPool().addWorker(new DownloadWorker(filehash, node), 60);
+        }
+    }
+
     public void download(NodeFileInfo file)
     {
         for (PeerAddress pa : node.peer.peerBean().peerMap().all())
@@ -55,7 +68,7 @@ public class Cluster
             node.send(pa, new BlockRequestPacket(file));
         }
     }
-    
+
     public void cache(NodeFileInfo file)
     {
         ClusterFileInfo clusterInfo = node.getDatabase().getPeers().getClusterFileInfo(file.hash);
@@ -76,7 +89,7 @@ public class Cluster
             node.send(pa, new FileInfoRequestPacket(filehash));
         }
     }
-    
+
     public void askAboutAllFiles()
     {
         for (FileEntry file : node.getDatabase().getFiles().getAllFiles())

@@ -64,7 +64,7 @@ public class Database
         downloadDatabase = new DownloadDatabase(conn, node);
     }
 
-    public DownloadDatabase getDownloadDatabase()
+    public DownloadDatabase getDownloads()
     {
         return downloadDatabase;
     }

@@ -24,6 +24,6 @@ public class WorkerPool
     
     public void addWorker(Worker worker, long delay)
     {
-        scheduledThreadPool.scheduleAtFixedRate(worker, 0, delay, TimeUnit.SECONDS);
+        worker.setFuture(scheduledThreadPool.scheduleAtFixedRate(worker, 0, delay, TimeUnit.SECONDS));
     }
 }

@@ -41,6 +41,7 @@ public class FileHandler
             fileList.add(fileEntry);
             
             node.getCluster().notifyAllOfNewFiles(fileList);
+            node.getGui().updateFileList();
             
         } catch (IOException ex)
         {

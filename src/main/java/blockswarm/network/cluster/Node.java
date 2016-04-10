@@ -3,6 +3,7 @@ package blockswarm.network.cluster;
 import blockswarm.database.Database;
 import blockswarm.gui.FXMLController;
 import blockswarm.workers.CacheWorker;
+import blockswarm.workers.GUIWorker;
 import blockswarm.workers.WorkerPool;
 import java.io.IOException;
 import java.net.Inet4Address;
@@ -82,6 +83,7 @@ public class Node
     {
         gui.setNode(this);
         gui.updateFileList();
+        workerPool.addWorker(new GUIWorker(this), 10);
     }
 
     protected void setupIncomingHandler()

@@ -6,6 +6,7 @@
 package blockswarm.workers;
 
 import blockswarm.files.FileHandler;
+import blockswarm.network.cluster.Node;
 
 /**
  *
@@ -13,6 +14,14 @@ import blockswarm.files.FileHandler;
  */
 public class FileAssemblyWorker extends Worker implements Runnable
 {
+    final String filehash;
+    Node node;
+
+    public FileAssemblyWorker(String filehash, Node node)
+    {
+        this.filehash = filehash;
+        this.node = node;
+    }
 
     @Override
     public int getPriority()
@@ -23,10 +32,11 @@ public class FileAssemblyWorker extends Worker implements Runnable
     @Override
     public void run()
     {
-//        if (node.getDatabase().getFiles().hasFullFile(blockPacket.fileHash))
-//        {
-//            FileHandler fileHandler = new FileHandler(node);
-//            fileHandler.assembleFile(blockPacket.fileHash);
-//        }
+        if (node.getDatabase().getFiles().hasFullFile(filehash))
+        {
+            node.getDatabase().getDownloads().removeDownload(filehash);
+            FileHandler fileHandler = new FileHandler(node);
+            fileHandler.assembleFile(filehash);
+        }
     }
 }

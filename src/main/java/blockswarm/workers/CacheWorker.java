@@ -30,9 +30,15 @@ public class CacheWorker extends Worker implements Runnable
     @Override
     public void run()
     {
-        for (String hash : node.getDatabase().getFiles().getAllFileHashes())
+        try
         {
-            node.getCluster().cache(new NodeFileInfo(hash));
+            for (String hash : node.getDatabase().getFiles().getAllFileHashes())
+            {
+                node.getCluster().cache(new NodeFileInfo(hash));
+            }
+        } catch (Exception e)
+        {
+            e.printStackTrace();
         }
     }
 }

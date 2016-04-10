@@ -71,7 +71,7 @@ public class FXMLController implements Initializable
     public void download()
     {
         FileRow file = (FileRow) searchTable.getSelectionModel().getSelectedItem();
-        node.getCluster().downloadFile(file.getFilehash());
+        node.getCluster().queueForDownload(file.getFilehash());
     }
 
     @Override
