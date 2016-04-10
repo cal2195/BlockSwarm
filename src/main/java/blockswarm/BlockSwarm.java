@@ -21,7 +21,8 @@ import javafx.stage.Stage;
  */
 public class BlockSwarm extends Application
 {
-    
+    Node node;
+
     public static void main(String[] args)
     {
         configureLogger(Level.FINE);
@@ -47,7 +48,7 @@ public class BlockSwarm extends Application
             fileHandler.uploadFile(new File(args[1]));
         }
     }
-    
+
     public static void configureLogger(Level logLevel)
     {
         //get the top Logger:
@@ -65,7 +66,7 @@ public class BlockSwarm extends Application
                 break;
             }
         }
-        
+
         if (consoleHandler == null)
         {
             //there was no console handler found, create a new one
@@ -77,23 +78,31 @@ public class BlockSwarm extends Application
         topLogger.setLevel(logLevel);
         consoleHandler.setLevel(logLevel);
     }
-    
+
     @Override
     public void start(Stage stage) throws Exception
     {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/Scene.fxml"));
-        
+
         Parent root = loader.load();
-        
+
         Scene scene = new Scene(root);
         scene.getStylesheets().add("/styles/Styles.css");
-        
+
         stage.setTitle("BlockSwarm");
         stage.setScene(scene);
         stage.show();
-        
+
         FXMLController gui = loader.getController();
-        Node node = new Node(gui);
+        node = new Node(gui);
         node.setupNode();
+    }
+
+    @Override
+    public void stop()
+    {
+        System.out.println("Stage is closing");
+        node.getPeer().shutdown();
+        System.exit(0);
     }
 }
