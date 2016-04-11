@@ -102,7 +102,8 @@ public class BlockSwarm extends Application
     public void stop()
     {
         System.out.println("Stage is closing");
+        node.getWorkerPool().shutdown();
         node.getPeer().shutdown();
-        System.exit(0);
+        node.getDatabase().disconnect();
     }
 }

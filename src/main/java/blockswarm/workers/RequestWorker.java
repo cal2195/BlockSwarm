@@ -1,6 +1,5 @@
 package blockswarm.workers;
 
-import blockswarm.database.Database;
 import blockswarm.info.NodeFileInfo;
 import blockswarm.network.cluster.Node;
 import java.util.logging.Level;

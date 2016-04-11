@@ -1,7 +1,5 @@
 package blockswarm.workers;
 
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 import java.util.concurrent.PriorityBlockingQueue;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.ThreadPoolExecutor;
@@ -25,5 +23,11 @@ public class WorkerPool
     public void addWorker(Worker worker, long delay)
     {
         worker.setFuture(scheduledThreadPool.scheduleAtFixedRate(worker, 0, delay, TimeUnit.SECONDS));
+    }
+    
+    public void shutdown()
+    {
+        threadPool.shutdownNow();
+        scheduledThreadPool.shutdownNow();
     }
 }
