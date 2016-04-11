@@ -169,11 +169,8 @@ public class Node
         }
     }
 
-    public boolean send(PeerAddress pa, Object o)
+    public FutureDirect send(PeerAddress pa, Object o)
     {
-        FutureDirect futureData = peer.sendDirect(pa).object(o).start();
-        futureData.awaitUninterruptibly();
-        System.out.println("result:" + futureData.failedReason());
-        return futureData.isSuccess();
+        return peer.sendDirect(pa).object(o).start();
     }
 }

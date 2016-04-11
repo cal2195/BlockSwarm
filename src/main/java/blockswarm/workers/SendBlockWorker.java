@@ -29,7 +29,7 @@ public class SendBlockWorker extends Worker implements Runnable
     public void run()
     {
         byte[] block = node.getDatabase().getCache().getBlock(filehash, blockID);
-        while (!node.send(requester, new BlockPacket(filehash, blockID, block))) {}
+        node.send(requester, new BlockPacket(filehash, blockID, block));
     }
 
     @Override
