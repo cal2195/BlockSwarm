@@ -15,6 +15,14 @@ import java.util.logging.Logger;
  */
 public class Bootloader
 {
+    public static final String VERSION =    "prealpha-0.02";
+    public static final String RELEASE =    "He's made of staples an broken bones\n" +
+                                            "Bruises from chapters\n" +
+                                            "Stories untold\n" +
+                                            "If I had a wish\n" +
+                                            "It'd be make him whole\n" +
+                                            "He's barely alive\n" +
+                                            "So is his soul";
 
     public static void main(String[] args)
     {
@@ -32,6 +40,12 @@ public class Bootloader
         {
             Node node = new Node();
             node.setupNode();
+        } else if (args[0].equals("version"))
+        {
+            System.out.println("BlockSwarm " + VERSION);
+            System.out.println("--------------------------------------------");
+            System.out.println(RELEASE);
+            System.out.println("--------------------------------------------");
         }
     }
 
