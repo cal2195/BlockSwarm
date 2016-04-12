@@ -4,6 +4,8 @@ import blockswarm.database.Database;
 import blockswarm.gui.FXMLController;
 import blockswarm.workers.CacheWorker;
 import blockswarm.workers.GUIWorker;
+import blockswarm.workers.PeerRequestManager;
+import blockswarm.workers.RequestManager;
 import blockswarm.workers.WorkerPool;
 import java.io.IOException;
 import java.net.Inet4Address;
@@ -36,6 +38,7 @@ public class Node
     Database database;
     Cluster cluster;
     FXMLController gui;
+    PeerRequestManager peerRequestManager;
 
     public Node()
     {
@@ -83,7 +86,7 @@ public class Node
     {
         gui.setNode(this);
         gui.updateFileList();
-        workerPool.addWorker(new GUIWorker(this), 10);
+        workerPool.addRepeatedWorker(new GUIWorker(this), 5);
     }
 
     protected void setupIncomingHandler()
@@ -99,7 +102,8 @@ public class Node
     protected void setupCluster()
     {
         cluster = new Cluster(this);
-        workerPool.addWorker(new CacheWorker(this), 30);
+        workerPool.addRepeatedWorker(new RequestManager(this), 10);
+        peerRequestManager = new PeerRequestManager(this);
     }
 
     protected void setupDatabase()
@@ -117,6 +121,11 @@ public class Node
     public Peer getPeer()
     {
         return peer;
+    }
+
+    public PeerRequestManager getPeerRequestManager()
+    {
+        return peerRequestManager;
     }
 
     public Tracker getTracker()

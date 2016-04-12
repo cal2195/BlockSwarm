@@ -99,6 +99,21 @@ public class CacheDatabase
         }
         return null;
     }
+    
+    public int cacheSize()
+    {
+        String sql = "SELECT COUNT(*) FROM cache";
+        try (PreparedStatement stmt = conn.prepareStatement(sql))
+        {
+            ResultSet resultSet = stmt.executeQuery();
+            resultSet.next();
+            return resultSet.getInt(1);
+        } catch (SQLException ex)
+        {
+            LOGGER.log(Level.FINE, "Problem getting cache size!");
+        }
+        return -1;
+    }
 
     private void setup()
     {

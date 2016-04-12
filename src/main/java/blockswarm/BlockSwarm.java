@@ -21,11 +21,13 @@ import javafx.stage.Stage;
  */
 public class BlockSwarm extends Application
 {
+
     Node node;
 
     public static void main(String[] args)
     {
         configureLogger(Level.FINE);
+        Logger.getLogger("javafx").setLevel(Level.OFF);
         //Here we go!
 //        Database database = new Database();
 //        database.connect();

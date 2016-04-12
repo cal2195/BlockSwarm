@@ -84,7 +84,7 @@ public class RequestWorker extends Worker implements Runnable
         }
         if (myBlocks.blocks.cardinality() != 0)
         {
-            node.getWorkerPool().addWorker(this);
+            node.getWorkerPool().addDelayedWorker(this, 2);
         }
     }
     private static final Logger LOG = Logger.getLogger(RequestWorker.class.getName());

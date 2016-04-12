@@ -20,7 +20,12 @@ public class WorkerPool
         threadPool.execute(worker);
     }
     
-    public void addWorker(Worker worker, long delay)
+    public void addDelayedWorker(Worker worker, long delay)
+    {
+        worker.setFuture(scheduledThreadPool.schedule(worker, delay, TimeUnit.SECONDS));
+    }
+    
+    public void addRepeatedWorker(Worker worker, long delay)
     {
         worker.setFuture(scheduledThreadPool.scheduleAtFixedRate(worker, 0, delay, TimeUnit.SECONDS));
     }

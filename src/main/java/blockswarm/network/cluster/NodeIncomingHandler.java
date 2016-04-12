@@ -40,7 +40,7 @@ public class NodeIncomingHandler implements ObjectDataReply
         else if (packet instanceof BlockRequestPacket)
         {
             LOG.fine("Received block request packet!");
-            node.getWorkerPool().addWorker(new RequestWorker(pa, ((BlockRequestPacket) packet).nodeFileInfo, node));
+            node.getPeerRequestManager().processRequest(pa, ((BlockRequestPacket) packet).nodeFileInfo);
         }
         else if (packet instanceof FileListPacket)
         {
@@ -54,12 +54,12 @@ public class NodeIncomingHandler implements ObjectDataReply
         }
         else if (packet instanceof FileInfoPacket)
         {
-            LOG.fine("Received a file info packet!");
+            LOG.finer("Received a file info packet!");
             node.getWorkerPool().addWorker(new PutFileInfoWorker(pa, ((FileInfoPacket) packet).info, node));
         }
         else if (packet instanceof FileInfoRequestPacket)
         {
-            LOG.fine("Received a file info request packet!");
+            LOG.finer("Received a file info request packet!");
             node.getWorkerPool().addWorker(new GetFileInfoWorker(((FileInfoRequestPacket) packet).filehash, pa, node));
         }
         return null;

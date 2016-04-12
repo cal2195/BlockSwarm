@@ -3,6 +3,7 @@ package blockswarm.gui;
 import blockswarm.database.Database;
 import blockswarm.database.entries.FileEntry;
 import blockswarm.files.FileHandler;
+import blockswarm.info.NodeFileInfo;
 import blockswarm.network.cluster.Node;
 import java.io.File;
 import java.net.URL;
@@ -26,18 +27,30 @@ public class FXMLController implements Initializable
 {
 
     @FXML
-    TableView<Map> searchTable;
+    TableView<Map> searchTable, downloadTable;
     
     Node node;
 
-    public void addFiles(ArrayList<FileEntry> files)
+    public void addSearchFiles(ArrayList<FileEntry> files)
     {
         List list = new ArrayList();
         for (FileEntry file : files)
         {
-            list.add(new FileRow(file.filename, file.filehash, "" + file.totalBlocks, "" + file.availability, "0", "0"));
+            list.add(new SearchFileRow(file.filename, file.filehash, "" + file.totalBlocks, "" + file.availability, "0", "0"));
         }
         searchTable.setItems(FXCollections.observableList(list));
+    }
+    
+    public void addDownloadFiles(ArrayList<NodeFileInfo> files)
+    {
+        List list = new ArrayList();
+        for (NodeFileInfo file : files)
+        {
+            NodeFileInfo current = node.getDatabase().getFiles().getFileInfo(file.hash);
+            FileEntry info = node.getDatabase().getFiles().getFile(file.hash);
+            list.add(new DownloadFileRow(info.filename, info.filehash, current.blocks.cardinality() + "/" + info.totalBlocks, "" + info.availability, "0", "0"));
+        }
+        downloadTable.setItems(FXCollections.observableList(list));
     }
     
     @FXML
@@ -45,12 +58,13 @@ public class FXMLController implements Initializable
     {
         ArrayList<FileEntry> files = new ArrayList<>();
         files.add(new FileEntry("test", "test", 1000, -1));
-        addFiles(files);
+        addSearchFiles(files);
     }
     
     public void updateFileList()
     {
-        addFiles(node.getDatabase().getFiles().getAllFiles());
+        addSearchFiles(node.getDatabase().getFiles().getAllFiles());
+        addDownloadFiles(node.getDatabase().getDownloads().getAllDownloads());
     }
 
     public void setNode(Node node)
@@ -70,14 +84,18 @@ public class FXMLController implements Initializable
     @FXML
     public void download()
     {
-        FileRow file = (FileRow) searchTable.getSelectionModel().getSelectedItem();
-        node.getCluster().queueForDownload(file.getFilehash());
+        SearchFileRow file = (SearchFileRow) searchTable.getSelectionModel().getSelectedItem();
+        node.getCluster().queueForDownload(file.getSearchFilehash());
     }
 
     @Override
     public void initialize(URL url, ResourceBundle rb)
     {
         for (TableColumn column : searchTable.getColumns())
+        {
+            column.setCellValueFactory(new PropertyValueFactory(column.getId()));
+        }
+        for (TableColumn column : downloadTable.getColumns())
         {
             column.setCellValueFactory(new PropertyValueFactory(column.getId()));
         }

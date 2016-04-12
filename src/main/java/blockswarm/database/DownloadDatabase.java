@@ -93,6 +93,25 @@ public class DownloadDatabase
             return false;
         }
     }
+    
+    public ArrayList<NodeFileInfo> getAllDownloads()
+    {
+        ArrayList<NodeFileInfo> fileList = new ArrayList<>();
+        String sql = "SELECT * FROM downloads";
+        try (PreparedStatement stmt = conn.prepareStatement(sql))
+        {
+            ResultSet resultSet = stmt.executeQuery();
+            while (resultSet.next())
+            {
+                fileList.add(node.getDatabase().getFiles().getFileInfo(resultSet.getString("file_hash")));
+            }
+            return fileList;
+        } catch (SQLException ex)
+        {
+            LOGGER.log(Level.FINE, "Error getting all downloads!!");
+        }
+        return null;
+    }
 
     private void setup()
     {

@@ -57,15 +57,15 @@ public class Cluster
         } else
         {
             node.getDatabase().getDownloads().queueDownload(filehash);
-            node.getWorkerPool().addWorker(new DownloadWorker(filehash, node), 60);
+            //node.getWorkerPool().addWorker(new DownloadWorker(filehash, node), 60);
         }
     }
 
-    public void download(NodeFileInfo file)
+    public void download(NodeFileInfo needed)
     {
         for (PeerAddress pa : node.peer.peerBean().peerMap().all())
         {
-            node.send(pa, new BlockRequestPacket(file));
+            node.send(pa, new BlockRequestPacket(needed));
         }
     }
 
@@ -82,7 +82,7 @@ public class Cluster
     {
         for (PeerAddress pa : node.peer.peerBean().peerMap().all())
         {
-            LOG.log(Level.FINE, "Asking {0} about {1}!", new Object[]
+            LOG.log(Level.FINER, "Asking {0} about {1}!", new Object[]
             {
                 pa, filehash
             });

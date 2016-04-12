@@ -62,11 +62,11 @@
                                  <center>
                                     <TableView fx:id="searchTable" prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
                                        <columns>
-                                          <TableColumn fx:id="filename" prefWidth="75.0" text="Filename" />
-                                          <TableColumn fx:id="filesize" prefWidth="75.0" text="Filesize" />
-                                          <TableColumn fx:id="blocks" prefWidth="75.0" text="Blocks" />
-                                          <TableColumn fx:id="availability" prefWidth="75.0" text="Availability" />
-                                          <TableColumn fx:id="peers" prefWidth="75.0" text="Peers" />
+                                          <TableColumn fx:id="searchFilename" prefWidth="75.0" text="Filename" />
+                                          <TableColumn fx:id="searchFilesize" prefWidth="75.0" text="Filesize" />
+                                          <TableColumn fx:id="searchBlocks" prefWidth="75.0" text="Blocks" />
+                                          <TableColumn fx:id="searchAvailability" prefWidth="75.0" text="Availability" />
+                                          <TableColumn fx:id="searchPeers" prefWidth="75.0" text="Peers" />
                                        </columns>
                                        <columnResizePolicy>
                                           <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
@@ -87,13 +87,13 @@
                            <content>
                               <BorderPane prefHeight="200.0" prefWidth="200.0">
                                  <center>
-                                    <TableView prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+                                    <TableView fx:id="downloadTable" prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
                                        <columns>
-                                          <TableColumn prefWidth="75.0" text="Filename" />
-                                          <TableColumn prefWidth="75.0" text="Filesize" />
-                                          <TableColumn prefWidth="75.0" text="Blocks" />
-                                          <TableColumn prefWidth="75.0" text="Availability" />
-                                          <TableColumn prefWidth="75.0" text="Peers" />
+                                          <TableColumn fx:id="downloadFilename" prefWidth="75.0" text="Filename" />
+                                          <TableColumn fx:id="downloadFilesize" prefWidth="75.0" text="Filesize" />
+                                          <TableColumn fx:id="downloadBlocks" prefWidth="75.0" text="Blocks" />
+                                          <TableColumn fx:id="downloadAvailability" prefWidth="75.0" text="Availability" />
+                                          <TableColumn fx:id="downloadPeers" prefWidth="75.0" text="Peers" />
                                        </columns>
                                        <columnResizePolicy>
                                           <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />

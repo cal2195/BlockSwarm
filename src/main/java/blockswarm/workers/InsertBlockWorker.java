@@ -24,10 +24,6 @@ public class InsertBlockWorker extends Worker implements Runnable
     public void run()
     {
         node.getDatabase().getCache().putBlock(blockPacket.filehash, blockPacket.blockID, blockPacket.block);
-        if (node.getDatabase().getDownloads().flaggedForDownload(blockPacket.filehash) && node.getDatabase().getFiles().hasFullFile(blockPacket.filehash))
-        {
-            node.getWorkerPool().addWorker(new FileAssemblyWorker(blockPacket.filehash, node));
-        }
     }
 
     @Override
