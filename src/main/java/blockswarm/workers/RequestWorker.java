@@ -59,22 +59,22 @@ public class RequestWorker extends Worker implements Runnable
             });
             byte[] block = node.getDatabase().getCache().getBlock(nodeFileInfo.hash, i);
             FutureDirect blockFuture = node.send(requester, new BlockPacket(nodeFileInfo.hash, i, block));
-            final int sentBlock = i;
-            blockFuture.addListener(new BaseFutureAdapter<BaseFuture>()
-            {
-                @Override
-                public void operationComplete(BaseFuture f) throws Exception
-                {
-                    if (f.isFailed())
-                    {
-                        LOG.log(Level.FINE, "Sending block {0}:{1} to {2} failed! Requeueing!", new Object[]
-                        {
-                            nodeFileInfo.hash, sentBlock, requester.inetAddress()
-                        });
-                        nodeFileInfo.blocks.set(sentBlock);
-                    }
-                }
-            });
+//            final int sentBlock = i;
+//            blockFuture.addListener(new BaseFutureAdapter<BaseFuture>()
+//            {
+//                @Override
+//                public void operationComplete(BaseFuture f) throws Exception
+//                {
+//                    if (f.isFailed())
+//                    {
+//                        LOG.log(Level.FINE, "Sending block {0}:{1} to {2} failed! Requeueing!", new Object[]
+//                        {
+//                            nodeFileInfo.hash, sentBlock, requester.inetAddress()
+//                        });
+//                        nodeFileInfo.blocks.set(sentBlock);
+//                    }
+//                }
+//            });
             myBlocks.blocks.clear(i);
             nodeFileInfo.blocks.clear(i);
             if (i == Integer.MAX_VALUE)

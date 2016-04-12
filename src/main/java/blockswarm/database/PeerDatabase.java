@@ -57,13 +57,13 @@ public class PeerDatabase
         {
             return -1;
         }
-        LOGGER.fine("Found " + nodes.size() + " who have this file!");
+        LOGGER.finer("Found " + nodes.size() + " who have this file!");
         for (NodeFileInfo nodeFile : nodes.values())
         {
-            LOGGER.fine(nodeFile.blocks.toString());
+            LOGGER.finer(nodeFile.blocks.toString());
             clusterFileInfo.blocks.or(nodeFile.blocks);
         }
-        LOGGER.log(Level.FINE, "Found {0} out of {1}", new Object[]{clusterFileInfo.blocks.cardinality(), totalBlocks});
+        LOGGER.log(Level.FINER, "Found {0} out of {1}", new Object[]{clusterFileInfo.blocks.cardinality(), totalBlocks});
         return (double) clusterFileInfo.blocks.cardinality() / (double) totalBlocks;
     }
     
@@ -76,10 +76,10 @@ public class PeerDatabase
         {
             return null;
         }
-        LOGGER.fine("Found " + nodes.size() + " who have this file!");
+        LOGGER.finer("Found " + nodes.size() + " who have this file!");
         for (NodeFileInfo nodeFile : nodes.values())
         {
-            LOGGER.fine(nodeFile.blocks.toString());
+            LOGGER.finer(nodeFile.blocks.toString());
             clusterFileInfo.add(nodeFile);
         }
         return clusterFileInfo;
@@ -102,7 +102,7 @@ public class PeerDatabase
         } catch (SQLException ex)
         {
             ex.printStackTrace();
-            LOGGER.log(Level.FINE, "Cache miss for peer file {0}!", new Object[]
+            LOGGER.log(Level.FINER, "Cache miss for peer file {0}!", new Object[]
             {
                 filehash
             });
