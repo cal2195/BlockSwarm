@@ -6,6 +6,7 @@
 package blockswarm.database;
 
 import blockswarm.BlockSwarm;
+import blockswarm.Bootloader;
 import blockswarm.database.entries.FileEntry;
 import java.io.File;
 import java.util.Arrays;
@@ -25,7 +26,7 @@ public class DatabaseTest
 
     public DatabaseTest()
     {
-        BlockSwarm.configureLogger(Level.FINEST);
+        Bootloader.configureLogger(Level.FINEST);
         deleteFiles();
         database = new Database(null);
         database.connect();

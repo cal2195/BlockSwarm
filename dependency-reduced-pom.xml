@@ -18,7 +18,7 @@
             <configuration>
               <transformers>
                 <transformer>
-                  <mainClass>blockswarm.BlockSwarm</mainClass>
+                  <mainClass>blockswarm.Bootloader</mainClass>
                 </transformer>
               </transformers>
             </configuration>
