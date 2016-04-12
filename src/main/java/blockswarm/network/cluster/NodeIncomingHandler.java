@@ -34,7 +34,7 @@ public class NodeIncomingHandler implements ObjectDataReply
     {
         if (packet instanceof BlockPacket)
         {
-            LOG.fine("Received block packet!");
+            LOG.fine("Received block packet from " + pa.inetAddress().getHostAddress());
             node.getWorkerPool().addWorker(new InsertBlockWorker((BlockPacket) packet, node));
         }
         else if (packet instanceof BlockRequestPacket)
@@ -61,6 +61,10 @@ public class NodeIncomingHandler implements ObjectDataReply
         {
             LOG.finer("Received a file info request packet!");
             node.getWorkerPool().addWorker(new GetFileInfoWorker(((FileInfoRequestPacket) packet).filehash, pa, node));
+        }
+        else 
+        {
+            LOG.fine("UNKNOWN BLOCK RECEIVED FROM " + pa.inetAddress().getHostAddress());
         }
         return null;
     }

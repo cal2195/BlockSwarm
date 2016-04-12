@@ -38,6 +38,7 @@ public class RequestWorker extends Worker implements Runnable
     @Override
     public void run()
     {
+        boolean connectionLost = false;
         NodeFileInfo myBlocks = node.getDatabase().getCache().getFileInfo(nodeFileInfo.hash);
         LOG.log(Level.FINE, "I have {0}:{1}", new Object[]
         {
@@ -61,9 +62,17 @@ public class RequestWorker extends Worker implements Runnable
             });
 
             byte[] block = node.getDatabase().getCache().getBlock(nodeFileInfo.hash, i);
-            if (node.send(requester, new BlockPacket(nodeFileInfo.hash, i, block)).awaitUninterruptibly().isSuccess())
+            FutureDirect fut;
+            if ((fut = node.send(requester, new BlockPacket(nodeFileInfo.hash, i, block))).awaitUninterruptibly().isSuccess())
             {
                 nodeFileInfo.blocks.clear(i);
+            } else
+            {
+                LOG.fine(fut.failedReason());
+                if (fut.failedReason().contains("Connection refused"))
+                {
+                    connectionLost = true;
+                }
             }
 
             //node.getWorkerPool().addWorker(new SendBlockWorker(nodeFileInfo.hash, i, requester, this));
@@ -72,9 +81,12 @@ public class RequestWorker extends Worker implements Runnable
                 break; // or (i+1) would overflow
             }
         }
-        if (myBlocks.blocks.cardinality() != 0)
+        if (myBlocks.blocks.cardinality() != 0 && !connectionLost)
         {
             node.getWorkerPool().addDelayedWorker(this, 10);
+        } else
+        {
+            node.getPeerRequestManager().remove(requester, nodeFileInfo);
         }
     }
     private static final Logger LOG = Logger.getLogger(RequestWorker.class.getName());

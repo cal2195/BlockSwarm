@@ -8,7 +8,12 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import net.tomp2p.peers.PeerAddress;
@@ -117,9 +122,11 @@ public class PeerDatabase
     {
         HashMap<PeerAddress, NodeFileInfo> nodes = getFileInfo(filehash);
         NodeFileInfo found = node.getDatabase().getFiles().getFileInfo(filehash);
-        for (PeerAddress peerAddress : nodes.keySet())
+        List<Map.Entry<PeerAddress, NodeFileInfo>> list = new ArrayList<>(nodes.entrySet());
+        Collections.shuffle(list);
+        for (Map.Entry<PeerAddress, NodeFileInfo> entry : list)
         {
-            NodeFileInfo peerfile = nodes.get(peerAddress);
+            NodeFileInfo peerfile = entry.getValue();
             peerfile.blocks.andNot(found.blocks);
             NodeFileInfo ask = new NodeFileInfo(filehash);
             int asked = 0;
@@ -128,7 +135,7 @@ public class PeerDatabase
                 ask.blocks.set(i);
                 found.blocks.set(i);
             }
-            nodes.put(peerAddress, ask);
+            nodes.put(entry.getKey(), ask);
         }
         return nodes;
     }

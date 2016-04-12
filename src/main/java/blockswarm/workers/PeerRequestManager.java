@@ -26,13 +26,17 @@ public class PeerRequestManager
         if (requests.containsKey(key))
         {
             requests.get(key).updateRequest(nodeFileInfo);
-            node.getWorkerPool().addWorker(requests.get(key));
         } else
         {
             RequestWorker request = new RequestWorker(requester, nodeFileInfo, node);
             requests.put(key, request);
             node.getWorkerPool().addWorker(request);
         }
+    }
+    
+    public void remove(PeerAddress pa, NodeFileInfo info)
+    {
+        requests.remove(new PeerRequestKey(pa, info));
     }
     
     private class PeerRequestKey
