@@ -20,6 +20,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.control.TextArea;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javax.swing.JFileChooser;
 
@@ -28,6 +29,8 @@ public class FXMLController implements Initializable
 
     @FXML
     TableView<Map> searchTable, downloadTable;
+    @FXML
+    TextArea statTextArea;
 
     Node node;
 
@@ -65,6 +68,14 @@ public class FXMLController implements Initializable
     {
         addSearchFiles(node.getDatabase().getFiles().getAllFiles());
         addDownloadFiles(node.getDatabase().getDownloads().getAllDownloads());
+        updateStats();
+    }
+    
+    public void updateStats()
+    {
+        statTextArea.setText("Cache Size: " + node.getDatabase().getCache().cacheSize() + "\n"
+                           + "Thread Pool Size: " + node.getWorkerPool().queue.size() + "\n"
+                           + "Scheduled Pool Size: " + node.getWorkerPool().scheduledThreadPool.getQueue().size());
     }
 
     public void setNode(Node node)

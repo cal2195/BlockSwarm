@@ -15,7 +15,7 @@ import java.util.logging.Logger;
  */
 public class Bootloader
 {
-    public static final String VERSION =    "prealpha-0.02";
+    public static final String VERSION =    "prealpha-0.03";
     public static final String RELEASE =    "He's made of staples an broken bones\n" +
                                             "Bruises from chapters\n" +
                                             "Stories untold\n" +
