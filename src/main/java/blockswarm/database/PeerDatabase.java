@@ -30,7 +30,7 @@ public class PeerDatabase
         this.node = node;
         setup();
     }
-    
+
     public boolean putFileInfo(PeerAddress pa, String filehash, NodeFileInfo info)
     {
         String sql = "MERGE into peers (peer_address, file_hash, file_info) KEY(peer_address, file_hash) VALUES (?,?,?)";
@@ -47,7 +47,7 @@ public class PeerDatabase
         }
         return false;
     }
-    
+
     public double getAvailability(String filehash)
     {
         HashMap<PeerAddress, NodeFileInfo> nodes = getFileInfo(filehash);
@@ -63,10 +63,13 @@ public class PeerDatabase
             LOGGER.finer(nodeFile.blocks.toString());
             clusterFileInfo.blocks.or(nodeFile.blocks);
         }
-        LOGGER.log(Level.FINER, "Found {0} out of {1}", new Object[]{clusterFileInfo.blocks.cardinality(), totalBlocks});
+        LOGGER.log(Level.FINER, "Found {0} out of {1}", new Object[]
+        {
+            clusterFileInfo.blocks.cardinality(), totalBlocks
+        });
         return (double) clusterFileInfo.blocks.cardinality() / (double) totalBlocks;
     }
-    
+
     public ClusterFileInfo getClusterFileInfo(String filehash)
     {
         int totalBlocks = node.getDatabase().getFiles().getTotalBlocks(filehash);
@@ -89,7 +92,7 @@ public class PeerDatabase
     {
         HashMap<PeerAddress, NodeFileInfo> nodes = new HashMap<>();
         String sql = "SELECT * FROM peers "
-                   + "WHERE file_hash = ?";
+                + "WHERE file_hash = ?";
         try (PreparedStatement stmt = conn.prepareStatement(sql))
         {
             stmt.setString(1, filehash);
@@ -108,6 +111,26 @@ public class PeerDatabase
             });
         }
         return null;
+    }
+
+    public HashMap<PeerAddress, NodeFileInfo> getDownload(String filehash)
+    {
+        HashMap<PeerAddress, NodeFileInfo> nodes = getFileInfo(filehash);
+        NodeFileInfo found = node.getDatabase().getFiles().getFileInfo(filehash);
+        for (PeerAddress peerAddress : nodes.keySet())
+        {
+            NodeFileInfo peerfile = nodes.get(peerAddress);
+            peerfile.blocks.andNot(found.blocks);
+            NodeFileInfo ask = new NodeFileInfo(filehash);
+            int asked = 0;
+            for (int i = peerfile.blocks.nextSetBit(0); i >= 0 && asked++ < 20; i = peerfile.blocks.nextSetBit(i + 1))
+            {
+                ask.blocks.set(i);
+                found.blocks.set(i);
+            }
+            nodes.put(peerAddress, ask);
+        }
+        return nodes;
     }
 
     private void setup()

@@ -9,7 +9,11 @@ import blockswarm.network.packets.FileListPacket;
 import blockswarm.network.packets.FileListRequestPacket;
 import blockswarm.workers.DownloadWorker;
 import blockswarm.workers.FileAssemblyWorker;
+import blockswarm.workers.RequestWorker;
+import blockswarm.workers.SendBlockWorker;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import net.tomp2p.peers.PeerAddress;
@@ -37,16 +41,22 @@ public class Cluster
 
     public void downloadFile(String filehash)
     {
-        for (PeerAddress pa : node.peer.peerBean().peerMap().all())
+        HashMap<PeerAddress, NodeFileInfo> peers = node.getDatabase().getPeers().getDownload(filehash);
+        for (PeerAddress pa : peers.keySet())
         {
-            LOG.log(Level.FINE, "Asking {0} for {1}!", new Object[]
-            {
-                pa, filehash
-            });
-            NodeFileInfo info = node.getDatabase().getFiles().getFileInfo(filehash);
-            info.blocks.flip(0, node.getDatabase().getFiles().getTotalBlocks(filehash));
-            node.send(pa, new BlockRequestPacket(info));
+            LOG.fine("Asking " + pa.inetAddress().getHostAddress() + " for " + peers.get(pa).blocks.toString());
+            node.send(pa, new BlockRequestPacket(peers.get(pa)));
         }
+//        for (PeerAddress pa : node.peer.peerBean().peerMap().all())
+//        {
+//            LOG.log(Level.FINE, "Asking {0} for {1}!", new Object[]
+//            {
+//                pa, filehash
+//            });
+//            NodeFileInfo info = node.getDatabase().getFiles().getFileInfo(filehash);
+//            info.blocks.flip(0, node.getDatabase().getFiles().getTotalBlocks(filehash));
+//            node.send(pa, new BlockRequestPacket(info));
+//        }
     }
 
     public void queueForDownload(String filehash)
@@ -63,9 +73,12 @@ public class Cluster
 
     public void download(NodeFileInfo needed)
     {
-        for (PeerAddress pa : node.peer.peerBean().peerMap().all())
+        if (needed.blocks.cardinality() > 0)
         {
-            node.send(pa, new BlockRequestPacket(needed));
+            for (PeerAddress pa : node.peer.peerBean().peerMap().all())
+            {
+                node.send(pa, new BlockRequestPacket(needed));
+            }
         }
     }
 
@@ -76,6 +89,25 @@ public class Cluster
         NodeFileInfo iHave = node.getDatabase().getCache().getFileInfo(file.hash);
         toCache.blocks.andNot(iHave.blocks);
         download(toCache);
+    }
+
+    public void superSeed(String filehash)
+    {
+        List<PeerAddress> peers = node.peer.peerBean().peerMap().all();
+        for (int i = 0; i < peers.size(); i++)
+        {
+            PeerAddress peer = peers.get(i);
+            int total = node.getDatabase().getFiles().getTotalBlocks(filehash);
+            NodeFileInfo upload = new NodeFileInfo(filehash, total);
+            for (int block = 0; block < total; block++)
+            {
+                if ((block + i) % peers.size() == 0)
+                {
+                    upload.blocks.set(block);
+                }
+            }
+            node.getWorkerPool().addWorker(new RequestWorker(peer, upload, node));
+        }
     }
 
     public void requestInfoAbout(String filehash)

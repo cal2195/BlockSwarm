@@ -23,7 +23,7 @@ public class Bootloader
         //Here we go!
         if (args.length == 0)
         {
-            BlockSwarm.launch(args);
+            new BlockSwarm(args);
         } else if (args[0].equals("super"))
         {
             SuperNode superNode = new SuperNode();

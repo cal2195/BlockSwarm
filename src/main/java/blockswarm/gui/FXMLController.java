@@ -28,7 +28,7 @@ public class FXMLController implements Initializable
 
     @FXML
     TableView<Map> searchTable, downloadTable;
-    
+
     Node node;
 
     public void addSearchFiles(ArrayList<FileEntry> files)
@@ -40,7 +40,7 @@ public class FXMLController implements Initializable
         }
         searchTable.setItems(FXCollections.observableList(list));
     }
-    
+
     public void addDownloadFiles(ArrayList<NodeFileInfo> files)
     {
         List list = new ArrayList();
@@ -52,7 +52,7 @@ public class FXMLController implements Initializable
         }
         downloadTable.setItems(FXCollections.observableList(list));
     }
-    
+
     @FXML
     public void updateSearch()
     {
@@ -60,7 +60,7 @@ public class FXMLController implements Initializable
         files.add(new FileEntry("test", "test", 1000, -1));
         addSearchFiles(files);
     }
-    
+
     public void updateFileList()
     {
         addSearchFiles(node.getDatabase().getFiles().getAllFiles());
@@ -71,16 +71,20 @@ public class FXMLController implements Initializable
     {
         this.node = node;
     }
-    
+
     @FXML
     public void uploadFile()
     {
         FileHandler fileHandler = new FileHandler(node);
-        JFileChooser file = new JFileChooser();
-        file.showOpenDialog(null);
-        fileHandler.uploadFile(file.getSelectedFile());
+        JFileChooser filechooser = new JFileChooser();
+        filechooser.setMultiSelectionEnabled(true);
+        filechooser.showOpenDialog(null);
+        for (File file : filechooser.getSelectedFiles())
+        {
+            fileHandler.uploadFile(file);
+        }
     }
-    
+
     @FXML
     public void download()
     {

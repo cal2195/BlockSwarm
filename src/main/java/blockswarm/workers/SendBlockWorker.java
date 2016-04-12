@@ -16,6 +16,7 @@ public class SendBlockWorker extends Worker implements Runnable
     final int blockID;
     final PeerAddress requester;
     final RequestWorker worker;
+    int priority = 0;
 
     public SendBlockWorker(String filehash, int blockID, PeerAddress requester, RequestWorker worker)
     {
@@ -37,10 +38,16 @@ public class SendBlockWorker extends Worker implements Runnable
             }
         }
     }
+    
+    public SendBlockWorker setPriority(int priority)
+    {
+        this.priority = priority;
+        return this;
+    }
 
     @Override
     public int getPriority()
     {
-        return 0;
+        return priority;
     }
 }

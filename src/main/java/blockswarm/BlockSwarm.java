@@ -23,6 +23,16 @@ public class BlockSwarm extends Application
 {
 
     Node node;
+    
+    public BlockSwarm()
+    {
+        
+    }
+
+    public BlockSwarm(String[] args)
+    {
+        launch(args);
+    }
 
     @Override
     public void start(Stage stage) throws Exception

@@ -107,7 +107,7 @@ public class Node
     protected void setupCluster()
     {
         cluster = new Cluster(this);
-        workerPool.addRepeatedWorker(new RequestManager(this), 10);
+        workerPool.addRepeatedWorker(new RequestManager(this), 20);
         peerRequestManager = new PeerRequestManager(this);
     }
 
