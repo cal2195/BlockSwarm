@@ -38,9 +38,9 @@ public class RequestManager extends Worker implements Runnable
                 node.getCluster().downloadFile(download.hash);
             }
         }
-        for (String hash : node.getDatabase().getFiles().getAllFileHashes())
-        {
-            node.getCluster().cache(new NodeFileInfo(hash));
-        }
+//        for (String hash : node.getDatabase().getFiles().getAllFileHashes())
+//        {
+//            node.getCluster().cache(new NodeFileInfo(hash));
+//        }
     }
 }
