@@ -24,63 +24,6 @@ public class BlockSwarm extends Application
 
     Node node;
 
-    public static void main(String[] args)
-    {
-        configureLogger(Level.FINE);
-        Logger.getLogger("javafx").setLevel(Level.OFF);
-        //Here we go!
-//        Database database = new Database();
-//        database.connect();
-//        database.initialise();
-//        database.disconnect();
-        if (args.length == 0)
-        {
-//            Node node = new Node();
-//            node.setupNode();
-            launch(args);
-        } else if (args[0].equals("super"))
-        {
-            SuperNode superNode = new SuperNode();
-            superNode.setupSuperNode();
-        } else if (args[0].equals("upload"))
-        {
-            Node node = new Node();
-            node.setupNode();
-            FileHandler fileHandler = new FileHandler(node);
-            fileHandler.uploadFile(new File(args[1]));
-        }
-    }
-
-    public static void configureLogger(Level logLevel)
-    {
-        //get the top Logger:
-        Logger topLogger = java.util.logging.Logger.getLogger("");
-
-        // Handler for console (reuse it if it already exists)
-        Handler consoleHandler = null;
-        //see if there is already a console handler
-        for (Handler handler : topLogger.getHandlers())
-        {
-            if (handler instanceof ConsoleHandler)
-            {
-                //found the console handler
-                consoleHandler = handler;
-                break;
-            }
-        }
-
-        if (consoleHandler == null)
-        {
-            //there was no console handler found, create a new one
-            consoleHandler = new ConsoleHandler();
-            topLogger.addHandler(consoleHandler);
-        }
-
-        //set the console handler to fine:
-        topLogger.setLevel(logLevel);
-        consoleHandler.setLevel(logLevel);
-    }
-
     @Override
     public void start(Stage stage) throws Exception
     {

@@ -15,21 +15,27 @@ public class SendBlockWorker extends Worker implements Runnable
     final String filehash;
     final int blockID;
     final PeerAddress requester;
-    Node node;
+    final RequestWorker worker;
 
-    public SendBlockWorker(String filehash, int blockID, PeerAddress requester, Node node)
+    public SendBlockWorker(String filehash, int blockID, PeerAddress requester, RequestWorker worker)
     {
         this.filehash = filehash;
         this.blockID = blockID;
         this.requester = requester;
-        this.node = node;
+        this.worker = worker;
     }
 
     @Override
     public void run()
     {
-        byte[] block = node.getDatabase().getCache().getBlock(filehash, blockID);
-        node.send(requester, new BlockPacket(filehash, blockID, block));
+        if (worker.nodeFileInfo.blocks.get(blockID))
+        {
+            byte[] block = worker.node.getDatabase().getCache().getBlock(filehash, blockID);
+            if (worker.node.send(requester, new BlockPacket(filehash, blockID, block)).awaitUninterruptibly().isSuccess())
+            {
+                worker.nodeFileInfo.blocks.clear(blockID);
+            }
+        }
     }
 
     @Override

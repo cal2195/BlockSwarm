@@ -30,6 +30,7 @@ public class Node
 {
 
     private static final Logger LOGGER = Logger.getLogger(Node.class.getName());
+    final boolean USING_GUI;
 
     WorkerPool workerPool;
     Peer peer;
@@ -42,11 +43,12 @@ public class Node
 
     public Node()
     {
-
+        USING_GUI = false;
     }
 
     public Node(FXMLController gui)
     {
+        USING_GUI = true;
         this.gui = gui;
     }
 
@@ -58,10 +60,13 @@ public class Node
     public void setupNode()
     {
         setupDatabase();
-        
+
         setupWorkerPool();
 
-        setupGui();
+        if (USING_GUI)
+        {
+            setupGui();
+        }
 
         setupIncomingHandler();
 
@@ -71,7 +76,7 @@ public class Node
 
         setupCluster();
     }
-    
+
     public void setupWorkerPool()
     {
         workerPool = new WorkerPool();
