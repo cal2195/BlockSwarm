@@ -79,7 +79,7 @@ public class PeerDatabase
         {
             return null;
         }
-        LOGGER.finer("Found " + nodes.size() + " who have this file!");
+        LOGGER.fine("Found " + nodes.size() + " who have this file!");
         for (NodeFileInfo nodeFile : nodes.values())
         {
             LOGGER.finer(nodeFile.blocks.toString());
@@ -152,6 +152,12 @@ public class PeerDatabase
                     sql = "ALTER TABLE peers ADD CONSTRAINT unique_block_peers UNIQUE(peer_address, file_hash)";
                     stmt.executeUpdate(sql);
                 }
+            }
+            //For now!
+            try (Statement stmt = conn.createStatement())
+            {
+                String sql = "DELETE FROM peers";
+                stmt.executeUpdate(sql);
             }
         } catch (SQLException ex)
         {

@@ -53,13 +53,20 @@ public class RequestWorker extends Worker implements Runnable
             nodeFileInfo.hash, nodeFileInfo.blocks.toString()
         });
         int sent = 0;
-        for (int i = myBlocks.blocks.nextSetBit(0); i >= 0 && sent++ < 40; i = myBlocks.blocks.nextSetBit(i + 1))
+        for (int i = myBlocks.blocks.nextSetBit(0); i >= 0 && sent++ < 5; i = myBlocks.blocks.nextSetBit(i + 1))
         {
             LOG.log(Level.FINE, "Sending block {0}:{1} to {2}", new Object[]
             {
                 nodeFileInfo.hash, i, requester.inetAddress()
             });
-            node.getWorkerPool().addWorker(new SendBlockWorker(nodeFileInfo.hash, i, requester, this));
+
+            byte[] block = node.getDatabase().getCache().getBlock(nodeFileInfo.hash, i);
+            if (node.send(requester, new BlockPacket(nodeFileInfo.hash, i, block)).awaitUninterruptibly().isSuccess())
+            {
+                nodeFileInfo.blocks.clear(i);
+            }
+
+            //node.getWorkerPool().addWorker(new SendBlockWorker(nodeFileInfo.hash, i, requester, this));
             if (i == Integer.MAX_VALUE)
             {
                 break; // or (i+1) would overflow

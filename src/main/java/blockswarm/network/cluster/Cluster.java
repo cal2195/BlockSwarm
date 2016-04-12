@@ -88,6 +88,7 @@ public class Cluster
         NodeFileInfo toCache = clusterInfo.getBlocksUnder(2);
         NodeFileInfo iHave = node.getDatabase().getCache().getFileInfo(file.hash);
         toCache.blocks.andNot(iHave.blocks);
+        LOG.fine("Caching " + toCache.blocks.toString());
         download(toCache);
     }
 
