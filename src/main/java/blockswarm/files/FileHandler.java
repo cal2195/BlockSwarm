@@ -42,7 +42,7 @@ public class FileHandler
             
             node.getCluster().notifyAllOfNewFiles(fileList);
             node.getGui().updateFileList();
-            node.getCluster().superSeed(hash);
+            //node.getCluster().superSeed(hash);
             
         } catch (IOException ex)
         {

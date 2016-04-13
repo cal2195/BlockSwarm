@@ -39,7 +39,8 @@ public class FXMLController implements Initializable
         List list = new ArrayList();
         for (FileEntry file : files)
         {
-            list.add(new SearchFileRow(file.filename, file.filehash, "" + file.totalBlocks, "" + file.availability, "0", "0"));
+            NodeFileInfo current = node.getDatabase().getFiles().getFileInfo(file.filehash);
+            list.add(new SearchFileRow(file.filename, file.filehash, current.blocks.cardinality() + "/" + file.totalBlocks, "" + file.availability, "0", "0"));
         }
         searchTable.setItems(FXCollections.observableList(list));
     }
@@ -73,9 +74,17 @@ public class FXMLController implements Initializable
     
     public void updateStats()
     {
-        statTextArea.setText("Cache Size: " + node.getDatabase().getCache().cacheSize() + "\n"
-                           + "Thread Pool Size: " + node.getWorkerPool().queue.size() + "\n"
-                           + "Scheduled Pool Size: " + node.getWorkerPool().scheduledThreadPool.getQueue().size());
+        try
+        {
+            statTextArea.setText("Cache Size: " + node.getDatabase().getCache().cacheSize() + "\n"
+                    + "Thread Pool Size: " + node.getWorkerPool().queue.size() + "\n"
+                    + "Scheduled Pool Size: " + node.getWorkerPool().scheduledThreadPool.getQueue().size() + "\n"
+                    + "Cluster Size (Verified): " + node.getPeer().peerBean().peerMap().all().size() + "\n"
+                    + "Cluster Size (Unverified): " + node.getPeer().peerBean().peerMap().allOverflow().size() + "\n"
+                    + "Peers: \n" + node.getPeer().peerBean().peerMap().all().toString() + "\n");
+        } catch (Exception e)
+        {
+        }
     }
 
     public void setNode(Node node)

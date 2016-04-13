@@ -27,7 +27,8 @@ public class RequestManager extends Worker implements Runnable
     @Override
     public void run()
     {
-        if (node.getDatabase().getCache().cacheSize() < Integer.parseInt(node.getDatabase().getSettings().get("cacheLimit", "200")))
+        node.getCluster().askAboutAllFiles();
+        if (node.getDatabase().getCache().cacheSize() < Integer.parseInt(node.getDatabase().getSettings().get("cacheLimit", "20000")))
         {
             for (String hash : node.getDatabase().getFiles().getAllFileHashes())
             {

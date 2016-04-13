@@ -26,7 +26,7 @@ public class Bootloader
 
     public static void main(String[] args)
     {
-        configureLogger(Level.FINE);
+        configureLogger(Level.FINER);
         Logger.getLogger("javafx").setLevel(Level.OFF);
         //Here we go!
         if (args.length == 0)

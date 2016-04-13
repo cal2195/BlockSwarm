@@ -26,7 +26,6 @@ public class GUIWorker extends Worker implements Runnable
     {
         try
         {
-            node.getCluster().askAboutAllFiles();
             node.getGui().updateFileList();
         } catch (Exception e)
         {

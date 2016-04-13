@@ -14,6 +14,7 @@ import blockswarm.workers.SendBlockWorker;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import net.tomp2p.peers.PeerAddress;
@@ -24,7 +25,7 @@ import net.tomp2p.peers.PeerAddress;
  */
 public class Cluster
 {
-
+    Random random = new Random();
     Node node;
 
     public Cluster(Node node)
@@ -75,10 +76,8 @@ public class Cluster
     {
         if (needed.blocks.cardinality() > 0)
         {
-            for (PeerAddress pa : node.peer.peerBean().peerMap().all())
-            {
-                node.send(pa, new BlockRequestPacket(needed));
-            }
+            PeerAddress pa = node.peer.peerBean().peerMap().all().get(random.nextInt(node.peer.peerBean().peerMap().all().size()));
+            node.send(pa, new BlockRequestPacket(needed));
         }
     }
 
@@ -90,6 +89,18 @@ public class Cluster
         toCache.blocks.andNot(iHave.blocks);
         LOG.fine("Caching " + toCache.blocks.toString());
         download(toCache);
+    }
+
+    public void stopAllRequests()
+    {
+        for (FileEntry file : node.getDatabase().getFiles().getAllFiles())
+        {
+            NodeFileInfo stop = new NodeFileInfo(file.filehash);
+            for (PeerAddress pa : node.peer.peerBean().peerMap().all())
+            {
+                node.send(pa, new BlockRequestPacket(stop));
+            }
+        }
     }
 
     public void superSeed(String filehash)

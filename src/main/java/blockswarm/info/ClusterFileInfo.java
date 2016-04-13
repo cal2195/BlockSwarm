@@ -35,7 +35,7 @@ public class ClusterFileInfo
         BitSet blocks = new BitSet(blockCount.length);
         for (int i = 0; i < blockCount.length; i++)
         {
-            if (blockCount[i] < minimum)
+            if (blockCount[i] != 0 && blockCount[i] < minimum)
             {
                 blocks.set(i);
             }
