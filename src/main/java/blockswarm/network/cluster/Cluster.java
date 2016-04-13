@@ -25,6 +25,7 @@ import net.tomp2p.peers.PeerAddress;
  */
 public class Cluster
 {
+
     Random random = new Random();
     Node node;
 
@@ -89,6 +90,15 @@ public class Cluster
         toCache.blocks.andNot(iHave.blocks);
         LOG.fine("Caching " + toCache.blocks.toString());
         download(toCache);
+    }
+
+    public void sendRequests(HashMap<PeerAddress, NodeFileInfo> requests)
+    {
+        for (PeerAddress pa : requests.keySet())
+        {
+            LOG.fine("Requesting: " + requests.get(pa).blocks.toString());
+            node.send(pa, new BlockRequestPacket(requests.get(pa)));
+        }
     }
 
     public void stopAllRequests()

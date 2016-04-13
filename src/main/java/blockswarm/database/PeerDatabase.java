@@ -139,6 +139,32 @@ public class PeerDatabase
         }
         return nodes;
     }
+    
+    public HashMap<PeerAddress, NodeFileInfo> getDownload(NodeFileInfo toCache)
+    {
+        HashMap<PeerAddress, NodeFileInfo> nodes = getFileInfo(toCache.hash);
+        NodeFileInfo have = node.getDatabase().getFiles().getFileInfo(toCache.hash);
+        System.out.println("I have this " + have.blocks.toString());
+        toCache.blocks.andNot(have.blocks);
+        System.out.println("I will ask for " + toCache.blocks.toString());
+        toCache.blocks.flip(0, node.getDatabase().getFiles().getTotalBlocks(toCache.hash));
+        List<Map.Entry<PeerAddress, NodeFileInfo>> list = new ArrayList<>(nodes.entrySet());
+        Collections.shuffle(list);
+        for (Map.Entry<PeerAddress, NodeFileInfo> entry : list)
+        {
+            NodeFileInfo peerfile = entry.getValue();
+            peerfile.blocks.andNot(toCache.blocks);
+            NodeFileInfo ask = new NodeFileInfo(toCache.hash);
+            int asked = 0;
+            for (int i = peerfile.blocks.nextSetBit(0); i >= 0 && asked++ < 20; i = peerfile.blocks.nextSetBit(i + 1))
+            {
+                ask.blocks.set(i);
+                toCache.blocks.set(i);
+            }
+            nodes.put(entry.getKey(), ask);
+        }
+        return nodes;
+    }
 
     private void setup()
     {

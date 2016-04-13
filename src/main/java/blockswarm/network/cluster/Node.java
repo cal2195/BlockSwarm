@@ -5,7 +5,7 @@ import blockswarm.gui.FXMLController;
 import blockswarm.workers.CacheWorker;
 import blockswarm.workers.GUIWorker;
 import blockswarm.workers.PeerRequestManager;
-import blockswarm.workers.RequestManager;
+import blockswarm.workers.CacheManager;
 import blockswarm.workers.WorkerPool;
 import java.io.IOException;
 import java.net.Inet4Address;
@@ -107,7 +107,7 @@ public class Node
     protected void setupCluster()
     {
         cluster = new Cluster(this);
-        workerPool.addRepeatedWorker(new RequestManager(this), 20);
+        workerPool.addRepeatedWorker(new CacheManager(this), 20);
         peerRequestManager = new PeerRequestManager(this);
     }
 
