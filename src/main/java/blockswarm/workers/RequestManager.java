@@ -27,20 +27,25 @@ public class RequestManager extends Worker implements Runnable
     @Override
     public void run()
     {
-        ArrayList<NodeFileInfo> toDownload = node.getDatabase().getDownloads().getAllDownloads();
-        for (NodeFileInfo download : toDownload)
+        if (node.getDatabase().getCache().cacheSize() < Integer.parseInt(node.getDatabase().getSettings().get("cacheLimit", "200")))
         {
-            if (node.getDatabase().getFiles().hasFullFile(download.hash))
+            for (String hash : node.getDatabase().getFiles().getAllFileHashes())
             {
-                node.getWorkerPool().addWorker(new FileAssemblyWorker(download.hash, node));
-            } else
+                node.getCluster().cache(new NodeFileInfo(hash));
+            }
+        } else
+        {
+            ArrayList<NodeFileInfo> toDownload = node.getDatabase().getDownloads().getAllDownloads();
+            for (NodeFileInfo download : toDownload)
             {
-                node.getCluster().downloadFile(download.hash);
+                if (node.getDatabase().getFiles().hasFullFile(download.hash))
+                {
+                    node.getWorkerPool().addWorker(new FileAssemblyWorker(download.hash, node));
+                } else
+                {
+                    node.getCluster().downloadFile(download.hash);
+                }
             }
         }
-//        for (String hash : node.getDatabase().getFiles().getAllFileHashes())
-//        {
-//            node.getCluster().cache(new NodeFileInfo(hash));
-//        }
     }
 }

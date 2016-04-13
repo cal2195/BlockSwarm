@@ -22,6 +22,7 @@ public class Database
     private FileDatabase fileDatabase;
     private PeerDatabase peerDatabase;
     private DownloadDatabase downloadDatabase;
+    private SettingsDatabase settingsDatabase;
     Node node;
 
     public Database(Node node)
@@ -62,6 +63,7 @@ public class Database
         cacheDatabase = new CacheDatabase(conn, node);
         peerDatabase = new PeerDatabase(conn, node);
         downloadDatabase = new DownloadDatabase(conn, node);
+        settingsDatabase = new SettingsDatabase(conn, node);
     }
 
     public DownloadDatabase getDownloads()
@@ -82,6 +84,11 @@ public class Database
     public PeerDatabase getPeers()
     {
         return peerDatabase;
+    }
+    
+    public SettingsDatabase getSettings()
+    {
+        return settingsDatabase;
     }
 
     public boolean tableExists(String table)
