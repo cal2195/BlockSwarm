@@ -6,6 +6,7 @@ import blockswarm.workers.CacheWorker;
 import blockswarm.workers.GUIWorker;
 import blockswarm.workers.PeerRequestManager;
 import blockswarm.workers.CacheManager;
+import blockswarm.workers.ClusterFileInfoUpdater;
 import blockswarm.workers.WorkerPool;
 import java.io.IOException;
 import java.net.Inet4Address;
@@ -33,9 +34,10 @@ public class Node
     final boolean USING_GUI;
 
     WorkerPool workerPool;
-    Peer peer;
+    public Peer peer;
     NodeIncomingHandler incomingHandler;
     Tracker tracker;
+    DHT dht;
     Database database;
     Cluster cluster;
     FXMLController gui;
@@ -73,6 +75,8 @@ public class Node
         bootstrap("morebetterengineering.com");
 
         setupTracker();
+        
+        setupDHT();
 
         setupCluster();
     }
@@ -103,12 +107,18 @@ public class Node
     {
         tracker = new Tracker(peer);
     }
+    
+    protected void setupDHT()
+    {
+        dht = new DHT(peer);
+    }
 
     protected void setupCluster()
     {
         cluster = new Cluster(this);
         workerPool.addRepeatedWorker(new CacheManager(this), 20);
         peerRequestManager = new PeerRequestManager(this);
+        workerPool.addRepeatedWorker(new ClusterFileInfoUpdater(this), 10);
     }
 
     protected void setupDatabase()
@@ -118,6 +128,11 @@ public class Node
         database.initialise();
     }
 
+    public DHT getDHT()
+    {
+        return dht;
+    }
+    
     public Database getDatabase()
     {
         return database;

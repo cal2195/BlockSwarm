@@ -52,15 +52,10 @@ public class NodeIncomingHandler implements ObjectDataReply
             LOG.fine("Received file list request packet!");
             node.getWorkerPool().addWorker(new FileListWorker(((FileListRequestPacket) packet).ignore, pa, node));
         }
-        else if (packet instanceof FileInfoPacket)
-        {
-            LOG.finer("Received a file info packet!");
-            node.getWorkerPool().addWorker(new PutFileInfoWorker(pa, ((FileInfoPacket) packet).info, node));
-        }
         else if (packet instanceof FileInfoRequestPacket)
         {
             LOG.finer("Received a file info request packet!");
-            node.getWorkerPool().addWorker(new GetFileInfoWorker(((FileInfoRequestPacket) packet).filehash, pa, node));
+            node.getWorkerPool().addWorker(new GetFileInfoWorker(pa, node));
         }
         else 
         {

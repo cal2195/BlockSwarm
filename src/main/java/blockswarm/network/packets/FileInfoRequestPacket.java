@@ -8,10 +8,8 @@ import java.io.Serializable;
  */
 public class FileInfoRequestPacket implements Serializable
 {
-    public final String filehash;
 
-    public FileInfoRequestPacket(String filehash)
+    public FileInfoRequestPacket()
     {
-        this.filehash = filehash;
     }
 }

@@ -4,6 +4,7 @@ import blockswarm.database.entries.FileEntry;
 import blockswarm.info.ClusterFileInfo;
 import blockswarm.info.NodeFileInfo;
 import blockswarm.network.cluster.Node;
+import blockswarm.network.cluster.PeerRequestKey;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.logging.Logger;
@@ -29,14 +30,14 @@ public class CacheManager extends Worker implements Runnable
         return 0;
     }
 
-    public HashMap<PeerAddress, NodeFileInfo> getCacheRequests()
+    public HashMap<PeerRequestKey, NodeFileInfo> getCacheRequests()
     {
-        HashMap<PeerAddress, NodeFileInfo> requests = new HashMap<>();
+        HashMap<PeerRequestKey, NodeFileInfo> requests = new HashMap<>();
         ArrayList<FileEntry> files = node.getDatabase().getFiles().getAllFiles();
         for (FileEntry file : files)
         {
             ClusterFileInfo clusterInfo = node.getDatabase().getPeers().getClusterFileInfo(file.filehash);
-            NodeFileInfo toCache = clusterInfo.getBlocksUnder(2, 5);
+            NodeFileInfo toCache = clusterInfo.getBlocksUnder(2, file.totalBlocks / 4);
             requests.putAll(node.getDatabase().getPeers().getDownload(toCache));
         }
         return requests;
@@ -45,7 +46,6 @@ public class CacheManager extends Worker implements Runnable
     @Override
     public void run()
     {
-        node.getCluster().askAboutAllFiles();
         if (node.getDatabase().getCache().cacheSize() < Integer.parseInt(node.getDatabase().getSettings().get("cacheLimit", "2000")))
         {
             node.getCluster().sendRequests(getCacheRequests());

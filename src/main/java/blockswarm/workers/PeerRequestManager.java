@@ -2,6 +2,7 @@ package blockswarm.workers;
 
 import blockswarm.info.NodeFileInfo;
 import blockswarm.network.cluster.Node;
+import blockswarm.network.cluster.PeerRequestKey;
 import java.util.HashMap;
 import java.util.Objects;
 import net.tomp2p.peers.PeerAddress;
@@ -37,53 +38,5 @@ public class PeerRequestManager
     public void remove(PeerAddress pa, NodeFileInfo info)
     {
         requests.remove(new PeerRequestKey(pa, info));
-    }
-    
-    private class PeerRequestKey
-    {
-        private PeerAddress requester;
-        private String filehash;
-
-        public PeerRequestKey(PeerAddress requester, NodeFileInfo nodeFileInfo)
-        {
-            this.requester = requester;
-            this.filehash = nodeFileInfo.hash;
-        }
-
-        @Override
-        public int hashCode()
-        {
-            int hash = 7;
-            hash = 17 * hash + Objects.hashCode(this.requester);
-            hash = 17 * hash + Objects.hashCode(this.filehash);
-            return hash;
-        }
-
-        @Override
-        public boolean equals(Object obj)
-        {
-            if (this == obj)
-            {
-                return true;
-            }
-            if (obj == null)
-            {
-                return false;
-            }
-            if (getClass() != obj.getClass())
-            {
-                return false;
-            }
-            final PeerRequestKey other = (PeerRequestKey) obj;
-            if (!Objects.equals(this.filehash, other.filehash))
-            {
-                return false;
-            }
-            if (!Objects.equals(this.requester, other.requester))
-            {
-                return false;
-            }
-            return true;
-        }
     }
 }

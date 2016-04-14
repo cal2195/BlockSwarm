@@ -9,6 +9,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -223,6 +224,16 @@ public class FileDatabase
             });
         }
         return null;
+    }
+    
+    public HashMap<String, NodeFileInfo> getAllFileInfo()
+    {
+        HashMap<String, NodeFileInfo> fileHashMap = new HashMap<>();
+        for (String filehash : getAllFileHashes())
+        {
+            fileHashMap.put(filehash, getFileInfo(filehash));
+        }
+        return fileHashMap;
     }
 
     private void setup()

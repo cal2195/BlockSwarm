@@ -1,6 +1,7 @@
 package blockswarm.info;
 
 import java.util.BitSet;
+import java.util.Random;
 
 /**
  *
@@ -8,7 +9,7 @@ import java.util.BitSet;
  */
 public class ClusterFileInfo
 {
-
+    Random random = new Random();
     public final String hash;
     int[] blockCount;
 
@@ -48,7 +49,8 @@ public class ClusterFileInfo
     {
         BitSet blocks = new BitSet(blockCount.length);
         int found = 0;
-        for (int i = 0; i < blockCount.length && found++ < limit; i++)
+        int checked = 0;
+        for (int i = random.nextInt(blockCount.length); checked++ < blockCount.length && found++ < limit; i = (i+1) % blockCount.length)
         {
             if (blockCount[i] != 0 && blockCount[i] < minimum)
             {

@@ -3,6 +3,7 @@ package blockswarm.database;
 import blockswarm.info.ClusterFileInfo;
 import blockswarm.info.NodeFileInfo;
 import blockswarm.network.cluster.Node;
+import blockswarm.network.cluster.PeerRequestKey;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -55,7 +56,7 @@ public class PeerDatabase
 
     public double getAvailability(String filehash)
     {
-        HashMap<PeerAddress, NodeFileInfo> nodes = getFileInfo(filehash);
+        HashMap<PeerRequestKey, NodeFileInfo> nodes = getFileInfo(filehash);
         int totalBlocks = node.getDatabase().getFiles().getTotalBlocks(filehash);
         NodeFileInfo clusterFileInfo = new NodeFileInfo(filehash, totalBlocks);
         if (nodes == null)
@@ -78,7 +79,7 @@ public class PeerDatabase
     public ClusterFileInfo getClusterFileInfo(String filehash)
     {
         int totalBlocks = node.getDatabase().getFiles().getTotalBlocks(filehash);
-        HashMap<PeerAddress, NodeFileInfo> nodes = getFileInfo(filehash);
+        HashMap<PeerRequestKey, NodeFileInfo> nodes = getFileInfo(filehash);
         ClusterFileInfo clusterFileInfo = new ClusterFileInfo(filehash, totalBlocks);
         if (nodes == null)
         {
@@ -93,9 +94,9 @@ public class PeerDatabase
         return clusterFileInfo;
     }
 
-    public HashMap<PeerAddress, NodeFileInfo> getFileInfo(String filehash)
+    public HashMap<PeerRequestKey, NodeFileInfo> getFileInfo(String filehash)
     {
-        HashMap<PeerAddress, NodeFileInfo> nodes = new HashMap<>();
+        HashMap<PeerRequestKey, NodeFileInfo> nodes = new HashMap<>();
         String sql = "SELECT * FROM peers "
                 + "WHERE file_hash = ?";
         try (PreparedStatement stmt = conn.prepareStatement(sql))
@@ -104,7 +105,7 @@ public class PeerDatabase
             ResultSet resultSet = stmt.executeQuery();
             while (resultSet.next())
             {
-                nodes.put((PeerAddress) resultSet.getObject("peer_address"), (NodeFileInfo) resultSet.getObject("file_info"));
+                nodes.put(new PeerRequestKey((PeerAddress) resultSet.getObject("peer_address"), (NodeFileInfo) resultSet.getObject("file_info")), (NodeFileInfo) resultSet.getObject("file_info"));
             }
             return nodes;
         } catch (SQLException ex)
@@ -118,13 +119,13 @@ public class PeerDatabase
         return null;
     }
 
-    public HashMap<PeerAddress, NodeFileInfo> getDownload(String filehash)
+    public HashMap<PeerRequestKey, NodeFileInfo> getDownload(String filehash)
     {
-        HashMap<PeerAddress, NodeFileInfo> nodes = getFileInfo(filehash);
+        HashMap<PeerRequestKey, NodeFileInfo> nodes = getFileInfo(filehash);
         NodeFileInfo found = node.getDatabase().getFiles().getFileInfo(filehash);
-        List<Map.Entry<PeerAddress, NodeFileInfo>> list = new ArrayList<>(nodes.entrySet());
+        List<Map.Entry<PeerRequestKey, NodeFileInfo>> list = new ArrayList<>(nodes.entrySet());
         Collections.shuffle(list);
-        for (Map.Entry<PeerAddress, NodeFileInfo> entry : list)
+        for (Map.Entry<PeerRequestKey, NodeFileInfo> entry : list)
         {
             NodeFileInfo peerfile = entry.getValue();
             peerfile.blocks.andNot(found.blocks);
@@ -140,17 +141,17 @@ public class PeerDatabase
         return nodes;
     }
     
-    public HashMap<PeerAddress, NodeFileInfo> getDownload(NodeFileInfo toCache)
+    public HashMap<PeerRequestKey, NodeFileInfo> getDownload(NodeFileInfo toCache)
     {
-        HashMap<PeerAddress, NodeFileInfo> nodes = getFileInfo(toCache.hash);
+        HashMap<PeerRequestKey, NodeFileInfo> nodes = getFileInfo(toCache.hash);
         NodeFileInfo have = node.getDatabase().getFiles().getFileInfo(toCache.hash);
         System.out.println("I have this " + have.blocks.toString());
         toCache.blocks.andNot(have.blocks);
         System.out.println("I will ask for " + toCache.blocks.toString());
         toCache.blocks.flip(0, node.getDatabase().getFiles().getTotalBlocks(toCache.hash));
-        List<Map.Entry<PeerAddress, NodeFileInfo>> list = new ArrayList<>(nodes.entrySet());
+        List<Map.Entry<PeerRequestKey, NodeFileInfo>> list = new ArrayList<>(nodes.entrySet());
         Collections.shuffle(list);
-        for (Map.Entry<PeerAddress, NodeFileInfo> entry : list)
+        for (Map.Entry<PeerRequestKey, NodeFileInfo> entry : list)
         {
             NodeFileInfo peerfile = entry.getValue();
             peerfile.blocks.andNot(toCache.blocks);

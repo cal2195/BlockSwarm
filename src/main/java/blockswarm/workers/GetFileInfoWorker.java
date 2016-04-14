@@ -6,6 +6,7 @@ import blockswarm.network.cluster.Node;
 import blockswarm.network.packets.FileInfoPacket;
 import blockswarm.network.packets.FileListPacket;
 import java.util.ArrayList;
+import java.util.HashMap;
 import net.tomp2p.peers.PeerAddress;
 
 /**
@@ -14,13 +15,11 @@ import net.tomp2p.peers.PeerAddress;
  */
 public class GetFileInfoWorker extends Worker implements Runnable
 {
-    final String filehash;
     final PeerAddress requester;
     Node node;
 
-    public GetFileInfoWorker(String filehash, PeerAddress requester, Node node)
+    public GetFileInfoWorker(PeerAddress requester, Node node)
     {
-        this.filehash = filehash;
         this.requester = requester;
         this.node = node;
     }
@@ -34,7 +33,7 @@ public class GetFileInfoWorker extends Worker implements Runnable
     @Override
     public void run()
     {
-        NodeFileInfo info = node.getDatabase().getFiles().getFileInfo(filehash);
-        node.send(requester, new FileInfoPacket(info));
+        HashMap<String, NodeFileInfo> all = node.getDatabase().getFiles().getAllFileInfo();
+        node.send(requester, new FileInfoPacket(all));
     }
 }

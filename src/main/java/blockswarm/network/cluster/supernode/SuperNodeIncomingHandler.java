@@ -1,4 +1,4 @@
-package blockswarm.network.cluster;
+package blockswarm.network.cluster.supernode;
 
 import blockswarm.workers.FileEntryWorker;
 import blockswarm.workers.FileListWorker;
@@ -57,11 +57,6 @@ public class SuperNodeIncomingHandler implements ObjectDataReply
         {
             LOG.fine("Received a file info packet!");
             node.getWorkerPool().addWorker(new PutFileInfoWorker(pa, ((FileInfoPacket) packet).info, node));
-        }
-        else if (packet instanceof FileInfoRequestPacket)
-        {
-            LOG.fine("Received a file info request packet!");
-            node.getWorkerPool().addWorker(new GetFileInfoWorker(((FileInfoRequestPacket) packet).filehash, pa, node));
         }
         return null;
     }

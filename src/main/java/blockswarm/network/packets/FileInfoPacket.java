@@ -2,6 +2,7 @@ package blockswarm.network.packets;
 
 import blockswarm.info.NodeFileInfo;
 import java.io.Serializable;
+import java.util.HashMap;
 
 /**
  *
@@ -9,9 +10,9 @@ import java.io.Serializable;
  */
 public class FileInfoPacket implements Serializable
 {
-    public final NodeFileInfo info;
+    public final HashMap<String, NodeFileInfo> info;
 
-    public FileInfoPacket(NodeFileInfo info)
+    public FileInfoPacket(HashMap<String, NodeFileInfo> info)
     {
         this.info = info;
     }

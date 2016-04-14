@@ -2,7 +2,7 @@ package blockswarm;
 
 import blockswarm.files.FileHandler;
 import blockswarm.network.cluster.Node;
-import blockswarm.network.cluster.SuperNode;
+import blockswarm.network.cluster.supernode.SuperNode;
 import java.io.File;
 import java.util.logging.ConsoleHandler;
 import java.util.logging.Handler;

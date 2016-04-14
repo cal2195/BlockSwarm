@@ -38,16 +38,15 @@ public class Cluster
     public void initialise()
     {
         collectFileLists();
-        askAboutAllFiles();
     }
 
     public void downloadFile(String filehash)
     {
-        HashMap<PeerAddress, NodeFileInfo> peers = node.getDatabase().getPeers().getDownload(filehash);
-        for (PeerAddress pa : peers.keySet())
+        HashMap<PeerRequestKey, NodeFileInfo> peers = node.getDatabase().getPeers().getDownload(filehash);
+        for (PeerRequestKey pa : peers.keySet())
         {
-            LOG.fine("Asking " + pa.inetAddress().getHostAddress() + " for " + peers.get(pa).blocks.toString());
-            node.send(pa, new BlockRequestPacket(peers.get(pa)));
+            LOG.fine("Asking " + pa.requester.inetAddress().getHostAddress() + " for " + peers.get(pa).blocks.toString());
+            node.send(pa.requester, new BlockRequestPacket(peers.get(pa)));
         }
 //        for (PeerAddress pa : node.peer.peerBean().peerMap().all())
 //        {
@@ -92,12 +91,12 @@ public class Cluster
         download(toCache);
     }
 
-    public void sendRequests(HashMap<PeerAddress, NodeFileInfo> requests)
+    public void sendRequests(HashMap<PeerRequestKey, NodeFileInfo> requests)
     {
-        for (PeerAddress pa : requests.keySet())
+        for (PeerRequestKey pa : requests.keySet())
         {
             LOG.fine("Requesting: " + requests.get(pa).blocks.toString());
-            node.send(pa, new BlockRequestPacket(requests.get(pa)));
+            node.send(pa.requester, new BlockRequestPacket(requests.get(pa)));
         }
     }
 
@@ -129,26 +128,6 @@ public class Cluster
                 }
             }
             node.getWorkerPool().addWorker(new RequestWorker(peer, upload, node));
-        }
-    }
-
-    public void requestInfoAbout(String filehash)
-    {
-        for (PeerAddress pa : node.peer.peerBean().peerMap().all())
-        {
-            LOG.log(Level.FINER, "Asking {0} about {1}!", new Object[]
-            {
-                pa, filehash
-            });
-            node.send(pa, new FileInfoRequestPacket(filehash));
-        }
-    }
-
-    public void askAboutAllFiles()
-    {
-        for (FileEntry file : node.getDatabase().getFiles().getAllFiles())
-        {
-            requestInfoAbout(file.filehash);
         }
     }
 
