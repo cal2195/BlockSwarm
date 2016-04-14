@@ -140,7 +140,7 @@ public class PeerDatabase
         }
         return nodes;
     }
-    
+
     public HashMap<PeerRequestKey, NodeFileInfo> getDownload(NodeFileInfo toCache)
     {
         HashMap<PeerRequestKey, NodeFileInfo> nodes = getFileInfo(toCache.hash);
@@ -167,6 +167,18 @@ public class PeerDatabase
         return nodes;
     }
 
+    public void clear()
+    {
+        try (Statement stmt = conn.createStatement())
+        {
+            String sql = "DELETE FROM peers";
+            stmt.executeUpdate(sql);
+        } catch (SQLException ex)
+        {
+            Logger.getLogger(PeerDatabase.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
     private void setup()
     {
         try
@@ -188,11 +200,7 @@ public class PeerDatabase
                 }
             }
             //For now!
-            try (Statement stmt = conn.createStatement())
-            {
-                String sql = "DELETE FROM peers";
-                stmt.executeUpdate(sql);
-            }
+            clear();
         } catch (SQLException ex)
         {
             Logger.getLogger(Database.class.getName()).log(Level.SEVERE, null, ex);

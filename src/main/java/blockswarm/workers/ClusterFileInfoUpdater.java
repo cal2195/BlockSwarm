@@ -14,6 +14,7 @@ public class ClusterFileInfoUpdater extends Worker implements Runnable
 {
 
     Node node;
+    int time = 0;
 
     public ClusterFileInfoUpdater(Node node)
     {
@@ -31,6 +32,10 @@ public class ClusterFileInfoUpdater extends Worker implements Runnable
     {
         try
         {
+            if (time++ % 6 == 0)
+            {
+                node.getDatabase().getPeers().clear();
+            }
             for (String filehash : node.getDatabase().getFiles().getAllFileHashes())
             {
                 HashMap<PeerAddress, NodeFileInfo> clusterInfo = node.getDHT().getClusterFileInfo(filehash);

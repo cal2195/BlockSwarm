@@ -50,11 +50,12 @@ public class ClusterFileInfo
         BitSet blocks = new BitSet(blockCount.length);
         int found = 0;
         int checked = 0;
-        for (int i = random.nextInt(blockCount.length); checked++ < blockCount.length && found++ < limit; i = (i+1) % blockCount.length)
+        for (int i = random.nextInt(blockCount.length); checked++ < blockCount.length && found < limit; i = (i+1) % blockCount.length)
         {
             if (blockCount[i] != 0 && blockCount[i] < minimum)
             {
                 blocks.set(i);
+                found++;
             }
         }
         return new NodeFileInfo(hash, blocks);
