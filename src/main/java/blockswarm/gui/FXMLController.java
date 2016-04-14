@@ -15,6 +15,7 @@ import java.util.ResourceBundle;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.SelectionMode;
@@ -23,6 +24,9 @@ import javafx.scene.control.TablePosition;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.input.DragEvent;
+import javafx.scene.input.Dragboard;
+import javafx.scene.input.TransferMode;
 import javax.swing.JFileChooser;
 
 public class FXMLController implements Initializable
@@ -130,7 +134,8 @@ public class FXMLController implements Initializable
     public void initialize(URL url, ResourceBundle rb)
     {
         searchTable.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
-        searchTable.getSelectionModel().getSelectedIndices().addListener(new ListChangeListener<Integer>() {
+        searchTable.getSelectionModel().getSelectedIndices().addListener(new ListChangeListener<Integer>()
+        {
             @Override
             public void onChanged(ListChangeListener.Change<? extends Integer> c)
             {
@@ -143,6 +148,42 @@ public class FXMLController implements Initializable
                 {
                     selection.clear(row);
                 }
+            }
+        });
+        searchTable.setOnDragOver(new EventHandler<DragEvent>()
+        {
+            @Override
+            public void handle(DragEvent event)
+            {
+                Dragboard db = event.getDragboard();
+                if (db.hasFiles())
+                {
+                    event.acceptTransferModes(TransferMode.COPY);
+                } else
+                {
+                    event.consume();
+                }
+            }
+        });
+        searchTable.setOnDragDropped(new EventHandler<DragEvent>()
+        {
+            @Override
+            public void handle(DragEvent event)
+            {
+                Dragboard db = event.getDragboard();
+                boolean success = false;
+                if (db.hasFiles())
+                {
+                    FileHandler fileHandler = new FileHandler(node);
+                    success = true;
+                    for (File file : db.getFiles())
+                    {
+                        System.out.println("Uploading " + file.getName());
+                        fileHandler.uploadFile(file);
+                    }
+                }
+                event.setDropCompleted(success);
+                event.consume();
             }
         });
         for (TableColumn column : searchTable.getColumns())
