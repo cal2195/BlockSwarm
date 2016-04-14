@@ -31,21 +31,10 @@ public class DHT
         dht = new PeerBuilderDHT(peer).start();
     }
 
-    public HashMap<PeerAddress, NodeFileInfo> getClusterFileInfo(String filehash)
+    public FutureGet getClusterFileInfo(String filehash)
     {
         FutureGet futureGet = dht.get(Number160.createHash(filehash)).start();
-        futureGet.awaitUninterruptibly();
-        try
-        {
-            return (HashMap<PeerAddress, NodeFileInfo>) futureGet.data().object();
-        } catch (ClassNotFoundException ex)
-        {
-            Logger.getLogger(DHT.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (IOException ex)
-        {
-            Logger.getLogger(DHT.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        return null;
+        return futureGet;
     }
     
     public void putClusterFileInfo(String filehash, HashMap<PeerAddress, NodeFileInfo> hashmap)
