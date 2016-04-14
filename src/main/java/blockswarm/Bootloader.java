@@ -15,19 +15,23 @@ import java.util.logging.Logger;
  */
 public class Bootloader
 {
-    public static final String VERSION =    "prealpha-0.03";
-    public static final String RELEASE =    "He's made of staples an broken bones\n" +
-                                            "Bruises from chapters\n" +
-                                            "Stories untold\n" +
-                                            "If I had a wish\n" +
-                                            "It'd be make him whole\n" +
-                                            "He's barely alive\n" +
-                                            "So is his soul";
+
+    public static final String VERSION = "prealpha-0.03";
+    public static final String RELEASE = "He's made of staples an broken bones\n"
+            + "Bruises from chapters\n"
+            + "Stories untold\n"
+            + "If I had a wish\n"
+            + "It'd be make him whole\n"
+            + "He's barely alive\n"
+            + "So is his soul";
 
     public static void main(String[] args)
     {
-        configureLogger(Level.FINER);
+        configureLogger(Level.FINE);
         Logger.getLogger("javafx").setLevel(Level.OFF);
+        Logger.getLogger("java.awt").setLevel(Level.OFF);
+        Logger.getLogger("sun.awt").setLevel(Level.OFF);
+        Logger.getLogger("javax.swing").setLevel(Level.OFF);
         //Here we go!
         if (args.length == 0)
         {
