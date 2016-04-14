@@ -1,6 +1,5 @@
 package blockswarm.gui;
 
-import blockswarm.database.Database;
 import blockswarm.database.entries.FileEntry;
 import blockswarm.files.FileHandler;
 import blockswarm.info.NodeFileInfo;
@@ -8,14 +7,10 @@ import blockswarm.network.cluster.Node;
 import java.io.File;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.ResourceBundle;
-import javafx.application.Application;
 import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.TableColumn;
@@ -42,7 +37,9 @@ public class FXMLController implements Initializable
             NodeFileInfo current = node.getDatabase().getFiles().getFileInfo(file.filehash);
             list.add(new SearchFileRow(file.filename, file.filehash, current.blocks.cardinality() + "/" + file.totalBlocks, "" + file.availability, "0", "0"));
         }
-        searchTable.setItems(FXCollections.observableList(list));
+        searchTable.getItems().clear();
+        searchTable.getItems().addAll(FXCollections.observableList(list));
+        searchTable.sort();
     }
 
     public void addDownloadFiles(ArrayList<NodeFileInfo> files)
@@ -54,7 +51,9 @@ public class FXMLController implements Initializable
             FileEntry info = node.getDatabase().getFiles().getFile(file.hash);
             list.add(new DownloadFileRow(info.filename, info.filehash, current.blocks.cardinality() + "/" + info.totalBlocks, "" + info.availability, "0", "0"));
         }
-        downloadTable.setItems(FXCollections.observableList(list));
+        downloadTable.getItems().clear();
+        downloadTable.getItems().addAll(FXCollections.observableList(list));
+        downloadTable.sort();
     }
 
     @FXML
@@ -71,7 +70,7 @@ public class FXMLController implements Initializable
         addDownloadFiles(node.getDatabase().getDownloads().getAllDownloads());
         updateStats();
     }
-    
+
     public void updateStats()
     {
         try
