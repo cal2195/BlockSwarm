@@ -7,13 +7,19 @@ import blockswarm.network.cluster.Node;
 import java.io.File;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.BitSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.ResourceBundle;
 import javafx.collections.FXCollections;
+import javafx.collections.ListChangeListener;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.SelectionMode;
 import javafx.scene.control.TableColumn;
+import javafx.scene.control.TablePosition;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.cell.PropertyValueFactory;
@@ -26,6 +32,7 @@ public class FXMLController implements Initializable
     TableView<Map> searchTable, downloadTable;
     @FXML
     TextArea statTextArea;
+    BitSet selection = new BitSet();
 
     Node node;
 
@@ -37,9 +44,14 @@ public class FXMLController implements Initializable
             NodeFileInfo current = node.getDatabase().getFiles().getFileInfo(file.filehash);
             list.add(new SearchFileRow(file.filename, file.filehash, current.blocks.cardinality() + "/" + file.totalBlocks, "" + file.availability, "0", "0"));
         }
+        BitSet toSelect = (BitSet) selection.clone();
         searchTable.getItems().clear();
         searchTable.getItems().addAll(FXCollections.observableList(list));
         searchTable.sort();
+        for (int i = toSelect.nextSetBit(0); i > -1; i = toSelect.nextSetBit(i + 1))
+        {
+            searchTable.getSelectionModel().select(i);
+        }
     }
 
     public void addDownloadFiles(ArrayList<NodeFileInfo> files)
@@ -107,13 +119,32 @@ public class FXMLController implements Initializable
     @FXML
     public void download()
     {
-        SearchFileRow file = (SearchFileRow) searchTable.getSelectionModel().getSelectedItem();
-        node.getCluster().queueForDownload(file.getSearchFilehash());
+        for (Iterator<Map> it = searchTable.getSelectionModel().getSelectedItems().iterator(); it.hasNext();)
+        {
+            SearchFileRow file = (SearchFileRow) it.next();
+            node.getCluster().queueForDownload(file.getSearchFilehash());
+        }
     }
 
     @Override
     public void initialize(URL url, ResourceBundle rb)
     {
+        searchTable.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
+        searchTable.getSelectionModel().getSelectedIndices().addListener(new ListChangeListener<Integer>() {
+            @Override
+            public void onChanged(ListChangeListener.Change<? extends Integer> c)
+            {
+                c.next();
+                for (Integer row : c.getAddedSubList())
+                {
+                    selection.set(row);
+                }
+                for (Integer row : c.getRemoved())
+                {
+                    selection.clear(row);
+                }
+            }
+        });
         for (TableColumn column : searchTable.getColumns())
         {
             column.setCellValueFactory(new PropertyValueFactory(column.getId()));
