@@ -39,7 +39,7 @@ public class Node
     Tracker tracker;
     DHT dht;
     Database database;
-    Cluster cluster;
+    public Cluster cluster;
     FXMLController gui;
     PeerRequestManager peerRequestManager;
 
