@@ -9,6 +9,7 @@ import java.util.Random;
  */
 public class ClusterFileInfo
 {
+
     Random random = new Random();
     public final String hash;
     int[] blockCount;
@@ -47,10 +48,14 @@ public class ClusterFileInfo
 
     public NodeFileInfo getBlocksUnder(int minimum, int limit)
     {
+        if (limit == 0)
+        {
+            limit = 1;
+        }
         BitSet blocks = new BitSet(blockCount.length);
         int found = 0;
         int checked = 0;
-        for (int i = random.nextInt(blockCount.length); checked++ < blockCount.length && found < limit; i = (i+1) % blockCount.length)
+        for (int i = random.nextInt(blockCount.length); checked++ < blockCount.length && found < limit; i = (i + 1) % blockCount.length)
         {
             if (blockCount[i] != 0 && blockCount[i] < minimum)
             {

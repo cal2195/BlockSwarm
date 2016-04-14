@@ -1,7 +1,11 @@
 package blockswarm.network.cluster.supernode;
 
 import blockswarm.database.Database;
+import blockswarm.network.cluster.Cluster;
 import blockswarm.network.cluster.Node;
+import blockswarm.workers.CacheManager;
+import blockswarm.workers.ClusterFileInfoUpdater;
+import blockswarm.workers.PeerRequestManager;
 import blockswarm.workers.supernode.ClusterFileInfoWorker;
 import java.io.IOException;
 import java.util.Random;
@@ -66,6 +70,12 @@ public class SuperNode extends Node
     public void setupClusterInfo()
     {
         getWorkerPool().addRepeatedWorker(new ClusterFileInfoWorker(this), 10);
+    }
+    
+    @Override
+    protected void setupCluster()
+    {
+        cluster = new Cluster(this);
     }
 
     public void serve()
