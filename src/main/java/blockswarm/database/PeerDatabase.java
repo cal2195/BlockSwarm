@@ -39,7 +39,7 @@ public class PeerDatabase
 
     public boolean putFileInfo(PeerAddress pa, String filehash, NodeFileInfo info)
     {
-        String sql = "MERGE into peers (peer_address, file_hash, file_info) KEY(peer_address, file_hash) VALUES (?,?,?)";
+        String sql = "MERGE into peers (peer_address, file_hash, file_info, date) KEY(peer_address, file_hash) VALUES (?,?,?,NOW())";
         try (PreparedStatement stmt = conn.prepareStatement(sql))
         {
             stmt.setObject(1, pa);
@@ -98,7 +98,8 @@ public class PeerDatabase
     {
         HashMap<PeerRequestKey, NodeFileInfo> nodes = new HashMap<>();
         String sql = "SELECT * FROM peers "
-                + "WHERE file_hash = ?";
+                + "WHERE file_hash = ? "
+                + "AND date > TIMESTAMPADD(minute, -1, NOW())";
         try (PreparedStatement stmt = conn.prepareStatement(sql))
         {
             stmt.setString(1, filehash);
@@ -192,6 +193,7 @@ public class PeerDatabase
                             + "(peer_address OTHER,"
                             + " file_hash CHAR(40) not NULL, "
                             + " file_info OTHER,"
+                            + " date TIMESTAMP, "
                             + " `id` INT NOT NULL AUTO_INCREMENT PRIMARY KEY,"
                             + " PRIMARY KEY ( id ))";
                     stmt.executeUpdate(sql);

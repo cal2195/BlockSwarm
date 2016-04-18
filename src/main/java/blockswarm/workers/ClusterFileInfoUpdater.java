@@ -35,10 +35,6 @@ public class ClusterFileInfoUpdater extends Worker implements Runnable
     {
         try
         {
-            if (time++ % 6 == 0)
-            {
-                node.getDatabase().getPeers().clear();
-            }
             for (String filehash : node.getDatabase().getFiles().getAllFileHashes())
             {
                 FutureGet futureGet = node.getDHT().getClusterFileInfo(filehash);
