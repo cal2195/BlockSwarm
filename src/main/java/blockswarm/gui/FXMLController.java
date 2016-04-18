@@ -23,10 +23,16 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TablePosition;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextArea;
+import javafx.scene.control.TextField;
+import javafx.scene.control.TreeCell;
+import javafx.scene.control.TreeItem;
+import javafx.scene.control.TreeView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.DragEvent;
 import javafx.scene.input.Dragboard;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.input.TransferMode;
+import javafx.util.Callback;
 import javax.swing.JFileChooser;
 
 public class FXMLController implements Initializable
@@ -36,7 +42,13 @@ public class FXMLController implements Initializable
     TableView<Map> searchTable, downloadTable;
     @FXML
     TextArea statTextArea;
+    @FXML
+    TextField searchField;
+    @FXML
+    TreeView searchTree;
     BitSet selection = new BitSet();
+
+    ArrayList<String> searchTerms = new ArrayList<>();
 
     Node node;
 
@@ -75,9 +87,13 @@ public class FXMLController implements Initializable
     @FXML
     public void updateSearch()
     {
-        ArrayList<FileEntry> files = new ArrayList<>();
-        files.add(new FileEntry("test", "test", 1000, -1));
-        addSearchFiles(files);
+        String searchText = searchField.getText();
+        TreeItem search = new TreeItem(searchText);
+        search.setExpanded(true);
+
+        TreeItem current = (TreeItem) searchTree.getSelectionModel().getSelectedItem();
+        current.getChildren().add(search);
+        searchTree.getSelectionModel().select(search);
     }
 
     public void updateFileList()
@@ -194,5 +210,16 @@ public class FXMLController implements Initializable
         {
             column.setCellValueFactory(new PropertyValueFactory(column.getId()));
         }
+
+        TreeItem root = new TreeItem("*");
+        root.setExpanded(true);
+        searchTree.setRoot(root);
+        searchTree.getSelectionModel().select(0);
+        searchTree.setCellFactory(new Callback<TreeView<String>,TreeCell<String>>(){
+            @Override
+            public TreeCell<String> call(TreeView<String> p) {
+                return new EditableTreeItem();
+            }
+        });
     }
 }

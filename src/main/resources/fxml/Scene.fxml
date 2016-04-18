@@ -53,12 +53,12 @@
                                     <ToolBar nodeOrientation="RIGHT_TO_LEFT" prefHeight="40.0" prefWidth="200.0" BorderPane.alignment="CENTER">
                                       <items>
                                         <Button mnemonicParsing="false" onAction="#updateSearch" text="Search" />
-                                          <TextField nodeOrientation="LEFT_TO_RIGHT" />
+                                          <TextField fx:id="searchField" nodeOrientation="LEFT_TO_RIGHT" onAction="#updateSearch" />
                                       </items>
                                     </ToolBar>
                                  </top>
                                  <left>
-                                    <TreeView prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER" />
+                                    <TreeView fx:id="searchTree" editable="true" prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER" />
                                  </left>
                                  <center>
                                     <TableView fx:id="searchTable" prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
