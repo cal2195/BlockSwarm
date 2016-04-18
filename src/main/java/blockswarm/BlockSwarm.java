@@ -44,7 +44,7 @@ public class BlockSwarm extends Application
         Scene scene = new Scene(root);
         scene.getStylesheets().add("/styles/Styles.css");
 
-        stage.setTitle("BlockSwarm");
+        stage.setTitle("BlockSwarm " + Bootloader.VERSION);
         stage.setScene(scene);
         stage.show();
 
