@@ -56,24 +56,7 @@ public class PeerDatabase
 
     public double getAvailability(String filehash)
     {
-        HashMap<PeerRequestKey, NodeFileInfo> nodes = getFileInfo(filehash);
-        int totalBlocks = node.getDatabase().getFiles().getTotalBlocks(filehash);
-        NodeFileInfo clusterFileInfo = new NodeFileInfo(filehash, totalBlocks);
-        if (nodes == null)
-        {
-            return -1;
-        }
-        LOGGER.finer("Found " + nodes.size() + " who have this file!");
-        for (NodeFileInfo nodeFile : nodes.values())
-        {
-            LOGGER.finer(nodeFile.blocks.toString());
-            clusterFileInfo.blocks.or(nodeFile.blocks);
-        }
-        LOGGER.log(Level.FINER, "Found {0} out of {1}", new Object[]
-        {
-            clusterFileInfo.blocks.cardinality(), totalBlocks
-        });
-        return (double) clusterFileInfo.blocks.cardinality() / (double) totalBlocks;
+        return getClusterFileInfo(filehash).getAvailability();
     }
 
     public ClusterFileInfo getClusterFileInfo(String filehash)
@@ -85,12 +68,12 @@ public class PeerDatabase
         {
             return null;
         }
-        LOGGER.fine("Found " + nodes.size() + " who have this file!");
         for (NodeFileInfo nodeFile : nodes.values())
         {
             LOGGER.finer(nodeFile.blocks.toString());
             clusterFileInfo.add(nodeFile);
         }
+        LOGGER.fine(clusterFileInfo.toString());
         return clusterFileInfo;
     }
 

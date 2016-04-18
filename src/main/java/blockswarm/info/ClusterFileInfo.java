@@ -1,5 +1,6 @@
 package blockswarm.info;
 
+import java.util.Arrays;
 import java.util.BitSet;
 import java.util.Random;
 
@@ -33,6 +34,38 @@ public class ClusterFileInfo
         return blockCount[block];
     }
 
+    public int getTotalBlocksOf(int count)
+    {
+        int total = 0;
+        for (int i = 0; i < blockCount.length; i++)
+        {
+            if (blockCount[i] == count)
+            {
+                total++;
+            }
+        }
+        return total;
+    }
+
+    public int getLeastAvailableBlockCount()
+    {
+        int least = Integer.MAX_VALUE;
+        for (int i = 0; i < blockCount.length; i++)
+        {
+            if (blockCount[i] < least)
+            {
+                least = blockCount[i];
+            }
+        }
+        return least;
+    }
+
+    public double getAvailability()
+    {
+        int least = getLeastAvailableBlockCount();
+        return (double) least + ((double)(blockCount.length - getTotalBlocksOf(least)) / blockCount.length);
+    }
+
     public NodeFileInfo getBlocksUnder(int minimum)
     {
         BitSet blocks = new BitSet(blockCount.length);
@@ -64,5 +97,11 @@ public class ClusterFileInfo
             }
         }
         return new NodeFileInfo(hash, blocks);
+    }
+
+    @Override
+    public String toString()
+    {
+        return "ClusterFileInfo{" + "hash=" + hash + ", blockCount=" + Arrays.toString(blockCount) + '}';
     }
 }
