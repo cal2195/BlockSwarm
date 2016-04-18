@@ -15,6 +15,7 @@ import java.util.Collection;
 import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import net.tomp2p.connection.ChannelServerConfiguration;
 import net.tomp2p.futures.FutureBootstrap;
 import net.tomp2p.futures.FutureDirect;
 import net.tomp2p.futures.FutureDiscover;
@@ -163,7 +164,7 @@ public class Node
         try
         {
             Random r = new Random();
-            peer = new PeerBuilder(new Number160(r)).ports(44444).start();
+            peer = new PeerBuilder(new Number160(r)).channelServerConfiguration(PeerBuilder.createDefaultChannelServerConfiguration().connectionTimeoutTCPMillis(60 * 1000)).ports(44444).start();
             peer.objectDataReply(incomingHandler);
             InetAddress address = Inet4Address.getByName(supernode);
 
@@ -200,6 +201,6 @@ public class Node
 
     public FutureDirect send(PeerAddress pa, Object o)
     {
-        return peer.sendDirect(pa).object(o).start();
+        return peer.sendDirect(pa).connectionTimeoutTCPMillis(60 * 1000).object(o).start();
     }
 }

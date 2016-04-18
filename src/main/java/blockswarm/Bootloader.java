@@ -44,6 +44,11 @@ public class Bootloader
         {
             Node node = new Node();
             node.setupNode();
+            if (args.length > 1)
+            {
+                FileHandler fileHandler = new FileHandler(node);
+                fileHandler.watchFolder(new File(args[1]));
+            }
         } else if (args[0].equals("version"))
         {
             System.out.println("BlockSwarm " + VERSION);
