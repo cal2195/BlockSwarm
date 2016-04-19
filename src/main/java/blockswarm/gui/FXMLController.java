@@ -12,6 +12,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.ResourceBundle;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
@@ -94,11 +96,33 @@ public class FXMLController implements Initializable
         TreeItem current = (TreeItem) searchTree.getSelectionModel().getSelectedItem();
         current.getChildren().add(search);
         searchTree.getSelectionModel().select(search);
+        generateSearchTerms();
+    }
+
+    @FXML
+    public void generateSearchTerms()
+    {
+        TreeItem current = (TreeItem) searchTree.getSelectionModel().getSelectedItem();
+        searchTerms.clear();
+        if (current.getParent() != null)
+        {
+            searchTerms.add((String) current.getValue());
+            TreeItem parent = current;
+            while ((parent = parent.getParent()) != null)
+            {
+                if (!((String) parent.getValue()).equals("*"))
+                {
+                    searchTerms.add((String) parent.getValue());
+                }
+            }
+        }
+        System.out.println("Search Terms: " + searchTerms);
+        updateFileList();
     }
 
     public void updateFileList()
     {
-        addSearchFiles(node.getDatabase().getFiles().getAllFiles());
+        addSearchFiles(node.getDatabase().getFiles().searchFiles(searchTerms));
         addDownloadFiles(node.getDatabase().getDownloads().getAllDownloads());
         updateStats();
     }
@@ -215,10 +239,20 @@ public class FXMLController implements Initializable
         root.setExpanded(true);
         searchTree.setRoot(root);
         searchTree.getSelectionModel().select(0);
-        searchTree.setCellFactory(new Callback<TreeView<String>,TreeCell<String>>(){
+        searchTree.setCellFactory(new Callback<TreeView<String>, TreeCell<String>>()
+        {
             @Override
-            public TreeCell<String> call(TreeView<String> p) {
-                return new EditableTreeItem();
+            public TreeCell<String> call(TreeView<String> p)
+            {
+                return new EditableTreeItem(FXMLController.this);
+            }
+        });
+        searchTree.getSelectionModel().selectedItemProperty().addListener(new ChangeListener()
+        {
+            @Override
+            public void changed(ObservableValue observable, Object oldValue, Object newValue)
+            {
+                generateSearchTerms();
             }
         });
     }

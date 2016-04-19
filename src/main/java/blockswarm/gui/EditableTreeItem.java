@@ -15,6 +15,12 @@ public class EditableTreeItem extends TreeCell<String>
 {
 
     private TextField textField;
+    FXMLController controller;
+
+    public EditableTreeItem(FXMLController controller)
+    {
+        this.controller = controller;
+    }
 
     @Override
     public void startEdit()
@@ -75,6 +81,7 @@ public class EditableTreeItem extends TreeCell<String>
                 if (t.getCode() == KeyCode.ENTER)
                 {
                     commitEdit(textField.getText());
+                    controller.generateSearchTerms();
                 } else if (t.getCode() == KeyCode.ESCAPE)
                 {
                     cancelEdit();

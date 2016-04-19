@@ -141,7 +141,7 @@ public class FileDatabase
         }
         return null;
     }
-    
+
     public ArrayList<String> getAllFileHashes()
     {
         ArrayList<String> files = new ArrayList<>();
@@ -165,6 +165,30 @@ public class FileDatabase
     {
         ArrayList<FileEntry> files = new ArrayList<>();
         String sql = "SELECT * FROM files";
+        try (PreparedStatement stmt = conn.prepareStatement(sql))
+        {
+            ResultSet resultSet = stmt.executeQuery();
+            while (resultSet.next())
+            {
+                files.add(new FileEntry(resultSet.getString("file_hash"), resultSet.getString("file_name"), resultSet.getInt("total_blocks"), node.getDatabase().getPeers().getAvailability(resultSet.getString("file_hash"))));
+            }
+            return files;
+        } catch (SQLException ex)
+        {
+            LOGGER.log(Level.FINE, "Error generating file list!");
+        }
+        return null;
+    }
+
+    public ArrayList<FileEntry> searchFiles(ArrayList<String> searches)
+    {
+        ArrayList<FileEntry> files = new ArrayList<>();
+        String sql = "SELECT * FROM files";
+        for (int i = 0; i < searches.size(); i++)
+        {
+            sql += ((i == 0) ? " WHERE " : " AND ") + "LOWER(file_name) LIKE LOWER('%" + searches.get(i) + "%')";
+        }
+        System.out.println("Looking for " + sql);
         try (PreparedStatement stmt = conn.prepareStatement(sql))
         {
             ResultSet resultSet = stmt.executeQuery();
@@ -225,7 +249,7 @@ public class FileDatabase
         }
         return null;
     }
-    
+
     public HashMap<String, NodeFileInfo> getAllFileInfo()
     {
         HashMap<String, NodeFileInfo> fileHashMap = new HashMap<>();
