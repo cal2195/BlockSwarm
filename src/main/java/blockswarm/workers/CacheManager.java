@@ -46,20 +46,26 @@ public class CacheManager extends Worker implements Runnable
     @Override
     public void run()
     {
-        if (node.getDatabase().getCache().cacheSize() < Integer.parseInt(node.getDatabase().getSettings().get("cacheLimit", "2000")))
+        try
         {
-            node.getCluster().sendRequests(getCacheRequests());
-        }
-        ArrayList<NodeFileInfo> toDownload = node.getDatabase().getDownloads().getAllDownloads();
-        for (NodeFileInfo download : toDownload)
-        {
-            if (node.getDatabase().getFiles().hasFullFile(download.hash))
+            if (node.getDatabase().getCache().cacheSize() < Integer.parseInt(node.getDatabase().getSettings().get("cacheLimit", "2000")))
             {
-                node.getWorkerPool().addWorker(new FileAssemblyWorker(download.hash, node));
-            } else
-            {
-                node.getCluster().downloadFile(download.hash);
+                node.getCluster().sendRequests(getCacheRequests());
             }
+            ArrayList<NodeFileInfo> toDownload = node.getDatabase().getDownloads().getAllDownloads();
+            for (NodeFileInfo download : toDownload)
+            {
+                if (node.getDatabase().getFiles().hasFullFile(download.hash))
+                {
+                    node.getWorkerPool().addWorker(new FileAssemblyWorker(download.hash, node));
+                } else
+                {
+                    node.getCluster().downloadFile(download.hash);
+                }
+            }
+        } catch (Exception e)
+        {
+            e.printStackTrace();
         }
     }
     private static final Logger LOG = Logger.getLogger(CacheManager.class.getName());

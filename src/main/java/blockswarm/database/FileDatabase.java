@@ -60,9 +60,12 @@ public class FileDatabase
 
     public void putAllFiles(ArrayList<FileEntry> files)
     {
-        for (FileEntry file : files)
+        if (files != null)
         {
-            putFile(file);
+            for (FileEntry file : files)
+            {
+                putFile(file);
+            }
         }
     }
 
