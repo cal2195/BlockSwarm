@@ -32,7 +32,7 @@ public class SendBlockWorker extends Worker implements Runnable
         if (worker.nodeFileInfo.blocks.get(blockID))
         {
             byte[] block = worker.node.getDatabase().getCache().getBlock(filehash, blockID);
-            if (worker.node.send(requester, new BlockPacket(filehash, blockID, block)).awaitUninterruptibly().isSuccess())
+            if (worker.node.send(requester, new BlockPacket(filehash, blockID, block)).isSuccess())
             {
                 worker.nodeFileInfo.blocks.clear(blockID);
             }

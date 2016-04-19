@@ -73,7 +73,7 @@ public class PeerDatabase
             LOGGER.finer(nodeFile.blocks.toString());
             clusterFileInfo.add(nodeFile);
         }
-        LOGGER.fine(clusterFileInfo.toString());
+        LOGGER.finer(clusterFileInfo.toString());
         return clusterFileInfo;
     }
 

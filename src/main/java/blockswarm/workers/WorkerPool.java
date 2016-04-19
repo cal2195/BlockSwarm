@@ -12,8 +12,8 @@ import java.util.concurrent.TimeUnit;
 public class WorkerPool
 {
     public PriorityBlockingQueue queue = new PriorityBlockingQueue();
-    ThreadPoolExecutor threadPool = new ThreadPoolExecutor(10, 10, 0, TimeUnit.DAYS, queue);
-    public ScheduledThreadPoolExecutor scheduledThreadPool = new ScheduledThreadPoolExecutor(10);
+    ThreadPoolExecutor threadPool = new ThreadPoolExecutor(20, 30, 0, TimeUnit.DAYS, queue);
+    public ScheduledThreadPoolExecutor scheduledThreadPool = new ScheduledThreadPoolExecutor(20);
     
     public void addWorker(Worker worker)
     {
