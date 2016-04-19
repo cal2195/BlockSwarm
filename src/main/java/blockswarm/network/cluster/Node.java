@@ -43,7 +43,9 @@ public class Node
     public Cluster cluster;
     FXMLController gui;
     PeerRequestManager peerRequestManager;
-
+    
+    int TIMEOUT = 60 * 1000;
+    
     public Node()
     {
         USING_GUI = false;
@@ -164,7 +166,7 @@ public class Node
         try
         {
             Random r = new Random();
-            peer = new PeerBuilder(new Number160(r)).channelServerConfiguration(PeerBuilder.createDefaultChannelServerConfiguration().connectionTimeoutTCPMillis(60 * 1000)).ports(44444).start();
+            peer = new PeerBuilder(new Number160(r)).channelServerConfiguration(PeerBuilder.createDefaultChannelServerConfiguration().connectionTimeoutTCPMillis(TIMEOUT).idleTCPMillis(TIMEOUT).idleUDPMillis(TIMEOUT)).ports(44444).start();
             peer.objectDataReply(incomingHandler);
             InetAddress address = Inet4Address.getByName(supernode);
 
@@ -201,6 +203,6 @@ public class Node
 
     public FutureDirect send(PeerAddress pa, Object o)
     {
-        return peer.sendDirect(pa).connectionTimeoutTCPMillis(60 * 1000).object(o).start();
+        return peer.sendDirect(pa).connectionTimeoutTCPMillis(60 * 1000).idleTCPMillis(TIMEOUT).idleUDPMillis(TIMEOUT).object(o).start();
     }
 }
