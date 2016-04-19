@@ -166,10 +166,9 @@ public class Node
         try
         {
             Random r = new Random();
-            peer = new PeerBuilder(new Number160(r)).channelServerConfiguration(PeerBuilder.createDefaultChannelServerConfiguration().connectionTimeoutTCPMillis(TIMEOUT).idleTCPMillis(TIMEOUT).idleUDPMillis(TIMEOUT)).ports(44444).start();
+            peer = new PeerBuilder(new Number160(r)).channelServerConfiguration(PeerBuilder.createDefaultChannelServerConfiguration().connectionTimeoutTCPMillis(TIMEOUT).idleTCPMillis(TIMEOUT).idleUDPMillis(TIMEOUT).heartBeatMillis(TIMEOUT)).ports(44444).start();
             peer.objectDataReply(incomingHandler);
             InetAddress address = Inet4Address.getByName(supernode);
-
             System.out.println("address visible to outside is " + peer.peerAddress());
 
             int masterPort = 44444;
@@ -203,6 +202,6 @@ public class Node
 
     public FutureDirect send(PeerAddress pa, Object o)
     {
-        return peer.sendDirect(pa).connectionTimeoutTCPMillis(60 * 1000).idleTCPMillis(TIMEOUT).idleUDPMillis(TIMEOUT).object(o).start();
+        return peer.sendDirect(pa).connectionTimeoutTCPMillis(TIMEOUT).idleTCPMillis(TIMEOUT).idleUDPMillis(TIMEOUT).object(o).start();
     }
 }

@@ -2,7 +2,9 @@ package blockswarm.workers;
 
 import blockswarm.info.NodeFileInfo;
 import blockswarm.network.cluster.Node;
+import java.io.IOException;
 import java.util.HashMap;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 import net.tomp2p.dht.FutureGet;
 import net.tomp2p.futures.BaseFuture;
@@ -38,23 +40,29 @@ public class ClusterFileInfoUpdater extends Worker implements Runnable
             for (String filehash : node.getDatabase().getFiles().getAllFileHashes())
             {
                 FutureGet futureGet = node.getDHT().getClusterFileInfo(filehash);
-                futureGet.addListener(new BaseFutureAdapter<BaseFuture>()
+                futureGet.addListener(new BaseFutureAdapter<FutureGet>()
                 {
                     @Override
-                    public void operationComplete(BaseFuture f) throws Exception
+                    public void operationComplete(FutureGet f)
                     {
-                        if (f.isSuccess())
+                        try
                         {
-                            HashMap<PeerAddress, NodeFileInfo> clusterInfo = (HashMap<PeerAddress, NodeFileInfo>) futureGet.data().object();
-                            for (PeerAddress pa : clusterInfo.keySet())
+                            if (f.isSuccess())
                             {
-                                if (!pa.inetAddress().getHostAddress().equals(node.peer.peerAddress().inetAddress().getHostAddress()))
+                                HashMap<PeerAddress, NodeFileInfo> clusterInfo = (HashMap<PeerAddress, NodeFileInfo>) f.data().object();
+                                for (PeerAddress pa : clusterInfo.keySet())
                                 {
-                                    LOG.finest("Adding info about " + filehash + " from " + pa.inetAddress().getHostAddress());
-                                    NodeFileInfo fileinfo = clusterInfo.get(pa);
-                                    node.getDatabase().getPeers().putFileInfo(pa, fileinfo.hash, fileinfo);
+                                    if (!pa.inetAddress().getHostAddress().equals(node.peer.peerAddress().inetAddress().getHostAddress()))
+                                    {
+                                        LOG.finest("Adding info about " + filehash + " from " + pa.inetAddress().getHostAddress());
+                                        NodeFileInfo fileinfo = clusterInfo.get(pa);
+                                        node.getDatabase().getPeers().putFileInfo(pa, fileinfo.hash, fileinfo);
+                                    }
                                 }
                             }
+                        } catch (Exception ex)
+                        {
+                            LOG.info("Problem finding info about " + filehash);
                         }
                     }
                 });
