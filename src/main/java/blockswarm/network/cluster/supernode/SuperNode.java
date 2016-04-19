@@ -16,6 +16,8 @@ import net.tomp2p.connection.ChannelCreator;
 import net.tomp2p.connection.DefaultConnectionConfiguration;
 import net.tomp2p.futures.FutureChannelCreator;
 import net.tomp2p.futures.FutureResponse;
+import net.tomp2p.nat.PeerBuilderNAT;
+import net.tomp2p.nat.PeerNAT;
 import net.tomp2p.p2p.PeerBuilder;
 import net.tomp2p.peers.Number160;
 import net.tomp2p.peers.PeerAddress;
@@ -85,6 +87,7 @@ public class SuperNode extends Node
             Random r = new Random();
             Bindings bindings = new Bindings().addInterface("eth0");
             peer = new PeerBuilder(new Number160(r)).ports(44444).bindings(bindings).start();
+            PeerNAT peerNAT = new PeerBuilderNAT(peer).start();
             System.out.println("address visible to outside is " + peer.peerAddress());
             LOGGER.info("Listening for connections...");
             peer.objectDataReply(incomingHandler);

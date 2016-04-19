@@ -19,10 +19,16 @@ import net.tomp2p.connection.ChannelServerConfiguration;
 import net.tomp2p.futures.FutureBootstrap;
 import net.tomp2p.futures.FutureDirect;
 import net.tomp2p.futures.FutureDiscover;
+import net.tomp2p.nat.FutureNAT;
+import net.tomp2p.nat.FutureRelayNAT;
+import net.tomp2p.nat.PeerBuilderNAT;
+import net.tomp2p.nat.PeerNAT;
 import net.tomp2p.p2p.Peer;
 import net.tomp2p.p2p.PeerBuilder;
 import net.tomp2p.peers.Number160;
 import net.tomp2p.peers.PeerAddress;
+import net.tomp2p.relay.RelayClientConfig;
+import net.tomp2p.relay.tcp.TCPRelayClientConfig;
 
 /**
  *
@@ -43,9 +49,9 @@ public class Node
     public Cluster cluster;
     FXMLController gui;
     PeerRequestManager peerRequestManager;
-    
+
     int TIMEOUT = 60 * 1000;
-    
+
     public Node()
     {
         USING_GUI = false;
@@ -78,7 +84,7 @@ public class Node
         bootstrap("morebetterengineering.com");
 
         setupTracker();
-        
+
         setupDHT();
 
         setupCluster();
@@ -110,7 +116,7 @@ public class Node
     {
         tracker = new Tracker(peer);
     }
-    
+
     protected void setupDHT()
     {
         dht = new DHT(peer);
@@ -135,7 +141,7 @@ public class Node
     {
         return dht;
     }
-    
+
     public Database getDatabase()
     {
         return database;
@@ -179,6 +185,19 @@ public class Node
             // Future Discover
             FutureDiscover futureDiscover = peer.discover().expectManualForwarding().inetAddress(address).ports(masterPort).start();
             futureDiscover.awaitUninterruptibly();
+
+            PeerNAT peerNAT = new PeerBuilderNAT(peer).start();
+
+            if (futureDiscover.isFailed())
+            {
+                FutureNAT futureNAT = peerNAT.startSetupPortforwarding(futureDiscover);
+                futureNAT.awaitUninterruptibly();
+                System.out.println(futureNAT.failedReason());
+
+                FutureRelayNAT futureRelayNAT = peerNAT.startRelay(new TCPRelayClientConfig(), futureDiscover, futureNAT);
+                futureRelayNAT.awaitUninterruptibly();
+                System.out.println(futureRelayNAT.failedReason());
+            }
 
             // Future Bootstrap - slave
             FutureBootstrap futureBootstrap = peer.bootstrap().inetAddress(address).ports(masterPort).start();
