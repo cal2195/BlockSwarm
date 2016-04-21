@@ -160,6 +160,7 @@ public class FileDatabase
         } catch (SQLException ex)
         {
             LOGGER.log(Level.FINE, "Error generating filehash list!");
+            ex.printStackTrace();
         }
         return null;
     }

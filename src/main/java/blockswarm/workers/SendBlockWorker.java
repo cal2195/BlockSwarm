@@ -3,6 +3,8 @@ package blockswarm.workers;
 import blockswarm.database.Database;
 import blockswarm.network.cluster.Node;
 import blockswarm.network.packets.BlockPacket;
+import net.tomp2p.futures.BaseFutureAdapter;
+import net.tomp2p.futures.FutureDirect;
 import net.tomp2p.peers.PeerAddress;
 
 /**
@@ -32,10 +34,16 @@ public class SendBlockWorker extends Worker implements Runnable
         if (worker.nodeFileInfo.blocks.get(blockID))
         {
             byte[] block = worker.node.getDatabase().getCache().getBlock(filehash, blockID);
-            if (worker.node.send(requester, new BlockPacket(filehash, blockID, block)).isSuccess())
-            {
-                worker.nodeFileInfo.blocks.clear(blockID);
-            }
+            worker.node.send(requester, new BlockPacket(filehash, blockID, block)).addListener(new BaseFutureAdapter<FutureDirect>() {
+                @Override
+                public void operationComplete(FutureDirect f) throws Exception
+                {
+                    if (f.isSuccess())
+                    {
+                        worker.nodeFileInfo.blocks.clear(blockID);
+                    }
+                }
+            });
         }
     }
     

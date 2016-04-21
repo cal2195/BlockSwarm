@@ -6,8 +6,6 @@ import blockswarm.network.packets.BlockPacket;
 import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import net.tomp2p.futures.BaseFuture;
-import net.tomp2p.futures.BaseFutureAdapter;
 import net.tomp2p.futures.FutureDirect;
 import net.tomp2p.peers.PeerAddress;
 
@@ -74,6 +72,7 @@ public class RequestWorker extends Worker implements Runnable
                     connectionLost = true;
                 }
             }
+            node.getNetworkStats().blockSent(myBlocks.hash);
 
             //node.getWorkerPool().addWorker(new SendBlockWorker(nodeFileInfo.hash, i, requester, this));
             if (i == Integer.MAX_VALUE)
@@ -83,7 +82,7 @@ public class RequestWorker extends Worker implements Runnable
         }
         if (myBlocks.blocks.cardinality() != 0 && !connectionLost)
         {
-            node.getWorkerPool().addDelayedWorker(this, 10);
+            node.getWorkerPool().addDelayedWorker(this, 5);
         } else
         {
             node.getPeerRequestManager().remove(requester, nodeFileInfo);

@@ -68,6 +68,8 @@
                                           <TableColumn fx:id="searchBlocks" prefWidth="75.0" text="Blocks" />
                                           <TableColumn fx:id="searchAvailability" prefWidth="75.0" text="Availability" />
                                           <TableColumn fx:id="searchPeers" prefWidth="75.0" text="Peers" />
+                                          <TableColumn fx:id="searchDownloadSpeed" prefWidth="75.0" text="DwnSpd" />
+                                          <TableColumn fx:id="searchUploadSpeed" prefWidth="75.0" text="UpSpd" />
                                        </columns>
                                        <columnResizePolicy>
                                           <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
@@ -95,6 +97,8 @@
                                           <TableColumn fx:id="downloadBlocks" prefWidth="75.0" text="Blocks" />
                                           <TableColumn fx:id="downloadAvailability" prefWidth="75.0" text="Availability" />
                                           <TableColumn fx:id="downloadPeers" prefWidth="75.0" text="Peers" />
+                                          <TableColumn fx:id="downloadDownSpeed" prefWidth="75.0" text="DwnSpd" />
+                                          <TableColumn fx:id="downloadUpSpeed" prefWidth="75.0" text="UpSpd" />
                                        </columns>
                                        <columnResizePolicy>
                                           <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />

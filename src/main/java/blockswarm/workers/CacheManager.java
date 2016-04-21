@@ -6,6 +6,7 @@ import blockswarm.info.NodeFileInfo;
 import blockswarm.network.cluster.Node;
 import blockswarm.network.cluster.PeerRequestKey;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.logging.Logger;
 import net.tomp2p.peers.PeerAddress;
@@ -34,11 +35,22 @@ public class CacheManager extends Worker implements Runnable
     {
         HashMap<PeerRequestKey, NodeFileInfo> requests = new HashMap<>();
         ArrayList<FileEntry> files = node.getDatabase().getFiles().getAllFiles();
+        int totalBlocks = 0;
+        Collections.shuffle(files);
         for (FileEntry file : files)
         {
             ClusterFileInfo clusterInfo = node.getDatabase().getPeers().getClusterFileInfo(file.filehash);
             NodeFileInfo toCache = clusterInfo.getBlocksUnder(2, file.totalBlocks / 4);
-            requests.putAll(node.getDatabase().getPeers().getDownload(toCache));
+            HashMap<PeerRequestKey, NodeFileInfo> toDownload = node.getDatabase().getPeers().getDownload(toCache);
+            for (NodeFileInfo info : toDownload.values())
+            {
+                totalBlocks += info.blocks.cardinality();
+            }
+            requests.putAll(toDownload);
+            if (totalBlocks > 50)
+            {
+                break;
+            }
         }
         return requests;
     }

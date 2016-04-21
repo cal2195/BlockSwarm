@@ -7,16 +7,38 @@ package blockswarm.gui;
  */
 public class DownloadFileRow
 {
-    private String downloadFilename, downloadFilehash, downloadBlocks, downloadAvailability, downloadFilesize, downloadPeers;
+    private String downloadFilename, downloadFilehash, downloadBlocks, downloadAvailability, downloadFilesize, downloadPeers, downloadDownSpeed, downloadUpSpeed;
 
-    public DownloadFileRow(String filename, String filehash, String blocks, String availability, String filesize, String peers)
+    public DownloadFileRow(String downloadFilename, String downloadFilehash, String downloadBlocks, String downloadAvailability, String downloadFilesize, String downloadPeers, String downloadDownSpeed, String downloadUpSpeed)
     {
-        this.downloadFilename = filename;
-        this.downloadFilehash = filehash;
-        this.downloadBlocks = blocks;
-        this.downloadAvailability = availability;
-        this.downloadFilesize = filesize;
-        this.downloadPeers = peers;
+        this.downloadFilename = downloadFilename;
+        this.downloadFilehash = downloadFilehash;
+        this.downloadBlocks = downloadBlocks;
+        this.downloadAvailability = downloadAvailability;
+        this.downloadFilesize = downloadFilesize;
+        this.downloadPeers = downloadPeers;
+        this.downloadDownSpeed = downloadDownSpeed;
+        this.downloadUpSpeed = downloadUpSpeed;
+    }
+
+    public String getDownloadDownSpeed()
+    {
+        return downloadDownSpeed;
+    }
+
+    public void setDownloadDownSpeed(String downloadDownSpeed)
+    {
+        this.downloadDownSpeed = downloadDownSpeed;
+    }
+
+    public String getDownloadUpSpeed()
+    {
+        return downloadUpSpeed;
+    }
+
+    public void setDownloadUpSpeed(String downloadUpSpeed)
+    {
+        this.downloadUpSpeed = downloadUpSpeed;
     }
 
     public String getDownloadFilename()

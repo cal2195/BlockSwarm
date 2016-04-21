@@ -36,6 +36,7 @@ public class NodeIncomingHandler implements ObjectDataReply
         {
             LOG.fine("Received block packet from " + pa.inetAddress().getHostAddress());
             node.getWorkerPool().addWorker(new InsertBlockWorker((BlockPacket) packet, node));
+            node.getNetworkStats().blockReceived(((BlockPacket) packet).filehash);
         }
         else if (packet instanceof BlockRequestPacket)
         {

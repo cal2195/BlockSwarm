@@ -95,8 +95,11 @@ public class Cluster
     {
         for (PeerRequestKey pa : requests.keySet())
         {
-            LOG.fine("Requesting: " + requests.get(pa).blocks.toString());
-            node.send(pa.requester, new BlockRequestPacket(requests.get(pa)));
+            if (requests.get(pa).blocks.cardinality() > 0)
+            {
+                LOG.fine("Requesting: " + requests.get(pa).blocks.toString());
+                node.send(pa.requester, new BlockRequestPacket(requests.get(pa)));
+            }
         }
     }
 

@@ -2,6 +2,7 @@ package blockswarm.network.cluster;
 
 import blockswarm.database.Database;
 import blockswarm.gui.FXMLController;
+import blockswarm.stats.NetworkStats;
 import blockswarm.workers.CacheWorker;
 import blockswarm.workers.GUIWorker;
 import blockswarm.workers.PeerRequestManager;
@@ -49,6 +50,7 @@ public class Node
     public Cluster cluster;
     FXMLController gui;
     PeerRequestManager peerRequestManager;
+    NetworkStats networkStats = new NetworkStats();
 
     int TIMEOUT = 60 * 1000;
 
@@ -128,6 +130,7 @@ public class Node
         workerPool.addRepeatedWorker(new CacheManager(this), 20);
         peerRequestManager = new PeerRequestManager(this);
         workerPool.addRepeatedWorker(new ClusterFileInfoUpdater(this), 10);
+        networkStats = new NetworkStats();
     }
 
     protected void setupDatabase()
@@ -135,6 +138,11 @@ public class Node
         database = new Database(this);
         database.connect();
         database.initialise();
+    }
+
+    public NetworkStats getNetworkStats()
+    {
+        return networkStats;
     }
 
     public DHT getDHT()
