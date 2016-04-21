@@ -1,5 +1,7 @@
 package blockswarm.gui;
 
+import blockswarm.BlockSwarm;
+import blockswarm.Bootloader;
 import blockswarm.database.entries.FileEntry;
 import blockswarm.files.FileHandler;
 import blockswarm.info.NodeFileInfo;
@@ -34,6 +36,7 @@ import javafx.scene.input.DragEvent;
 import javafx.scene.input.Dragboard;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.TransferMode;
+import javafx.scene.text.Font;
 import javafx.util.Callback;
 import javax.swing.JFileChooser;
 
@@ -173,6 +176,8 @@ public class FXMLController implements Initializable
     @Override
     public void initialize(URL url, ResourceBundle rb)
     {
+        System.out.println(Font.loadFont(BlockSwarm.class.getResource("/bitstream.ttf").toExternalForm(), 10).getName());
+        
         searchTable.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
         searchTable.getSelectionModel().getSelectedIndices().addListener(new ListChangeListener<Integer>()
         {

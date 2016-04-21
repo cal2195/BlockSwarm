@@ -127,7 +127,7 @@ public class Node
     protected void setupCluster()
     {
         cluster = new Cluster(this);
-        workerPool.addRepeatedWorker(new CacheManager(this), 20);
+        workerPool.addRepeatedWorker(new CacheManager(this), 60);
         peerRequestManager = new PeerRequestManager(this);
         workerPool.addRepeatedWorker(new ClusterFileInfoUpdater(this), 10);
         networkStats = new NetworkStats();

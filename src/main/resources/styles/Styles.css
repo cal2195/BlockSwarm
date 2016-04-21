@@ -1,3 +1,37 @@
+.root {
+    -fx-font-size: 12px;
+    -fx-font-family: "Bitstream Vera Sans Mono";
+}
+
 .button {
     -fx-font-weight: bold;
 }
+
+.table-view {
+    -fx-font-size: 11px;
+    -fx-background-color: black;
+}
+
+/* Default row background is black */
+.table-row-cell {
+    -fx-background-color: black;
+    -fx-border-color: grey;
+}
+
+.table-row-cell:selected {
+    -fx-background-color: #33ff00;
+}
+
+.table-row-cell:selected .text {
+    -fx-fill: black;
+}
+
+/* Text in the rows will be white */
+.table-row-cell .text {
+       -fx-fill: white;
+}
+
+.tab-pane {
+    -fx-font-size: 11px;
+}
+
