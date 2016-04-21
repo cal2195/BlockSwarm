@@ -61,19 +61,16 @@
                                     <TreeView fx:id="searchTree" editable="true" prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER" />
                                  </left>
                                  <center>
-                                    <TableView fx:id="searchTable" prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+                                    <TableView fx:id="searchTable" prefHeight="200.0" prefWidth="200.0" tableMenuButtonVisible="true" BorderPane.alignment="CENTER">
                                        <columns>
-                                          <TableColumn fx:id="searchFilename" prefWidth="75.0" text="Filename" />
-                                          <TableColumn fx:id="searchFilesize" prefWidth="75.0" text="Filesize" />
-                                          <TableColumn fx:id="searchBlocks" prefWidth="75.0" text="Blocks" />
-                                          <TableColumn fx:id="searchAvailability" prefWidth="75.0" text="Availability" />
-                                          <TableColumn fx:id="searchPeers" prefWidth="75.0" text="Peers" />
-                                          <TableColumn fx:id="searchDownloadSpeed" prefWidth="75.0" text="DwnSpd" />
-                                          <TableColumn fx:id="searchUploadSpeed" prefWidth="75.0" text="UpSpd" />
+                                          <TableColumn fx:id="searchFilename" prefWidth="117.0" text="Filename" />
+                                          <TableColumn fx:id="searchFilesize" minWidth="9.0" prefWidth="90.0" text="Filesize" />
+                                          <TableColumn fx:id="searchBlocks" minWidth="9.0" prefWidth="67.0" text="Blocks" />
+                                          <TableColumn fx:id="searchAvailability" minWidth="0.0" prefWidth="101.0" text="Availability" />
+                                          <TableColumn fx:id="searchPeers" minWidth="0.0" prefWidth="63.0" text="Peers" />
+                                          <TableColumn fx:id="searchDownloadSpeed" prefWidth="90.0" text="DwnSpd" />
+                                          <TableColumn fx:id="searchUploadSpeed" prefWidth="89.0" text="UpSpd" />
                                        </columns>
-                                       <columnResizePolicy>
-                                          <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
-                                       </columnResizePolicy>
                                        <contextMenu>
                                           <ContextMenu>
                                             <items>

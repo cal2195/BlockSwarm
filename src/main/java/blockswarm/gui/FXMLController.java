@@ -60,7 +60,7 @@ public class FXMLController implements Initializable
         for (FileEntry file : files)
         {
             NodeFileInfo current = node.getDatabase().getFiles().getFileInfo(file.filehash);
-            list.add(new SearchFileRow(file.filename, file.filehash, current.blocks.cardinality() + "/" + file.totalBlocks, "" + file.availability, "0", "0", "" + node.getNetworkStats().blocksReceived(file.filehash), "" + node.getNetworkStats().blocksSent(file.filehash)));
+            list.add(new SearchFileRow(file.filename, file.filehash, current.blocks.cardinality() + "/" + file.totalBlocks, "" + file.availability, file.totalBlocks + "MB", "?", "" + node.getNetworkStats().blocksReceived(file.filehash), "" + node.getNetworkStats().blocksSent(file.filehash)));
         }
         BitSet toSelect = (BitSet) selection.clone();
         searchTable.getItems().clear();
@@ -79,7 +79,7 @@ public class FXMLController implements Initializable
         {
             NodeFileInfo current = node.getDatabase().getFiles().getFileInfo(file.hash);
             FileEntry info = node.getDatabase().getFiles().getFile(file.hash);
-            list.add(new DownloadFileRow(info.filename, info.filehash, current.blocks.cardinality() + "/" + info.totalBlocks, "" + info.availability, "0", "0", "" + node.getNetworkStats().blocksReceived(info.filehash), "" + node.getNetworkStats().blocksSent(info.filehash)));
+            list.add(new DownloadFileRow(info.filename, info.filehash, current.blocks.cardinality() + "/" + info.totalBlocks, "" + info.availability, info.totalBlocks + "MB", "?", "" + node.getNetworkStats().blocksReceived(info.filehash), "" + node.getNetworkStats().blocksSent(info.filehash)));
         }
         downloadTable.getItems().clear();
         downloadTable.getItems().addAll(FXCollections.observableList(list));
