@@ -65,7 +65,7 @@ public class FXMLController implements Initializable
         for (FileEntry file : files)
         {
             NodeFileInfo current = node.getDatabase().getFiles().getFileInfo(file.filehash);
-            list.add(new SearchFileRow(file.filename, file.filehash, current.blocks.cardinality() + "/" + file.totalBlocks, "" + file.availability, file.totalBlocks + "MB", "?", "" + node.getNetworkStats().blocksReceived(file.filehash), "" + node.getNetworkStats().blocksSent(file.filehash)));
+            list.add(new SearchFileRow(file.filename, file.filehash, current.blocks.cardinality() + "/" + file.totalBlocks, "" + file.availability, file.totalBlocks + "MB", "?", "" + node.getNetworkStats().blocksReceived(file.filehash) + "MB/s", "" + node.getNetworkStats().blocksSent(file.filehash) + "MB/s"));
         }
         BitSet toSelect = (BitSet) selection.clone();
         searchTable.getItems().clear();
@@ -84,7 +84,7 @@ public class FXMLController implements Initializable
         {
             NodeFileInfo current = node.getDatabase().getFiles().getFileInfo(file.hash);
             FileEntry info = node.getDatabase().getFiles().getFile(file.hash);
-            list.add(new DownloadFileRow(info.filename, info.filehash, current.blocks.cardinality() + "/" + info.totalBlocks, "" + info.availability, info.totalBlocks + "MB", "?", "" + node.getNetworkStats().blocksReceived(info.filehash), "" + node.getNetworkStats().blocksSent(info.filehash)));
+            list.add(new DownloadFileRow(info.filename, info.filehash, current.blocks.cardinality() + "/" + info.totalBlocks, "" + info.availability, info.totalBlocks + "MB", "?", "" + node.getNetworkStats().blocksReceived(info.filehash) + "MB/s", "" + node.getNetworkStats().blocksSent(info.filehash) + "MB/s"));
         }
         downloadTable.getItems().clear();
         downloadTable.getItems().addAll(FXCollections.observableList(list));
@@ -98,7 +98,7 @@ public class FXMLController implements Initializable
         {
             NodeFileInfo current = node.getDatabase().getFiles().getFileInfo(file);
             FileEntry info = node.getDatabase().getFiles().getFile(file);
-            list.add(new UploadFileRow(info.filename, info.filehash, current.blocks.cardinality() + "/" + info.totalBlocks, "" + info.availability, info.totalBlocks + "MB", "?", "" + node.getNetworkStats().blocksSent(info.filehash)));
+            list.add(new UploadFileRow(info.filename, info.filehash, current.blocks.cardinality() + "/" + info.totalBlocks, "" + info.availability, info.totalBlocks + "MB", "?", "" + node.getNetworkStats().blocksSent(info.filehash) + "MB/s"));
         }
         uploadTable.getItems().clear();
         uploadTable.getItems().addAll(FXCollections.observableList(list));
@@ -151,7 +151,7 @@ public class FXMLController implements Initializable
     {
         try
         {
-            statTextArea.setText("Cache Size: " + node.getDatabase().getCache().cacheSize() + "\n"
+            statTextArea.setText("Cache Size: " + node.getDatabase().getCache().cacheSize() + " \tTotal Dwn: " + node.getNetworkStats().totalReceived() + "MB/s\tTotal Up: " + node.getNetworkStats().totalSent() + "MB/s\n"
                     + "Thread Pool Size: " + node.getWorkerPool().queue.size() + "\n"
                     + "Scheduled Pool Size: " + node.getWorkerPool().scheduledThreadPool.getQueue().size() + "\n"
                     + "Cluster Size (Verified): " + node.getPeer().peerBean().peerMap().all().size() + "\n"

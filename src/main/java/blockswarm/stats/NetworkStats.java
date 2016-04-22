@@ -15,6 +15,26 @@ public class NetworkStats
     HashMap<String, ArrayList<BlockTimer>> sent = new HashMap<>();
     HashMap<String, ArrayList<BlockTimer>> received = new HashMap<>();
     
+    public double totalSent()
+    {
+        int total = 0;
+        for (ArrayList<BlockTimer> list : sent.values())
+        {
+            total += list.size();
+        }
+        return (double) total / (double) sampleSize;
+    }
+    
+    public double totalReceived()
+    {
+        int total = 0;
+        for (ArrayList<BlockTimer> list : received.values())
+        {
+            total += list.size();
+        }
+        return (double) total / (double) sampleSize;
+    }
+    
     public void blockSent(String hash)
     {
         ArrayList<BlockTimer> blocks = sent.get(hash);
