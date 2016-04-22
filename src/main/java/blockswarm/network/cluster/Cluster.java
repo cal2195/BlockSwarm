@@ -4,18 +4,14 @@ import blockswarm.database.entries.FileEntry;
 import blockswarm.info.ClusterFileInfo;
 import blockswarm.info.NodeFileInfo;
 import blockswarm.network.packets.BlockRequestPacket;
-import blockswarm.network.packets.FileInfoRequestPacket;
 import blockswarm.network.packets.FileListPacket;
 import blockswarm.network.packets.FileListRequestPacket;
-import blockswarm.workers.DownloadWorker;
 import blockswarm.workers.FileAssemblyWorker;
 import blockswarm.workers.RequestWorker;
-import blockswarm.workers.SendBlockWorker;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Random;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 import net.tomp2p.peers.PeerAddress;
 
@@ -48,16 +44,6 @@ public class Cluster
             LOG.fine("Asking " + pa.requester.inetAddress().getHostAddress() + " for " + peers.get(pa).blocks.toString());
             node.send(pa.requester, new BlockRequestPacket(peers.get(pa)));
         }
-//        for (PeerAddress pa : node.peer.peerBean().peerMap().all())
-//        {
-//            LOG.log(Level.FINE, "Asking {0} for {1}!", new Object[]
-//            {
-//                pa, filehash
-//            });
-//            NodeFileInfo info = node.getDatabase().getFiles().getFileInfo(filehash);
-//            info.blocks.flip(0, node.getDatabase().getFiles().getTotalBlocks(filehash));
-//            node.send(pa, new BlockRequestPacket(info));
-//        }
     }
 
     public void queueForDownload(String filehash)
@@ -68,7 +54,6 @@ public class Cluster
         } else
         {
             node.getDatabase().getDownloads().queueDownload(filehash);
-            //node.getWorkerPool().addWorker(new DownloadWorker(filehash, node), 60);
         }
     }
 

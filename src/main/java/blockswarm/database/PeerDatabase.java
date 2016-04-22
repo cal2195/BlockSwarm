@@ -10,10 +10,12 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.PriorityQueue;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -57,6 +59,17 @@ public class PeerDatabase
     public double getAvailability(String filehash)
     {
         return getClusterFileInfo(filehash).getAvailability();
+    }
+    
+    public ClusterFileInfo[] getLowestAvailability()
+    {
+        ArrayList<ClusterFileInfo> files = new ArrayList<>();
+        for (String hash : node.getDatabase().getFiles().getAllFileHashes())
+        {
+            files.add(getClusterFileInfo(hash));
+        }
+        Collections.sort(files);
+        return Arrays.copyOfRange((ClusterFileInfo[]) files.toArray(new ClusterFileInfo[0]), 0, 20);
     }
 
     public ClusterFileInfo getClusterFileInfo(String filehash)

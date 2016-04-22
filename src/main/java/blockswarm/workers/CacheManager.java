@@ -34,20 +34,23 @@ public class CacheManager extends Worker implements Runnable
     public HashMap<PeerRequestKey, NodeFileInfo> getCacheRequests()
     {
         HashMap<PeerRequestKey, NodeFileInfo> requests = new HashMap<>();
-        ArrayList<FileEntry> files = node.getDatabase().getFiles().getAllFiles();
+        ClusterFileInfo[] files = node.getDatabase().getPeers().getLowestAvailability();
         int totalBlocks = 0;
-        Collections.shuffle(files);
-        for (FileEntry file : files)
+        for (ClusterFileInfo clusterInfo : files)
         {
-            ClusterFileInfo clusterInfo = node.getDatabase().getPeers().getClusterFileInfo(file.filehash);
-            NodeFileInfo toCache = clusterInfo.getBlocksUnder(2, file.totalBlocks / 4);
+            if (clusterInfo == null)
+            {
+                continue;
+            }
+            System.out.println("Going to cache " + clusterInfo.hash + " with avail of " + clusterInfo.getAvailability());
+            NodeFileInfo toCache = clusterInfo.getBlocksUnder(2, clusterInfo.getTotalBlocks() / 4);
             HashMap<PeerRequestKey, NodeFileInfo> toDownload = node.getDatabase().getPeers().getDownload(toCache);
             for (NodeFileInfo info : toDownload.values())
             {
                 totalBlocks += info.blocks.cardinality();
             }
             requests.putAll(toDownload);
-            if (totalBlocks > 50)
+            if (totalBlocks > 20)
             {
                 break;
             }

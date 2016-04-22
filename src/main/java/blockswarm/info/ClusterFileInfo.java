@@ -8,7 +8,7 @@ import java.util.Random;
  *
  * @author cal
  */
-public class ClusterFileInfo
+public class ClusterFileInfo implements Comparable<ClusterFileInfo>
 {
 
     Random random = new Random();
@@ -27,6 +27,11 @@ public class ClusterFileInfo
         {
             blockCount[i]++;
         }
+    }
+    
+    public int getTotalBlocks()
+    {
+        return blockCount.length;
     }
 
     public int getBlockCount(int block)
@@ -103,5 +108,11 @@ public class ClusterFileInfo
     public String toString()
     {
         return "ClusterFileInfo{" + "hash=" + hash + ", blockCount=" + Arrays.toString(blockCount) + '}';
+    }
+
+    @Override
+    public int compareTo(ClusterFileInfo o)
+    {
+        return (int) (getAvailability() * 100 - o.getAvailability() * 100);
     }
 }
