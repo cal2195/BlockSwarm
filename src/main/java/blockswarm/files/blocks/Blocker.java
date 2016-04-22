@@ -51,8 +51,10 @@ public class Blocker
         {
             filehash, info.filename
         });
+        
+        new File("downloads").mkdir();
 
-        try (FileOutputStream fos = new FileOutputStream(info.filename))
+        try (FileOutputStream fos = new FileOutputStream("downloads/" + info.filename))
         {
             for (int i = 0; i < info.totalBlocks; i++)
             {

@@ -65,6 +65,7 @@ public class CacheManager extends Worker implements Runnable
         {
             if (node.getWorkerPool().queue.size() < 50 && node.getDatabase().getCache().cacheSize() < Integer.parseInt(node.getDatabase().getSettings().get("cacheLimit", "2000")))
             {
+                System.out.println("Cache: " + node.getWorkerPool().queue.size() + "/" + Integer.parseInt(node.getDatabase().getSettings().get("cacheLimit", "2000")));
                 node.getCluster().sendRequests(getCacheRequests());
             }
             ArrayList<NodeFileInfo> toDownload = node.getDatabase().getDownloads().getAllDownloads();

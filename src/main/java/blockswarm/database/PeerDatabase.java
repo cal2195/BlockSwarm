@@ -60,13 +60,17 @@ public class PeerDatabase
     {
         return getClusterFileInfo(filehash).getAvailability();
     }
-    
+
     public ClusterFileInfo[] getLowestAvailability()
     {
         ArrayList<ClusterFileInfo> files = new ArrayList<>();
         for (String hash : node.getDatabase().getFiles().getAllFileHashes())
         {
-            files.add(getClusterFileInfo(hash));
+            if (!Double.isNaN(getClusterFileInfo(hash).getAvailability()))
+            {
+                files.add(getClusterFileInfo(hash));
+                System.out.println("Added " + hash + " with " + getClusterFileInfo(hash).getAvailability());
+            }
         }
         Collections.sort(files);
         return Arrays.copyOfRange((ClusterFileInfo[]) files.toArray(new ClusterFileInfo[0]), 0, 20);
