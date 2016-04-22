@@ -16,7 +16,7 @@ import java.util.logging.Logger;
 public class Bootloader
 {
 
-    public static final String VERSION = "prealpha-0.03";
+    public static final String VERSION = "prealpha-0.04";
     public static final String RELEASE = "Never let them take the light behind your eyes";
 
     public static void main(String[] args)
