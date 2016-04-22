@@ -42,7 +42,7 @@ public class DHT
         try
         {
             FuturePut futurePut = dht.put(Number160.createHash(filehash)).data(new Data(hashmap)).start();
-            futurePut.awaitUninterruptibly();
+            //futurePut.awaitUninterruptibly();
         } catch (IOException iOException)
         {
             iOException.printStackTrace();

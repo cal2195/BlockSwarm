@@ -8,6 +8,7 @@ import blockswarm.workers.GUIWorker;
 import blockswarm.workers.PeerRequestManager;
 import blockswarm.workers.CacheManager;
 import blockswarm.workers.ClusterFileInfoUpdater;
+import blockswarm.workers.FileListUpdater;
 import blockswarm.workers.WorkerPool;
 import java.io.IOException;
 import java.net.Inet4Address;
@@ -41,7 +42,7 @@ public class Node
     private static final Logger LOGGER = Logger.getLogger(Node.class.getName());
     final boolean USING_GUI;
 
-    WorkerPool workerPool;
+    public WorkerPool workerPool;
     public Peer peer;
     NodeIncomingHandler incomingHandler;
     Tracker tracker;
@@ -131,6 +132,7 @@ public class Node
         peerRequestManager = new PeerRequestManager(this);
         workerPool.addRepeatedWorker(new ClusterFileInfoUpdater(this), 10);
         networkStats = new NetworkStats();
+        workerPool.addRepeatedWorker(new FileListUpdater(this), 120);
     }
 
     protected void setupDatabase()

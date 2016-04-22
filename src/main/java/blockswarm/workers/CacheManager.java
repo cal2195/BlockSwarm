@@ -1,15 +1,12 @@
 package blockswarm.workers;
 
-import blockswarm.database.entries.FileEntry;
 import blockswarm.info.ClusterFileInfo;
 import blockswarm.info.NodeFileInfo;
 import blockswarm.network.cluster.Node;
 import blockswarm.network.cluster.PeerRequestKey;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.logging.Logger;
-import net.tomp2p.peers.PeerAddress;
 
 /**
  *
@@ -42,7 +39,7 @@ public class CacheManager extends Worker implements Runnable
             {
                 continue;
             }
-            System.out.println("Going to cache " + clusterInfo.hash + " with avail of " + clusterInfo.getAvailability());
+            LOG.fine("Going to cache " + clusterInfo.hash + " with avail of " + clusterInfo.getAvailability());
             NodeFileInfo toCache = clusterInfo.getBlocksUnder(2, clusterInfo.getTotalBlocks() / 4);
             HashMap<PeerRequestKey, NodeFileInfo> toDownload = node.getDatabase().getPeers().getDownload(toCache);
             for (NodeFileInfo info : toDownload.values())
@@ -63,9 +60,9 @@ public class CacheManager extends Worker implements Runnable
     {
         try
         {
-            if (node.getWorkerPool().queue.size() < 50 && node.getDatabase().getCache().cacheSize() < Integer.parseInt(node.getDatabase().getSettings().get("cacheLimit", "2000")))
+            LOG.info("Cache: " + node.getDatabase().getCache().cacheSize() + "/" + Integer.parseInt(node.getDatabase().getSettings().get("cacheLimit", "10000")));
+            if (node.getWorkerPool().queue.size() < 50 && node.getDatabase().getCache().cacheSize() < Integer.parseInt(node.getDatabase().getSettings().get("cacheLimit", "10000")))
             {
-                System.out.println("Cache: " + node.getWorkerPool().queue.size() + "/" + Integer.parseInt(node.getDatabase().getSettings().get("cacheLimit", "2000")));
                 node.getCluster().sendRequests(getCacheRequests());
             }
             ArrayList<NodeFileInfo> toDownload = node.getDatabase().getDownloads().getAllDownloads();

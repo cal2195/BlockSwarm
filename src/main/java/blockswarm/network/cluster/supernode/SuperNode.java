@@ -5,6 +5,7 @@ import blockswarm.network.cluster.Cluster;
 import blockswarm.network.cluster.Node;
 import blockswarm.workers.CacheManager;
 import blockswarm.workers.ClusterFileInfoUpdater;
+import blockswarm.workers.FileListUpdater;
 import blockswarm.workers.PeerRequestManager;
 import blockswarm.workers.supernode.ClusterFileInfoWorker;
 import java.io.IOException;
@@ -78,6 +79,7 @@ public class SuperNode extends Node
     protected void setupCluster()
     {
         cluster = new Cluster(this);
+        workerPool.addRepeatedWorker(new FileListUpdater(this), 120);
     }
 
     public void serve()
