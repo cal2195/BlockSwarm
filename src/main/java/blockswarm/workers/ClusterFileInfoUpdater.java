@@ -7,7 +7,6 @@ import java.util.HashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import net.tomp2p.dht.FutureGet;
-import net.tomp2p.futures.BaseFuture;
 import net.tomp2p.futures.BaseFutureAdapter;
 import net.tomp2p.peers.PeerAddress;
 
@@ -20,6 +19,32 @@ public class ClusterFileInfoUpdater extends Worker implements Runnable
 
     Node node;
     int time = 0;
+    BaseFutureAdapter<FutureGet> listener = new BaseFutureAdapter<FutureGet>()
+    {
+        @Override
+        public void operationComplete(FutureGet f)
+        {
+            try
+            {
+                if (f.isSuccess())
+                {
+                    HashMap<PeerAddress, NodeFileInfo> clusterInfo = (HashMap<PeerAddress, NodeFileInfo>) f.data().object();
+                    for (PeerAddress pa : clusterInfo.keySet())
+                    {
+                        if (!pa.inetAddress().getHostAddress().equals(node.peer.peerAddress().inetAddress().getHostAddress()))
+                        {
+                            NodeFileInfo fileinfo = clusterInfo.get(pa);
+                            LOG.finest("Adding info about " + fileinfo.hash + " from " + pa.inetAddress().getHostAddress());
+                            node.getDatabase().getPeers().putFileInfo(pa, fileinfo.hash, fileinfo);
+                        }
+                    }
+                }
+            } catch (Exception ex)
+            {
+
+            }
+        }
+    };
 
     public ClusterFileInfoUpdater(Node node)
     {
@@ -40,32 +65,7 @@ public class ClusterFileInfoUpdater extends Worker implements Runnable
             for (String filehash : node.getDatabase().getFiles().getAllFileHashes())
             {
                 FutureGet futureGet = node.getDHT().getClusterFileInfo(filehash);
-                futureGet.addListener(new BaseFutureAdapter<FutureGet>()
-                {
-                    @Override
-                    public void operationComplete(FutureGet f)
-                    {
-                        try
-                        {
-                            if (f.isSuccess())
-                            {
-                                HashMap<PeerAddress, NodeFileInfo> clusterInfo = (HashMap<PeerAddress, NodeFileInfo>) f.data().object();
-                                for (PeerAddress pa : clusterInfo.keySet())
-                                {
-                                    if (!pa.inetAddress().getHostAddress().equals(node.peer.peerAddress().inetAddress().getHostAddress()))
-                                    {
-                                        LOG.finest("Adding info about " + filehash + " from " + pa.inetAddress().getHostAddress());
-                                        NodeFileInfo fileinfo = clusterInfo.get(pa);
-                                        node.getDatabase().getPeers().putFileInfo(pa, fileinfo.hash, fileinfo);
-                                    }
-                                }
-                            }
-                        } catch (Exception ex)
-                        {
-                            LOG.info("Problem finding info about " + filehash);
-                        }
-                    }
-                });
+                futureGet.addListener(listener);
             }
         } catch (Exception e)
         {

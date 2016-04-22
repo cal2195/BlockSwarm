@@ -1,6 +1,7 @@
 package blockswarm.stats;
 
 import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.HashMap;
 import javax.swing.Timer;
@@ -83,9 +84,13 @@ public class NetworkStats
     {
         public BlockTimer(ArrayList<BlockTimer> list)
         {
-            new Timer(sampleSize * 1000, (ActionEvent e) ->
+            new Timer(sampleSize * 1000, new ActionListener()
             {
-                list.remove(BlockTimer.this);
+                @Override
+                public void actionPerformed(ActionEvent e)
+                {
+                    list.remove(BlockTimer.this);
+                }
             }).start();
         }
     }
