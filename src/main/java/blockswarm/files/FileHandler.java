@@ -42,6 +42,8 @@ public class FileHandler
 
             FileEntry fileEntry = new FileEntry(hash, file.getName(), totalBlocks, -1);
             node.getDatabase().getFiles().putFile(fileEntry);
+            
+            node.getDatabase().getUploads().queueUpload(hash);
 
             ArrayList<FileEntry> fileList = new ArrayList<>();
             fileList.add(fileEntry);

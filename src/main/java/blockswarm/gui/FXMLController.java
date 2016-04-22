@@ -36,15 +36,17 @@ import javafx.scene.input.DragEvent;
 import javafx.scene.input.Dragboard;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.TransferMode;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.text.Font;
 import javafx.util.Callback;
 import javax.swing.JFileChooser;
 
 public class FXMLController implements Initializable
 {
-
     @FXML
-    TableView<Map> searchTable, downloadTable;
+    BorderPane main;
+    @FXML
+    TableView<Map> searchTable, downloadTable, uploadTable;
     @FXML
     TextArea statTextArea;
     @FXML
@@ -88,6 +90,20 @@ public class FXMLController implements Initializable
         downloadTable.getItems().addAll(FXCollections.observableList(list));
         downloadTable.sort();
     }
+    
+    public void addUploadFiles(ArrayList<String> files)
+    {
+        List list = new ArrayList();
+        for (String file : files)
+        {
+            NodeFileInfo current = node.getDatabase().getFiles().getFileInfo(file);
+            FileEntry info = node.getDatabase().getFiles().getFile(file);
+            list.add(new UploadFileRow(info.filename, info.filehash, current.blocks.cardinality() + "/" + info.totalBlocks, "" + info.availability, info.totalBlocks + "MB", "?", "" + node.getNetworkStats().blocksSent(info.filehash)));
+        }
+        uploadTable.getItems().clear();
+        uploadTable.getItems().addAll(FXCollections.observableList(list));
+        uploadTable.sort();
+    }
 
     @FXML
     public void updateSearch()
@@ -127,6 +143,7 @@ public class FXMLController implements Initializable
     {
         addSearchFiles(node.getDatabase().getFiles().searchFiles(searchTerms));
         addDownloadFiles(node.getDatabase().getDownloads().getAllDownloads());
+        addUploadFiles(node.getDatabase().getUploads().getAllUploads());
         updateStats();
     }
 
@@ -195,7 +212,7 @@ public class FXMLController implements Initializable
                 }
             }
         });
-        searchTable.setOnDragOver(new EventHandler<DragEvent>()
+        main.setOnDragOver(new EventHandler<DragEvent>()
         {
             @Override
             public void handle(DragEvent event)
@@ -210,7 +227,7 @@ public class FXMLController implements Initializable
                 }
             }
         });
-        searchTable.setOnDragDropped(new EventHandler<DragEvent>()
+        main.setOnDragDropped(new EventHandler<DragEvent>()
         {
             @Override
             public void handle(DragEvent event)
@@ -236,6 +253,10 @@ public class FXMLController implements Initializable
             column.setCellValueFactory(new PropertyValueFactory(column.getId()));
         }
         for (TableColumn column : downloadTable.getColumns())
+        {
+            column.setCellValueFactory(new PropertyValueFactory(column.getId()));
+        }
+        for (TableColumn column : uploadTable.getColumns())
         {
             column.setCellValueFactory(new PropertyValueFactory(column.getId()));
         }
