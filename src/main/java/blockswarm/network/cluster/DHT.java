@@ -13,6 +13,7 @@ import net.tomp2p.p2p.Peer;
 import net.tomp2p.peers.Number160;
 import net.tomp2p.peers.PeerAddress;
 import net.tomp2p.storage.Data;
+import net.tomp2p.storage.StorageDisk;
 import net.tomp2p.tracker.FutureTracker;
 import net.tomp2p.tracker.PeerBuilderTracker;
 import net.tomp2p.tracker.PeerTracker;

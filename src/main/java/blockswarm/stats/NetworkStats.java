@@ -18,66 +18,70 @@ public class NetworkStats
     
     public double totalSent()
     {
-        int total = 0;
-        for (ArrayList<BlockTimer> list : sent.values())
-        {
-            total += list.size();
-        }
-        return (double) total / (double) sampleSize;
+//        int total = 0;
+//        for (ArrayList<BlockTimer> list : sent.values())
+//        {
+//            total += list.size();
+//        }
+//        return (double) total / (double) sampleSize;
+        return 0;
     }
     
     public double totalReceived()
     {
-        int total = 0;
-        for (ArrayList<BlockTimer> list : received.values())
-        {
-            total += list.size();
-        }
-        return (double) total / (double) sampleSize;
+//        int total = 0;
+//        for (ArrayList<BlockTimer> list : received.values())
+//        {
+//            total += list.size();
+//        }
+//        return (double) total / (double) sampleSize;
+        return 0;
     }
     
     public void blockSent(String hash)
     {
-        ArrayList<BlockTimer> blocks = sent.get(hash);
-        if (blocks == null)
-        {
-            blocks = new ArrayList<>();
-            sent.put(hash, blocks);
-        }
-        blocks.add(new BlockTimer(blocks));
+//        ArrayList<BlockTimer> blocks = sent.get(hash);
+//        if (blocks == null)
+//        {
+//            blocks = new ArrayList<>();
+//            sent.put(hash, blocks);
+//        }
+//        blocks.add(new BlockTimer(blocks));
     }
     
     public double blocksSent(String hash)
     {
-        ArrayList<BlockTimer> blocks = sent.get(hash);
-        if (blocks == null)
-        {
-            blocks = new ArrayList<>();
-            sent.put(hash, blocks);
-        }
-        return (double) blocks.size() / (double) sampleSize;
+//        ArrayList<BlockTimer> blocks = sent.get(hash);
+//        if (blocks == null)
+//        {
+//            blocks = new ArrayList<>();
+//            sent.put(hash, blocks);
+//        }
+//        return (double) blocks.size() / (double) sampleSize;
+        return 0;
     }
     
     public void blockReceived(String hash)
     {
-        ArrayList<BlockTimer> blocks = received.get(hash);
-        if (blocks == null)
-        {
-            blocks = new ArrayList<>();
-            received.put(hash, blocks);
-        }
-        blocks.add(new BlockTimer(blocks));
+//        ArrayList<BlockTimer> blocks = received.get(hash);
+//        if (blocks == null)
+//        {
+//            blocks = new ArrayList<>();
+//            received.put(hash, blocks);
+//        }
+//        blocks.add(new BlockTimer(blocks));
     }
     
     public double blocksReceived(String hash)
     {
-        ArrayList<BlockTimer> blocks = received.get(hash);
-        if (blocks == null)
-        {
-            blocks = new ArrayList<>();
-            received.put(hash, blocks);
-        }
-        return (double) blocks.size() / (double) sampleSize;
+//        ArrayList<BlockTimer> blocks = received.get(hash);
+//        if (blocks == null)
+//        {
+//            blocks = new ArrayList<>();
+//            received.put(hash, blocks);
+//        }
+//        return (double) blocks.size() / (double) sampleSize;
+        return 0;
     }
     
     private class BlockTimer
@@ -90,6 +94,7 @@ public class NetworkStats
                 public void actionPerformed(ActionEvent e)
                 {
                     list.remove(BlockTimer.this);
+                    
                 }
             }).start();
         }

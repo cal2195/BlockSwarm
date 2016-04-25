@@ -1,11 +1,5 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package blockswarm.workers;
 
-import blockswarm.info.NodeFileInfo;
 import blockswarm.network.cluster.Node;
 
 /**
@@ -34,7 +28,7 @@ public class CacheWorker extends Worker implements Runnable
         {
             for (String hash : node.getDatabase().getFiles().getAllFileHashes())
             {
-                node.getCluster().cache(new NodeFileInfo(hash));
+                node.getCluster().cache(hash);
             }
         } catch (Exception e)
         {

@@ -19,32 +19,6 @@ public class ClusterFileInfoUpdater extends Worker implements Runnable
 
     Node node;
     int time = 0;
-    BaseFutureAdapter<FutureGet> listener = new BaseFutureAdapter<FutureGet>()
-    {
-        @Override
-        public void operationComplete(FutureGet f)
-        {
-            try
-            {
-                if (f.isSuccess())
-                {
-                    HashMap<PeerAddress, NodeFileInfo> clusterInfo = (HashMap<PeerAddress, NodeFileInfo>) f.data().object();
-                    for (PeerAddress pa : clusterInfo.keySet())
-                    {
-                        if (!pa.inetAddress().getHostAddress().equals(node.peer.peerAddress().inetAddress().getHostAddress()))
-                        {
-                            NodeFileInfo fileinfo = clusterInfo.get(pa);
-                            LOG.finest("Adding info about " + fileinfo.hash + " from " + pa.inetAddress().getHostAddress());
-                            node.getDatabase().getPeers().putFileInfo(pa, fileinfo.hash, fileinfo);
-                        }
-                    }
-                }
-            } catch (Exception ex)
-            {
-
-            }
-        }
-    };
 
     public ClusterFileInfoUpdater(Node node)
     {
@@ -65,7 +39,32 @@ public class ClusterFileInfoUpdater extends Worker implements Runnable
             for (String filehash : node.getDatabase().getFiles().getAllFileHashes())
             {
                 FutureGet futureGet = node.getDHT().getClusterFileInfo(filehash);
-                futureGet.addListener(listener);
+                futureGet.addListener(new BaseFutureAdapter<FutureGet>()
+                {
+                    @Override
+                    public void operationComplete(FutureGet f)
+                    {
+                        try
+                        {
+                            if (f.isSuccess())
+                            {
+                                HashMap<PeerAddress, NodeFileInfo> clusterInfo = (HashMap<PeerAddress, NodeFileInfo>) f.data().object();
+                                for (PeerAddress pa : clusterInfo.keySet())
+                                {
+                                    if (!pa.inetAddress().getHostAddress().equals(node.peer.peerAddress().inetAddress().getHostAddress()))
+                                    {
+                                        NodeFileInfo fileinfo = clusterInfo.get(pa);
+                                        LOG.finest("Adding info about " + fileinfo.hash + " from " + pa.inetAddress().getHostAddress());
+                                        node.getDatabase().getPeers().putFileInfo(pa, fileinfo.hash, fileinfo);
+                                    }
+                                }
+                            }
+                        } catch (Exception ex)
+                        {
+                            ex.printStackTrace();
+                        }
+                    }
+                });
             }
         } catch (Exception e)
         {

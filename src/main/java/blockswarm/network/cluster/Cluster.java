@@ -66,11 +66,11 @@ public class Cluster
         }
     }
 
-    public void cache(NodeFileInfo file)
+    public void cache(String hash)
     {
-        ClusterFileInfo clusterInfo = node.getDatabase().getPeers().getClusterFileInfo(file.hash);
+        ClusterFileInfo clusterInfo = node.getDatabase().getPeers().getClusterFileInfo(hash);
         NodeFileInfo toCache = clusterInfo.getBlocksUnder(2);
-        NodeFileInfo iHave = node.getDatabase().getCache().getFileInfo(file.hash);
+        NodeFileInfo iHave = node.getDatabase().getCache().getFileInfo(hash);
         toCache.blocks.andNot(iHave.blocks);
         LOG.fine("Caching " + toCache.blocks.toString());
         download(toCache);
@@ -88,36 +88,36 @@ public class Cluster
         }
     }
 
-    public void stopAllRequests()
-    {
-        for (FileEntry file : node.getDatabase().getFiles().getAllFiles())
-        {
-            NodeFileInfo stop = new NodeFileInfo(file.filehash);
-            for (PeerAddress pa : node.peer.peerBean().peerMap().all())
-            {
-                node.send(pa, new BlockRequestPacket(stop));
-            }
-        }
-    }
+//    public void stopAllRequests()
+//    {
+//        for (FileEntry file : node.getDatabase().getFiles().getAllFiles())
+//        {
+//            NodeFileInfo stop = new NodeFileInfo(file.filehash);
+//            for (PeerAddress pa : node.peer.peerBean().peerMap().all())
+//            {
+//                node.send(pa, new BlockRequestPacket(stop));
+//            }
+//        }
+//    }
 
-    public void superSeed(String filehash)
-    {
-        List<PeerAddress> peers = node.peer.peerBean().peerMap().all();
-        for (int i = 0; i < peers.size(); i++)
-        {
-            PeerAddress peer = peers.get(i);
-            int total = node.getDatabase().getFiles().getTotalBlocks(filehash);
-            NodeFileInfo upload = new NodeFileInfo(filehash, total);
-            for (int block = 0; block < total; block++)
-            {
-                if ((block + i) % peers.size() == 0)
-                {
-                    upload.blocks.set(block);
-                }
-            }
-            node.getWorkerPool().addWorker(new RequestWorker(peer, upload, node));
-        }
-    }
+//    public void superSeed(String filehash)
+//    {
+//        List<PeerAddress> peers = node.peer.peerBean().peerMap().all();
+//        for (int i = 0; i < peers.size(); i++)
+//        {
+//            PeerAddress peer = peers.get(i);
+//            int total = node.getDatabase().getFiles().getTotalBlocks(filehash);
+//            NodeFileInfo upload = new NodeFileInfo(filehash, total);
+//            for (int block = 0; block < total; block++)
+//            {
+//                if ((block + i) % peers.size() == 0)
+//                {
+//                    upload.blocks.set(block);
+//                }
+//            }
+//            node.getWorkerPool().addWorker(new RequestWorker(peer, upload, node));
+//        }
+//    }
 
     public void collectFileLists()
     {

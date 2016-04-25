@@ -213,9 +213,6 @@ public class Node
             FutureBootstrap futureBootstrap = peer.bootstrap().inetAddress(address).ports(masterPort).start();
             futureBootstrap.awaitUninterruptibly();
 
-            Collection<PeerAddress> addressList = peer.peerBean().peerMap().all();
-            System.out.println(addressList.size());
-
             if (futureDiscover.isSuccess())
             {
                 System.out.println("found that my outside address is " + futureDiscover.peerAddress());
