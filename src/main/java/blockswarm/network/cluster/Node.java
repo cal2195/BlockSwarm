@@ -183,7 +183,7 @@ public class Node
         try
         {
             Random r = new Random();
-            peer = new PeerBuilder(new Number160(r)).channelServerConfiguration(PeerBuilder.createDefaultChannelServerConfiguration().connectionTimeoutTCPMillis(TIMEOUT).idleTCPMillis(TIMEOUT).idleUDPMillis(TIMEOUT).heartBeatMillis(TIMEOUT)).ports(33333).start();
+            peer = new PeerBuilder(new Number160(r)).channelServerConfiguration(PeerBuilder.createDefaultChannelServerConfiguration().connectionTimeoutTCPMillis(TIMEOUT).idleTCPMillis(TIMEOUT).idleUDPMillis(TIMEOUT).heartBeatMillis(TIMEOUT)).ports(44444).start();
             peer.objectDataReply(incomingHandler);
             InetAddress address = Inet4Address.getByName(supernode);
             System.out.println("address visible to outside is " + peer.peerAddress());
@@ -197,36 +197,36 @@ public class Node
             FutureDiscover futureDiscover = peer.discover().expectManualForwarding().inetAddress(address).ports(masterPort).start();
             futureDiscover.awaitUninterruptibly();
 
-            PeerNAT peerNAT = new PeerBuilderNAT(peer).start();
-
-            if (futureDiscover.isFailed())
-            {
-                final FutureNAT futureNAT = peerNAT.startSetupPortforwarding(futureDiscover);
-                futureNAT.awaitUninterruptibly();
-                if (futureNAT.isFailed())
-                {
-                    FutureRelayNAT futureRelayNAT = peerNAT.startRelay(new TCPRelayClientConfig(), futureDiscover, futureNAT);
-                    futureRelayNAT.awaitUninterruptibly();
-                    System.out.println("Relay NAT: " + futureRelayNAT.failedReason());
-                }
-
-                if (futureNAT.isSuccess())
-                {
-                    System.out.println("NAT success: " + futureNAT.peerAddress());
-                } else
-                {
-                    System.out.println("NAT failed: " + futureNAT.failedReason());
-                    //this is enough time to print out the status of the relay search
-                    Thread.sleep(5000);
-                }
-//                FutureNAT futureNAT = peerNAT.startSetupPortforwarding(futureDiscover);
-//                futureNAT.awaitUninterruptibly();
-//                System.out.println(futureNAT.failedReason());
+//            PeerNAT peerNAT = new PeerBuilderNAT(peer).start();
 //
-//                FutureRelayNAT futureRelayNAT = peerNAT.startRelay(new TCPRelayClientConfig(), futureDiscover, futureNAT);
-//                futureRelayNAT.awaitUninterruptibly();
-//                System.out.println(futureRelayNAT.failedReason());
-            }
+//            if (futureDiscover.isFailed())
+//            {
+//                final FutureNAT futureNAT = peerNAT.startSetupPortforwarding(futureDiscover);
+//                futureNAT.awaitUninterruptibly();
+////                if (futureNAT.isFailed())
+////                {
+////                    FutureRelayNAT futureRelayNAT = peerNAT.startRelay(new TCPRelayClientConfig(), futureDiscover, futureNAT);
+////                    futureRelayNAT.awaitUninterruptibly();
+////                    System.out.println("Relay NAT: " + futureRelayNAT.failedReason());
+////                }
+//
+//                if (futureNAT.isSuccess())
+//                {
+//                    System.out.println("NAT success: " + futureNAT.peerAddress());
+//                } else
+//                {
+//                    System.out.println("NAT failed: " + futureNAT.failedReason());
+//                    //this is enough time to print out the status of the relay search
+//                    Thread.sleep(5000);
+//                }
+////                FutureNAT futureNAT = peerNAT.startSetupPortforwarding(futureDiscover);
+////                futureNAT.awaitUninterruptibly();
+////                System.out.println(futureNAT.failedReason());
+////
+////                FutureRelayNAT futureRelayNAT = peerNAT.startRelay(new TCPRelayClientConfig(), futureDiscover, futureNAT);
+////                futureRelayNAT.awaitUninterruptibly();
+////                System.out.println(futureRelayNAT.failedReason());
+//            }
 
             // Future Bootstrap - slave
             FutureBootstrap futureBootstrap = peer.bootstrap().inetAddress(address).ports(masterPort).start();
@@ -240,9 +240,6 @@ public class Node
                 System.out.println("failed " + futureDiscover.failedReason());
             }
         } catch (IOException ex)
-        {
-            Logger.getLogger(Node.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (InterruptedException ex)
         {
             Logger.getLogger(Node.class.getName()).log(Level.SEVERE, null, ex);
         }

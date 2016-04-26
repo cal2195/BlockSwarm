@@ -61,7 +61,7 @@ public class ClusterFileInfoUpdater extends Worker implements Runnable
                             }
                         } catch (Exception ex)
                         {
-                            ex.printStackTrace();
+                            LOG.fine("Couldn't get info on " + filehash);
                         }
                     }
                 });

@@ -115,6 +115,7 @@ public class PeerConnection {
 //            public void operationComplete(Future<? super Void> arg0) throws Exception {
 //            	LOG.debug("About to close the connection {}, {}.",  channelFuture.channel(), initiator ? "initiator" : "from-disptacher");
 //                closeFuture.done();
+//                channelFuture.channel().closeFuture().removeListener(this);
 //            }
 //        });
     }

@@ -89,7 +89,7 @@ public class SuperNode extends Node
             Random r = new Random();
             Bindings bindings = new Bindings().addInterface("eth0");
             peer = new PeerBuilder(new Number160(r)).ports(44444).bindings(bindings).start();
-            PeerNAT peerNAT = new PeerBuilderNAT(peer).start();
+            //PeerNAT peerNAT = new PeerBuilderNAT(peer).start();
             System.out.println("address visible to outside is " + peer.peerAddress());
             LOGGER.info("Listening for connections...");
             peer.objectDataReply(incomingHandler);

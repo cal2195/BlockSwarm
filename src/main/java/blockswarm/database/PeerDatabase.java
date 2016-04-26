@@ -66,7 +66,7 @@ public class PeerDatabase
         ArrayList<ClusterFileInfo> files = new ArrayList<>();
         for (String hash : node.getDatabase().getFiles().getAllFileHashes())
         {
-            if (!Double.isNaN(getClusterFileInfo(hash).getAvailability()))
+            if (!Double.isNaN(getClusterFileInfo(hash).getAvailability()) && getClusterFileInfo(hash).getAvailability() != 0)
             {
                 files.add(getClusterFileInfo(hash));
                 System.out.println("Added " + hash + " with " + getClusterFileInfo(hash).getAvailability());
@@ -99,7 +99,7 @@ public class PeerDatabase
         HashMap<PeerRequestKey, NodeFileInfo> nodes = new HashMap<>();
         String sql = "SELECT * FROM peers "
                 + "WHERE file_hash = ? "
-                + "AND date > TIMESTAMPADD(minute, -1, NOW())";
+                + "AND date > TIMESTAMPADD(minute, -2, NOW())";
         try (PreparedStatement stmt = conn.prepareStatement(sql))
         {
             stmt.setString(1, filehash);
