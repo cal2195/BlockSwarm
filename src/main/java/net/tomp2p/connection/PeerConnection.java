@@ -24,19 +24,19 @@ public class PeerConnection
 
     final private static Logger LOG = LoggerFactory.getLogger(PeerConnection.class);
     final public static int HEART_BEAT_MILLIS = 2000;
-    
+
     final private Semaphore oneConnection;
     final private PeerAddress remotePeer;
     final private ChannelCreator cc;
     final private boolean initiator;
-    
+
     final private Map<FutureChannelCreator, FutureResponse> map;
     final private FutureDone<Void> closeFuture;
     final private int heartBeatMillis;
 
     // these may be called from different threads, but they will never be called concurrently within this library
     private volatile ChannelFuture channelFuture;
-    
+
     private PeerConnection(Semaphore oneConnection, PeerAddress remotePeer, ChannelCreator cc,
             boolean initiator, Map<FutureChannelCreator, FutureResponse> map, FutureDone<Void> closeFuture,
             int heartBeatMillis, ChannelFuture channelFuture)
@@ -82,7 +82,7 @@ public class PeerConnection
     {
         this.remotePeer = remotePeer;
         this.channelFuture = channelFuture;
-        addCloseListener(channelFuture);
+        addCloseListener(this.channelFuture);
         this.cc = null;
         this.heartBeatMillis = heartBeatMillis;
         this.initiator = false;
@@ -90,45 +90,46 @@ public class PeerConnection
         this.map = new LinkedHashMap<FutureChannelCreator, FutureResponse>();
         this.closeFuture = new FutureDone<Void>();
     }
-    
+
     public PeerConnection channelFuture(ChannelFuture channelFuture)
     {
         this.channelFuture = channelFuture;
-        addCloseListener(channelFuture);
+        addCloseListener(this.channelFuture);
         return this;
     }
-    
+
     public int heartBeatMillis()
     {
         return heartBeatMillis;
     }
-    
+
     public ChannelFuture channelFuture()
     {
         return channelFuture;
     }
-    
+
     public FutureDone<Void> closeFuture()
     {
         return closeFuture;
     }
-    
-    GenericFutureListener<Future<? super Void>> closeListener = new GenericFutureListener<Future<? super Void>>()
-    {
-        @Override
-        public void operationComplete(Future<? super Void> arg0) throws Exception
-        {
-            LOG.debug("About to close the connection {}, {}.", channelFuture.channel(), initiator ? "initiator" : "from-disptacher");
-            closeFuture.done();
-            channelFuture.removeListener(closeListener);
-        }
-    };
-    
+
+//    Listener listener = new Listener();
+//    
+//    private class Listener implements GenericFutureListener<Future<? super Void>>
+//    {
+//        @Override
+//        public void operationComplete(Future<? super Void> f) throws Exception
+//        {
+//            //System.out.println("About to close the connection " + channelFuture.channel() + (initiator ? "initiator" : "from-disptacher"));
+//            closeFuture.done();
+//        }
+//    }
+
     private void addCloseListener(final ChannelFuture channelFuture)
     {
-        channelFuture.channel().closeFuture().addListener(closeListener);
+//        channelFuture.channel().closeFuture().addListener(listener);
     }
-    
+
     public FutureDone<Void> close()
     {
         // cc is not null if we opened the connection
@@ -145,7 +146,7 @@ public class PeerConnection
                 {
                     closeFuture.done();
                 }
-            });            
+            });
         } else
         {
             // cc is null if it is an incoming connection
@@ -155,13 +156,13 @@ public class PeerConnection
         }
         return closeFuture;
     }
-    
+
     public FutureChannelCreator acquire(final FutureResponse futureResponse)
     {
         FutureChannelCreator futureChannelCreator = new FutureChannelCreator();
         return acquire(futureChannelCreator, futureResponse);
     }
-    
+
     private FutureChannelCreator acquire(final FutureChannelCreator futureChannelCreator,
             final FutureResponse futureResponse)
     {
@@ -200,17 +201,17 @@ public class PeerConnection
         }
         return futureChannelCreator;
     }
-    
+
     public ChannelCreator channelCreator()
     {
         return cc;
     }
-    
+
     public PeerAddress remotePeer()
     {
         return remotePeer;
     }
-    
+
     public boolean isOpen()
     {
         if (channelFuture != null)
@@ -221,12 +222,12 @@ public class PeerConnection
             return false;
         }
     }
-    
+
     public PeerConnection changeRemotePeer(PeerAddress remotePeer)
     {
         return new PeerConnection(oneConnection, remotePeer, cc, initiator, map, closeFuture, heartBeatMillis, channelFuture);
     }
-    
+
     @Override
     public int hashCode()
     {
@@ -236,7 +237,7 @@ public class PeerConnection
         }
         return remotePeer.hashCode();
     }
-    
+
     @Override
     public boolean equals(Object obj)
     {
