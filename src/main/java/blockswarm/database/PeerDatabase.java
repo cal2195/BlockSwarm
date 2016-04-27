@@ -132,7 +132,7 @@ public class PeerDatabase
             peerfile.blocks.andNot(found.blocks);
             NodeFileInfo ask = new NodeFileInfo(filehash);
             int asked = 0;
-            for (int i = peerfile.blocks.nextSetBit(0); i >= 0 && asked++ < 20; i = peerfile.blocks.nextSetBit(i + 1))
+            for (int i = peerfile.blocks.nextSetBit(0); i >= 0 && asked++ < 100; i = peerfile.blocks.nextSetBit(i + 1))
             {
                 ask.blocks.set(i);
                 found.blocks.set(i);
