@@ -16,7 +16,7 @@ import java.util.logging.Logger;
 public class Bootloader
 {
 
-    public static final String VERSION =    "prealpha-0.04";
+    public static final String VERSION =    "prealpha-0.05";
     public static final String RELEASE =    "Be lost, be strange, be what those other people won't do\n" +
                                             "You know, you're right\n" +
                                             "Here you will know your might\n" +
