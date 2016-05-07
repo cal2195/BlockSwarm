@@ -23,6 +23,7 @@ public class Database
     private DownloadDatabase downloadDatabase;
     private UploadDatabase uploadDatabase;
     private SettingsDatabase settingsDatabase;
+    private SiteDatabase siteDatabase;
     Node node;
 
     public Database(Node node)
@@ -65,6 +66,7 @@ public class Database
         downloadDatabase = new DownloadDatabase(conn, node);
         uploadDatabase = new UploadDatabase(conn, node);
         settingsDatabase = new SettingsDatabase(conn, node);
+        siteDatabase = new SiteDatabase(conn, node);
     }
 
     public DownloadDatabase getDownloads()
@@ -95,6 +97,11 @@ public class Database
     public SettingsDatabase getSettings()
     {
         return settingsDatabase;
+    }
+
+    public SiteDatabase getSites()
+    {
+        return siteDatabase;
     }
 
     public boolean tableExists(String table)
