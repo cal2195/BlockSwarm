@@ -1,13 +1,11 @@
 package blockswarm.database;
 
-import blockswarm.info.NodeFileInfo;
 import blockswarm.network.cluster.Node;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -30,7 +28,7 @@ public class SiteDatabase
 
     public boolean addSite(String domain, String filehash)
     {
-        String sql = "INSERT INTO uploads "
+        String sql = "INSERT INTO site "
                 + "(domain, file_hash) "
                 + "VALUES (?,?)";
         LOGGER.log(Level.FINE, "Adding site {0}!", new Object[]
@@ -49,7 +47,7 @@ public class SiteDatabase
             {
                 domain
             });
-            //ex.printStackTrace();
+            ex.printStackTrace();
         }
         return false;
     }

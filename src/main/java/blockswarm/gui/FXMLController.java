@@ -2,6 +2,7 @@ package blockswarm.gui;
 
 import blockswarm.BlockSwarm;
 import blockswarm.Bootloader;
+import blockswarm.blocksites.SiteGenerator;
 import blockswarm.database.entries.FileEntry;
 import blockswarm.files.FileHandler;
 import blockswarm.info.NodeFileInfo;
@@ -40,6 +41,7 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.text.Font;
 import javafx.util.Callback;
 import javax.swing.JFileChooser;
+import javax.swing.JOptionPane;
 
 public class FXMLController implements Initializable
 {
@@ -178,6 +180,15 @@ public class FXMLController implements Initializable
         {
             fileHandler.uploadFile(file);
         }
+    }
+    
+    @FXML
+    public void uploadSite()
+    {
+        JFileChooser filechooser = new JFileChooser();
+        filechooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+        filechooser.showOpenDialog(null);
+        new SiteGenerator(node).uploadSite(filechooser.getSelectedFile().getAbsolutePath(), JOptionPane.showInputDialog("Please enter a domain:"));
     }
 
     @FXML

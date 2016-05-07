@@ -72,7 +72,7 @@ public class FileHandler
         }
     }
 
-    private static String hashFile(File file, String algorithm)
+    public static String hashFile(File file, String algorithm)
     {
         try (FileInputStream inputStream = new FileInputStream(file))
         {

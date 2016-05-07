@@ -52,9 +52,20 @@ public class Blocker
             filehash, info.filename
         });
         
-        new File("downloads").mkdir();
+        String folder = "";
+        
+        if (info.filehash.endsWith(".bsite"))
+        {
+            folder = ".sites";
+        }
+        else 
+        {
+            folder = "downloads";
+        }
+        
+        new File(folder).mkdir();
 
-        try (FileOutputStream fos = new FileOutputStream("downloads/" + info.filename))
+        try (FileOutputStream fos = new FileOutputStream(folder + info.filename))
         {
             for (int i = 0; i < info.totalBlocks; i++)
             {

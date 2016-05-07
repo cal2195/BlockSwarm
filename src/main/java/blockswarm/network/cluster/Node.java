@@ -1,5 +1,6 @@
 package blockswarm.network.cluster;
 
+import blockswarm.blocksites.ProxyServer;
 import blockswarm.database.Database;
 import blockswarm.gui.FXMLController;
 import blockswarm.stats.NetworkStats;
@@ -53,6 +54,7 @@ public class Node
     FXMLController gui;
     PeerRequestManager peerRequestManager;
     NetworkStats networkStats = new NetworkStats();
+    ProxyServer proxyServer;
 
     int TIMEOUT = 60 * 1000;
     int PORT = 44446;
@@ -93,6 +95,13 @@ public class Node
         setupDHT();
 
         setupCluster();
+        
+        setupProxyServer();
+    }
+    
+    public void setupProxyServer()
+    {
+        proxyServer = new ProxyServer(this);
     }
 
     public void setupWorkerPool()
