@@ -41,10 +41,10 @@ public class PutBlockSiteWorker extends Worker implements Runnable
             {
                 if (version == -1)
                 {
-                    node.getDatabase().getSites().addSite(packet.domain, packet.filehash, packet.version, packet.publicKey);
+                    node.getDatabase().getSites().addSite(packet.domain, packet.filehash, packet.version, packet.signature, packet.publicKey);
                 } else if (SignatureRSA.verify(packet.getData(), packet.signature, publicKey))
                 {
-                    node.getDatabase().getSites().addSite(packet.domain, packet.filehash, packet.version, publicKey);
+                    node.getDatabase().getSites().addSite(packet.domain, packet.filehash, packet.version, packet.signature, publicKey);
                 }
             }
         }

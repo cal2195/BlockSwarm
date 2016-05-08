@@ -4,6 +4,7 @@ import blockswarm.database.entries.FileEntry;
 import blockswarm.info.ClusterFileInfo;
 import blockswarm.info.NodeFileInfo;
 import blockswarm.network.packets.BlockRequestPacket;
+import blockswarm.network.packets.BlockSitePacket;
 import blockswarm.network.packets.FileListPacket;
 import blockswarm.network.packets.FileListRequestPacket;
 import blockswarm.workers.FileAssemblyWorker;
@@ -136,6 +137,15 @@ public class Cluster
         {
             LOG.fine("Telling " + pa + " about new files!");
             node.send(pa, filePacket);
+        }
+    }
+    
+    public void notifyAllOfNewSite(BlockSitePacket packet)
+    {
+        for (PeerAddress pa : node.peer.peerBean().peerMap().all())
+        {
+            LOG.fine("Telling " + pa + " about new site!");
+            node.send(pa, packet);
         }
     }
     private static final Logger LOG = Logger.getLogger(Cluster.class.getName());
