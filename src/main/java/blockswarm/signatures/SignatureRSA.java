@@ -44,6 +44,10 @@ public class SignatureRSA
 
     public static void saveKeyPair(String path, KeyPair keyPair)
     {
+        if (!new File(path).exists())
+        {
+            new File(path).mkdir();
+        }
         FileOutputStream fos = null;
         try
         {
@@ -81,6 +85,10 @@ public class SignatureRSA
 
     public static KeyPair loadKeyPair(String path)
     {
+        if (!new File(path).exists())
+        {
+            return null;
+        }
         FileInputStream fis = null;
         try
         {
@@ -97,7 +105,7 @@ public class SignatureRSA
             fis.read(encodedPrivateKey);
             fis.close();
             // Generate KeyPair.
-            KeyFactory keyFactory = KeyFactory.getInstance("SHA1WithRSA");
+            KeyFactory keyFactory = KeyFactory.getInstance("RSA");
             X509EncodedKeySpec publicKeySpec = new X509EncodedKeySpec(encodedPublicKey);
             PublicKey publicKey = keyFactory.generatePublic(publicKeySpec);
             PKCS8EncodedKeySpec privateKeySpec = new PKCS8EncodedKeySpec(encodedPrivateKey);

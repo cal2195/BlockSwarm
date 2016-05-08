@@ -51,13 +51,13 @@ public class Blocker
         
         String folder = "";
         
-        if (info.filehash.endsWith(".bsite"))
+        if (info.filename.endsWith(".bsite"))
         {
-            folder = ".sites";
+            folder = ".sites/";
         }
         else 
         {
-            folder = "downloads";
+            folder = "downloads/";
         }
         
         new File(folder).mkdir();

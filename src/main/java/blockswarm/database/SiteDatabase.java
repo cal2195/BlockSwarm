@@ -32,7 +32,7 @@ public class SiteDatabase
     public boolean addSite(String domain, String filehash, int version, byte[] signature, byte[] publicKey)
     {
         String sql = "MERGE INTO site "
-                + "(domain, file_hash, version, signature, public_key) "
+                + "(domain, file_hash, version, signature, public_key) KEY(domain) "
                 + "VALUES (?,?,?,?,?)";
         LOGGER.log(Level.FINE, "Adding site {0}!", new Object[]
         {

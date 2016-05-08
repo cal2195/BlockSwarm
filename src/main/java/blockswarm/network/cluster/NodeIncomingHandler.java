@@ -54,22 +54,22 @@ public class NodeIncomingHandler implements ObjectDataReply
             node.getWorkerPool().addWorker(new FileListWorker(((FileListRequestPacket) packet).ignore, pa, node));
         } else if (packet instanceof FileInfoRequestPacket)
         {
-            LOG.finer("Received a file info request packet!");
+            LOG.fine("Received a file info request packet!");
             node.getWorkerPool().addWorker(new GetFileInfoWorker(pa, node));
         } else if (packet instanceof BlockSitePacket)
         {
-            LOG.finer("Received a blocksite packet!");
+            LOG.fine("Received a blocksite packet!");
             node.getWorkerPool().addWorker(new PutBlockSiteWorker((BlockSitePacket) packet, node));
         } else if (packet instanceof BlockSiteCollectionPacket)
         {
-            LOG.finer("Received a blocksite collection packet!");
+            LOG.fine("Received a blocksite collection packet!");
             for (BlockSitePacket site : ((BlockSiteCollectionPacket) packet).sites)
             {
                 node.getWorkerPool().addWorker(new PutBlockSiteWorker(site, node));
             }
         } else if (packet instanceof BlockSitesInfoRequestPacket)
         {
-            LOG.finer("Received a blocksite info request packet!");
+            LOG.fine("Received a blocksite info request packet!");
             node.getWorkerPool().addWorker(new GetAllBlockSitesWorker(pa, node));
         } else
         {

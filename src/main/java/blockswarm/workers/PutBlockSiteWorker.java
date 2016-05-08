@@ -31,6 +31,7 @@ public class PutBlockSiteWorker extends Worker implements Runnable
     {
         int version = node.getDatabase().getSites().getVersion(packet.domain);
         byte[] publicKey = node.getDatabase().getSites().getPublicKey(packet.domain);
+        System.out.println("Processing " + packet.domain);
         if (version < packet.version)
         {
             if (SignatureRSA.verify(packet.getData(), packet.signature, packet.publicKey))
