@@ -3,8 +3,6 @@ package blockswarm.network.cluster;
 import blockswarm.info.NodeFileInfo;
 import java.io.IOException;
 import java.util.HashMap;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import net.tomp2p.dht.FutureGet;
 import net.tomp2p.dht.FuturePut;
 import net.tomp2p.dht.PeerBuilderDHT;
@@ -13,10 +11,6 @@ import net.tomp2p.p2p.Peer;
 import net.tomp2p.peers.Number160;
 import net.tomp2p.peers.PeerAddress;
 import net.tomp2p.storage.Data;
-import net.tomp2p.storage.StorageDisk;
-import net.tomp2p.tracker.FutureTracker;
-import net.tomp2p.tracker.PeerBuilderTracker;
-import net.tomp2p.tracker.PeerTracker;
 
 /**
  *

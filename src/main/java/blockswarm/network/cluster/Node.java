@@ -4,7 +4,6 @@ import blockswarm.blocksites.ProxyServer;
 import blockswarm.database.Database;
 import blockswarm.gui.FXMLController;
 import blockswarm.stats.NetworkStats;
-import blockswarm.workers.CacheWorker;
 import blockswarm.workers.GUIWorker;
 import blockswarm.workers.PeerRequestManager;
 import blockswarm.workers.CacheManager;
@@ -14,25 +13,16 @@ import blockswarm.workers.WorkerPool;
 import java.io.IOException;
 import java.net.Inet4Address;
 import java.net.InetAddress;
-import java.util.Collection;
 import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import net.tomp2p.connection.ChannelServerConfiguration;
-import net.tomp2p.futures.BaseFutureAdapter;
 import net.tomp2p.futures.FutureBootstrap;
 import net.tomp2p.futures.FutureDirect;
 import net.tomp2p.futures.FutureDiscover;
-import net.tomp2p.nat.FutureNAT;
-import net.tomp2p.nat.FutureRelayNAT;
-import net.tomp2p.nat.PeerBuilderNAT;
-import net.tomp2p.nat.PeerNAT;
 import net.tomp2p.p2p.Peer;
 import net.tomp2p.p2p.PeerBuilder;
 import net.tomp2p.peers.Number160;
 import net.tomp2p.peers.PeerAddress;
-import net.tomp2p.relay.RelayClientConfig;
-import net.tomp2p.relay.tcp.TCPRelayClientConfig;
 
 /**
  *

@@ -2,9 +2,7 @@ package blockswarm.workers;
 
 import blockswarm.info.NodeFileInfo;
 import blockswarm.network.cluster.Node;
-import java.io.IOException;
 import java.util.HashMap;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 import net.tomp2p.dht.FutureGet;
 import net.tomp2p.futures.BaseFutureAdapter;

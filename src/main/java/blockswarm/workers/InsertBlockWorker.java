@@ -1,7 +1,5 @@
 package blockswarm.workers;
 
-import blockswarm.database.Database;
-import blockswarm.files.FileHandler;
 import blockswarm.network.cluster.Node;
 import blockswarm.network.packets.BlockPacket;
 

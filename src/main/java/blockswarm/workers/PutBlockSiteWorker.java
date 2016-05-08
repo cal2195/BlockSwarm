@@ -1,12 +1,8 @@
 package blockswarm.workers;
 
-import blockswarm.info.NodeFileInfo;
 import blockswarm.network.cluster.Node;
-import blockswarm.network.cluster.supernode.SuperNode;
 import blockswarm.network.packets.BlockSitePacket;
 import blockswarm.signatures.SignatureRSA;
-import java.util.HashMap;
-import net.tomp2p.peers.PeerAddress;
 
 /**
  *

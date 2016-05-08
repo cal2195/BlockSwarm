@@ -2,7 +2,6 @@ package blockswarm.files.blocks;
 
 import blockswarm.database.Database;
 import blockswarm.database.entries.FileEntry;
-import blockswarm.info.NodeFileInfo;
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.File;
@@ -10,8 +9,6 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.file.Files;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
 import java.util.List;
 import java.util.logging.Level;

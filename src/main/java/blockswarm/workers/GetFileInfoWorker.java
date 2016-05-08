@@ -1,11 +1,8 @@
 package blockswarm.workers;
 
-import blockswarm.database.entries.FileEntry;
 import blockswarm.info.NodeFileInfo;
 import blockswarm.network.cluster.Node;
 import blockswarm.network.packets.FileInfoPacket;
-import blockswarm.network.packets.FileListPacket;
-import java.util.ArrayList;
 import java.util.HashMap;
 import net.tomp2p.peers.PeerAddress;
 

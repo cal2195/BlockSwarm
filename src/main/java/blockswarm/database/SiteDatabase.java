@@ -2,7 +2,6 @@ package blockswarm.database;
 
 import blockswarm.network.cluster.Node;
 import blockswarm.network.packets.BlockSitePacket;
-import com.google.common.primitives.Bytes;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;

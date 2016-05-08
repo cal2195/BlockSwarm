@@ -1,7 +1,5 @@
 package blockswarm.workers;
 
-import blockswarm.database.Database;
-import blockswarm.network.cluster.Node;
 import blockswarm.network.packets.BlockPacket;
 import net.tomp2p.futures.BaseFutureAdapter;
 import net.tomp2p.futures.FutureDirect;
