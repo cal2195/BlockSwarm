@@ -73,7 +73,7 @@ public class PeerDatabase
             }
         }
         Collections.sort(files);
-        return Arrays.copyOfRange((ClusterFileInfo[]) files.toArray(new ClusterFileInfo[0]), 0, 20);
+        return Arrays.copyOfRange(files.toArray(new ClusterFileInfo[0]), 0, 20);
     }
 
     public ClusterFileInfo getClusterFileInfo(String filehash)

@@ -131,7 +131,7 @@ public class FXMLController implements Initializable
             TreeItem parent = current;
             while ((parent = parent.getParent()) != null)
             {
-                if (!((String) parent.getValue()).equals("*"))
+                if (!parent.getValue().equals("*"))
                 {
                     searchTerms.add((String) parent.getValue());
                 }

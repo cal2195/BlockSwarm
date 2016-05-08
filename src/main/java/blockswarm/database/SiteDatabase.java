@@ -1,6 +1,7 @@
 package blockswarm.database;
 
 import blockswarm.network.cluster.Node;
+import com.google.common.primitives.Bytes;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -26,11 +27,11 @@ public class SiteDatabase
         setup();
     }
 
-    public boolean addSite(String domain, String filehash)
+    public boolean addSite(String domain, String filehash, int version, byte[] publicKey)
     {
-        String sql = "INSERT INTO site "
-                + "(domain, file_hash) "
-                + "VALUES (?,?)";
+        String sql = "MERGE INTO site "
+                + "(domain, file_hash, version, public_key) "
+                + "VALUES (?,?,?,?)";
         LOGGER.log(Level.FINE, "Adding site {0}!", new Object[]
         {
             domain
@@ -39,6 +40,8 @@ public class SiteDatabase
         {
             stmt.setString(1, domain);
             stmt.setString(2, filehash);
+            stmt.setInt(3, version);
+            stmt.setBytes(4, publicKey);
             stmt.execute();
             return true;
         } catch (SQLException ex)
@@ -71,6 +74,46 @@ public class SiteDatabase
         }
         return null;
     }
+    
+    public byte[] getPublicKey(String domain)
+    {
+        String sql = "SELECT public_key FROM site "
+                   + "WHERE domain = ?";
+        try (PreparedStatement stmt = conn.prepareStatement(sql))
+        {
+            stmt.setString(1, domain);
+            ResultSet resultSet = stmt.executeQuery();
+            resultSet.next();
+            return resultSet.getBytes("public_key");
+        } catch (SQLException ex)
+        {
+            LOGGER.log(Level.FINE, "Site miss for {0}!", new Object[]
+            {
+                domain
+            });
+        }
+        return null;
+    }
+    
+    public int getVersion(String domain)
+    {
+        String sql = "SELECT version FROM site "
+                   + "WHERE domain = ?";
+        try (PreparedStatement stmt = conn.prepareStatement(sql))
+        {
+            stmt.setString(1, domain);
+            ResultSet resultSet = stmt.executeQuery();
+            resultSet.next();
+            return resultSet.getInt("version");
+        } catch (SQLException ex)
+        {
+            LOGGER.log(Level.FINE, "Site miss for {0}!", new Object[]
+            {
+                domain
+            });
+        }
+        return -1;
+    }
 
     private void setup()
     {
@@ -83,7 +126,9 @@ public class SiteDatabase
                 {
                     String sql = "CREATE TABLE site "
                             + "(domain VARCHAR not NULL UNIQUE,"
-                            + " file_hash CHAR(40) not NULL UNIQUE, "
+                            + " file_hash CHAR(40) not NULL, "
+                            + " version INTEGER not NULL, "
+                            + " public_key BLOB not NULL,"
                             + " `id` INT NOT NULL AUTO_INCREMENT PRIMARY KEY,"
                             + " PRIMARY KEY ( id ))";
                     stmt.executeUpdate(sql);

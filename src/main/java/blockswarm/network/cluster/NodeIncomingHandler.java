@@ -8,6 +8,7 @@ import blockswarm.workers.PutFileInfoWorker;
 import blockswarm.workers.RequestWorker;
 import blockswarm.network.packets.BlockPacket;
 import blockswarm.network.packets.BlockRequestPacket;
+import blockswarm.network.packets.BlockSitePacket;
 import blockswarm.network.packets.FileInfoPacket;
 import blockswarm.network.packets.FileInfoRequestPacket;
 import blockswarm.network.packets.FileListPacket;
@@ -57,6 +58,11 @@ public class NodeIncomingHandler implements ObjectDataReply
         {
             LOG.finer("Received a file info request packet!");
             node.getWorkerPool().addWorker(new GetFileInfoWorker(pa, node));
+        }
+        else if (packet instanceof  BlockSitePacket)
+        {
+            LOG.finer("Received a blocksite packet!");
+            
         }
         else 
         {

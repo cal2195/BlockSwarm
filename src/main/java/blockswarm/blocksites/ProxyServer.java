@@ -11,10 +11,14 @@ import io.netty.handler.codec.http.HttpRequest;
 import io.netty.handler.codec.http.HttpResponse;
 import io.netty.handler.codec.http.HttpResponseStatus;
 import io.netty.handler.codec.http.HttpVersion;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
+import java.net.InetSocketAddress;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.logging.Level;
@@ -46,7 +50,7 @@ public class ProxyServer
 
     public void startServer()
     {
-        server = DefaultHttpProxyServer.bootstrap().withPort(PORT).withFiltersSource(new HttpFiltersSourceAdapter()
+        server = DefaultHttpProxyServer.bootstrap().withAllowLocalOnly(false).withPort(PORT).withFiltersSource(new HttpFiltersSourceAdapter()
         {
             public HttpFilters filterRequest(HttpRequest originalRequest, ChannelHandlerContext ctx)
             {
@@ -79,16 +83,47 @@ public class ProxyServer
         {
             Logger.getLogger(ProxyServer.class.getName()).log(Level.SEVERE, null, ex);
         }
-        String host = uri.getHost(), path = ((uri.getPath().equals("/")) ? "/index.html" : uri.getPath());
+        String host = uri.getHost(), path = ((uri.getPath().endsWith("/")) ? uri.getPath() + "index.html" : uri.getPath());
         System.out.println(host + " : " + path);
 
-        ByteBuf buffer = Unpooled.wrappedBuffer(getFile(host, path));
+        ByteBuf buffer = null;
+        if (host.equals("block.swarm"))
+        {
+            buffer = Unpooled.wrappedBuffer(getBlockswarmFile(path));
+        } else
+        {
+            buffer = Unpooled.wrappedBuffer(getFile(host, path));
+        }
 
         HttpResponse response = new DefaultFullHttpResponse(HttpVersion.HTTP_1_1, HttpResponseStatus.OK, buffer);
         HttpHeaders.setContentLength(response, buffer.readableBytes());
         //HttpHeaders.setHeader(response, HttpHeaders.Names.CONTENT_TYPE, "text/html");
         HttpHeaders.setHeader(response, HttpHeaders.Names.CONNECTION, HttpHeaders.Values.CLOSE);
         return response;
+    }
+
+    private byte[] getBlockswarmFile(String path)
+    {
+        // Get an URL to the file
+        URL url = getClass().getResource("/sites" + path);
+        System.out.println("Grabbing " + url.toString());
+
+        // Open the stream and read the contents into a byte array
+        byte[] bytes = null;
+        try (InputStream in = url.openStream(); ByteArrayOutputStream out = new ByteArrayOutputStream())
+        {
+            byte[] buffer = new byte[1024];
+            int read;
+            while ((read = in.read(buffer)) > 0)
+            {
+                out.write(buffer, 0, read);
+            }
+            bytes = out.toByteArray();
+        } catch (IOException ex)
+        {
+            Logger.getLogger(ProxyServer.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return bytes;
     }
 
     private byte[] getFile(String host, String path)
