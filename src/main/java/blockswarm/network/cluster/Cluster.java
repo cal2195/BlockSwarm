@@ -5,6 +5,7 @@ import blockswarm.info.ClusterFileInfo;
 import blockswarm.info.NodeFileInfo;
 import blockswarm.network.packets.BlockRequestPacket;
 import blockswarm.network.packets.BlockSitePacket;
+import blockswarm.network.packets.BlockSitesInfoRequestPacket;
 import blockswarm.network.packets.FileListPacket;
 import blockswarm.network.packets.FileListRequestPacket;
 import blockswarm.workers.FileAssemblyWorker;
@@ -125,6 +126,15 @@ public class Cluster
         {
             LOG.fine("Asking " + pa + " for their file list!");
             node.send(pa, new FileListRequestPacket(files));
+        }
+    }
+    
+    public void collectBlockSites()
+    {
+        for (PeerAddress pa : node.peer.peerBean().peerMap().all())
+        {
+            LOG.fine("Asking " + pa + " for their blocksite list!");
+            node.send(pa, new BlockSitesInfoRequestPacket());
         }
     }
 

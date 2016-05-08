@@ -1,10 +1,12 @@
 package blockswarm.network.packets;
 
+import java.io.Serializable;
+
 /**
  *
  * @author cal
  */
-public class BlockSitePacket
+public class BlockSitePacket implements Serializable
 {
     public final int version;
     public final byte[] signature, publicKey;

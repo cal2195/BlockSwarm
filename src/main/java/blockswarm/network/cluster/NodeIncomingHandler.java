@@ -6,10 +6,14 @@ import blockswarm.workers.FileListWorker;
 import blockswarm.workers.InsertBlockWorker;
 import blockswarm.network.packets.BlockPacket;
 import blockswarm.network.packets.BlockRequestPacket;
+import blockswarm.network.packets.BlockSiteCollectionPacket;
 import blockswarm.network.packets.BlockSitePacket;
+import blockswarm.network.packets.BlockSitesInfoRequestPacket;
 import blockswarm.network.packets.FileInfoRequestPacket;
 import blockswarm.network.packets.FileListPacket;
 import blockswarm.network.packets.FileListRequestPacket;
+import blockswarm.workers.GetAllBlockSitesWorker;
+import blockswarm.workers.PutBlockSiteWorker;
 import java.util.logging.Logger;
 import net.tomp2p.peers.PeerAddress;
 import net.tomp2p.rpc.ObjectDataReply;
@@ -20,13 +24,14 @@ import net.tomp2p.rpc.ObjectDataReply;
  */
 public class NodeIncomingHandler implements ObjectDataReply
 {
+
     Node node;
 
     public NodeIncomingHandler(Node node)
     {
         this.node = node;
     }
-    
+
     @Override
     public Object reply(PeerAddress pa, Object packet)
     {
@@ -35,33 +40,38 @@ public class NodeIncomingHandler implements ObjectDataReply
             LOG.fine("Received block packet from " + pa.inetAddress().getHostAddress());
             node.getWorkerPool().addWorker(new InsertBlockWorker((BlockPacket) packet, node));
             node.getNetworkStats().blockReceived(((BlockPacket) packet).filehash);
-        }
-        else if (packet instanceof BlockRequestPacket)
+        } else if (packet instanceof BlockRequestPacket)
         {
             LOG.fine("Received block request packet!");
             node.getPeerRequestManager().processRequest(pa, ((BlockRequestPacket) packet).nodeFileInfo);
-        }
-        else if (packet instanceof FileListPacket)
+        } else if (packet instanceof FileListPacket)
         {
             LOG.fine("Received file list packet!");
             node.getWorkerPool().addWorker(new FileEntryWorker(((FileListPacket) packet).files, node, pa));
-        }
-        else if (packet instanceof FileListRequestPacket)
+        } else if (packet instanceof FileListRequestPacket)
         {
             LOG.fine("Received file list request packet!");
             node.getWorkerPool().addWorker(new FileListWorker(((FileListRequestPacket) packet).ignore, pa, node));
-        }
-        else if (packet instanceof FileInfoRequestPacket)
+        } else if (packet instanceof FileInfoRequestPacket)
         {
             LOG.finer("Received a file info request packet!");
             node.getWorkerPool().addWorker(new GetFileInfoWorker(pa, node));
-        }
-        else if (packet instanceof  BlockSitePacket)
+        } else if (packet instanceof BlockSitePacket)
         {
             LOG.finer("Received a blocksite packet!");
-            
-        }
-        else 
+            node.getWorkerPool().addWorker(new PutBlockSiteWorker((BlockSitePacket) packet, node));
+        } else if (packet instanceof BlockSiteCollectionPacket)
+        {
+            LOG.finer("Received a blocksite collection packet!");
+            for (BlockSitePacket site : ((BlockSiteCollectionPacket) packet).sites)
+            {
+                node.getWorkerPool().addWorker(new PutBlockSiteWorker(site, node));
+            }
+        } else if (packet instanceof BlockSitesInfoRequestPacket)
+        {
+            LOG.finer("Received a blocksite info request packet!");
+            node.getWorkerPool().addWorker(new GetAllBlockSitesWorker(pa, node));
+        } else
         {
             LOG.fine("UNKNOWN BLOCK RECEIVED FROM " + pa.inetAddress().getHostAddress());
         }
