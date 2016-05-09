@@ -1,6 +1,7 @@
 package blockswarm.blocksites;
 
 import blockswarm.network.cluster.Node;
+import blockswarm.network.packets.BlockSitePacket;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
 import io.netty.channel.ChannelHandlerContext;
@@ -85,18 +86,46 @@ public class ProxyServer
         String host = uri.getHost(), path = ((uri.getPath().endsWith("/")) ? uri.getPath() + "index.html" : uri.getPath());
         System.out.println(host + " : " + path);
 
+        if (host.startsWith("www."))
+        {
+            host = host.substring(4);
+        }
+
+        String contentType = "text/html";
         ByteBuf buffer = null;
         if (host.equals("block.swarm"))
         {
             buffer = Unpooled.wrappedBuffer(getBlockswarmFile(path));
+            try
+            {
+                contentType = Files.probeContentType(Paths.get(getClass().getResource("/sites" + path).toURI()));
+            } catch (IOException ex)
+            {
+                Logger.getLogger(ProxyServer.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (URISyntaxException ex)
+            {
+                Logger.getLogger(ProxyServer.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        } else if (host.equals("the.index"))
+        {
+            buffer = Unpooled.wrappedBuffer(listTheIndex());
         } else
         {
             buffer = Unpooled.wrappedBuffer(getFile(host, path));
+            try
+            {
+                contentType = Files.probeContentType(Paths.get(".sites/" + node.getDatabase().getSites().getHash(host) + path));
+            } catch (IOException ex)
+            {
+                Logger.getLogger(ProxyServer.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
+        
+        System.out.println("::" + contentType);
 
         HttpResponse response = new DefaultFullHttpResponse(HttpVersion.HTTP_1_1, HttpResponseStatus.OK, buffer);
         HttpHeaders.setContentLength(response, buffer.readableBytes());
-        //HttpHeaders.setHeader(response, HttpHeaders.Names.CONTENT_TYPE, "text/html");
+        HttpHeaders.setHeader(response, HttpHeaders.Names.CONTENT_TYPE, contentType);
         HttpHeaders.setHeader(response, HttpHeaders.Names.CONNECTION, HttpHeaders.Values.CLOSE);
         return response;
     }
@@ -123,6 +152,16 @@ public class ProxyServer
             Logger.getLogger(ProxyServer.class.getName()).log(Level.SEVERE, null, ex);
         }
         return bytes;
+    }
+
+    private byte[] listTheIndex()
+    {
+        String data = "";
+        for (BlockSitePacket site : node.getDatabase().getSites().getAllBlockSites())
+        {
+            data += site.filehash + " <a href='http://" + site.domain + "'>" + site.domain + "</a> (v" + site.version + ")<br/>";
+        }
+        return data.getBytes();
     }
 
     private byte[] getFile(String host, String path)
