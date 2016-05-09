@@ -10,12 +10,26 @@ import blockswarm.workers.CacheManager;
 import blockswarm.workers.ClusterFileInfoUpdater;
 import blockswarm.workers.FileListUpdater;
 import blockswarm.workers.WorkerPool;
+import io.netty.channel.ChannelHandler;
+import io.netty.handler.traffic.GlobalChannelTrafficCounter;
+import io.netty.handler.traffic.GlobalTrafficShapingHandler;
+import io.netty.handler.traffic.TrafficCounter;
+import io.netty.util.concurrent.EventExecutorGroup;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.net.Inet4Address;
 import java.net.InetAddress;
+import java.util.LinkedHashMap;
+import java.util.Map;
 import java.util.Random;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.Timer;
+import net.tomp2p.connection.PipelineFilter;
 import net.tomp2p.futures.FutureBootstrap;
 import net.tomp2p.futures.FutureDirect;
 import net.tomp2p.futures.FutureDiscover;
@@ -23,6 +37,7 @@ import net.tomp2p.p2p.Peer;
 import net.tomp2p.p2p.PeerBuilder;
 import net.tomp2p.peers.Number160;
 import net.tomp2p.peers.PeerAddress;
+import net.tomp2p.utils.Pair;
 
 /**
  *
@@ -30,10 +45,10 @@ import net.tomp2p.peers.PeerAddress;
  */
 public class Node
 {
-
+    
     private static final Logger LOGGER = Logger.getLogger(Node.class.getName());
     final boolean USING_GUI;
-
+    
     public WorkerPool workerPool;
     public Peer peer;
     NodeIncomingHandler incomingHandler;
@@ -45,45 +60,45 @@ public class Node
     PeerRequestManager peerRequestManager;
     NetworkStats networkStats = new NetworkStats();
     ProxyServer proxyServer;
-
+    
     int TIMEOUT = 60 * 1000;
     int PORT = 44446;
-
+    
     public Node()
     {
         USING_GUI = false;
     }
-
+    
     public Node(FXMLController gui)
     {
         USING_GUI = true;
         this.gui = gui;
     }
-
+    
     public FXMLController getGui()
     {
         return gui;
     }
-
+    
     public void setupNode()
     {
         setupDatabase();
-
+        
         setupWorkerPool();
-
+        
         if (USING_GUI)
         {
             setupGui();
         }
-
+        
         setupIncomingHandler();
-
+        
         bootstrap("morebetterengineering.com");
-
+        
         setupTracker();
-
+        
         setupDHT();
-
+        
         setupCluster();
         
         setupProxyServer();
@@ -93,39 +108,39 @@ public class Node
     {
         proxyServer = new ProxyServer(this);
     }
-
+    
     public void setupWorkerPool()
     {
         workerPool = new WorkerPool();
     }
-
+    
     public WorkerPool getWorkerPool()
     {
         return workerPool;
     }
-
+    
     protected void setupGui()
     {
         gui.setNode(this);
         gui.updateFileList();
         workerPool.addRepeatedWorker(new GUIWorker(this), 5);
     }
-
+    
     protected void setupIncomingHandler()
     {
         incomingHandler = new NodeIncomingHandler(this);
     }
-
+    
     protected void setupTracker()
     {
         tracker = new Tracker(peer);
     }
-
+    
     protected void setupDHT()
     {
         dht = new DHT(peer);
     }
-
+    
     protected void setupCluster()
     {
         cluster = new Cluster(this);
@@ -135,62 +150,92 @@ public class Node
         networkStats = new NetworkStats();
         workerPool.addRepeatedWorker(new FileListUpdater(this), 120);
     }
-
+    
     protected void setupDatabase()
     {
         database = new Database(this);
         database.connect();
         database.initialise();
     }
-
+    
     public NetworkStats getNetworkStats()
     {
         return networkStats;
     }
-
+    
     public DHT getDHT()
     {
         return dht;
     }
-
+    
     public Database getDatabase()
     {
         return database;
     }
-
+    
     public Peer getPeer()
     {
         return peer;
     }
-
+    
     public PeerRequestManager getPeerRequestManager()
     {
         return peerRequestManager;
     }
-
+    
     public Tracker getTracker()
     {
         return tracker;
     }
-
+    
     public Cluster getCluster()
     {
         return cluster;
     }
-
+    
     public void bootstrap(String supernode)
     {
         try
         {
             Random r = new Random();
-            peer = new PeerBuilder(new Number160(r)).channelServerConfiguration(PeerBuilder.createDefaultChannelServerConfiguration().connectionTimeoutTCPMillis(TIMEOUT).idleTCPMillis(TIMEOUT).idleUDPMillis(TIMEOUT).heartBeatMillis(TIMEOUT)).ports(PORT).start();
+            ScheduledExecutorService executor = Executors.newScheduledThreadPool(5);
+            GlobalTrafficShapingHandler traffic = new GlobalTrafficShapingHandler(executor, 100 * 1000, 100 * 1000, 60 * 1000);
+            new Timer(1000, new ActionListener()
+            {
+                @Override
+                public void actionPerformed(ActionEvent e)
+                {
+                    System.out.println(traffic.trafficCounter().toString());
+                }
+            }).start();
+            peer = new PeerBuilder(new Number160(r)).channelClientConfiguration(PeerBuilder.createDefaultChannelClientConfiguration().pipelineFilter(new PipelineFilter()
+            {
+                @Override
+                public Map<String, Pair<EventExecutorGroup, ChannelHandler>> filter(Map<String, Pair<EventExecutorGroup, ChannelHandler>> map, boolean bln, boolean bln1)
+                {
+                    Map<String, Pair<EventExecutorGroup, ChannelHandler>> retVal = new LinkedHashMap<String, Pair<EventExecutorGroup, ChannelHandler>>();
+                    retVal.put("traffic", new Pair<EventExecutorGroup, ChannelHandler>(null, traffic));
+                    retVal.putAll(map);
+                    return retVal;
+                }
+            })).channelServerConfiguration(PeerBuilder.createDefaultChannelServerConfiguration().pipelineFilter(new PipelineFilter()
+            {
+                @Override
+                public Map<String, Pair<EventExecutorGroup, ChannelHandler>> filter(Map<String, Pair<EventExecutorGroup, ChannelHandler>> map, boolean bln, boolean bln1)
+                {
+                    Map<String, Pair<EventExecutorGroup, ChannelHandler>> retVal = new LinkedHashMap<String, Pair<EventExecutorGroup, ChannelHandler>>();
+                    retVal.put("traffic", new Pair<EventExecutorGroup, ChannelHandler>(null, traffic));
+                    retVal.putAll(map);
+                    return retVal;
+                }
+            }).connectionTimeoutTCPMillis(TIMEOUT).idleTCPMillis(TIMEOUT).idleUDPMillis(TIMEOUT).heartBeatMillis(TIMEOUT)).ports(PORT).start();
             peer.objectDataReply(incomingHandler);
             InetAddress address = Inet4Address.getByName(supernode);
             System.out.println("address visible to outside is " + peer.peerAddress());
-
+            
             int masterPort = 44444;
             PeerAddress pa = new PeerAddress(Number160.ZERO, address, masterPort, masterPort);
-
+            
             System.out.println("PeerAddress: " + pa);
 
             // Future Discover
@@ -227,11 +272,10 @@ public class Node
 ////                futureRelayNAT.awaitUninterruptibly();
 ////                System.out.println(futureRelayNAT.failedReason());
 //            }
-
             // Future Bootstrap - slave
             FutureBootstrap futureBootstrap = peer.bootstrap().inetAddress(address).ports(masterPort).start();
             futureBootstrap.awaitUninterruptibly();
-
+            
             if (futureDiscover.isSuccess())
             {
                 System.out.println("found that my outside address is " + futureDiscover.peerAddress());
@@ -244,7 +288,7 @@ public class Node
             Logger.getLogger(Node.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-
+    
     public FutureDirect send(PeerAddress pa, Object o)
     {
         return peer.sendDirect(pa).connectionTimeoutTCPMillis(TIMEOUT).idleTCPMillis(TIMEOUT).idleUDPMillis(TIMEOUT).object(o).start();
