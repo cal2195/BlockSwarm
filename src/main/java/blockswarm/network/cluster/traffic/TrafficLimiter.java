@@ -33,8 +33,8 @@ public class TrafficLimiter
             public Map<String, Pair<EventExecutorGroup, ChannelHandler>> filter(Map<String, Pair<EventExecutorGroup, ChannelHandler>> map, boolean bln, boolean bln1)
             {
                 Map<String, Pair<EventExecutorGroup, ChannelHandler>> retVal = new LinkedHashMap<>();
-                retVal.putAll(map);
                 retVal.put("traffic", new Pair<>(null, traffic));
+                retVal.putAll(map);
                 return retVal;
             }
         };
