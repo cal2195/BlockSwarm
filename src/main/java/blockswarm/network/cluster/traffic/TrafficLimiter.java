@@ -26,15 +26,15 @@ public class TrafficLimiter
     public TrafficLimiter()
     {
         ScheduledExecutorService executor = Executors.newScheduledThreadPool(5);
-        traffic = new GlobalTrafficShapingHandler(executor, 100 * 1000, 100 * 1000, 60 * 1000);
+        traffic = new GlobalTrafficShapingHandler(executor, 60 * 1000);
         pipelineFilter = new PipelineFilter()
         {
             @Override
             public Map<String, Pair<EventExecutorGroup, ChannelHandler>> filter(Map<String, Pair<EventExecutorGroup, ChannelHandler>> map, boolean bln, boolean bln1)
             {
                 Map<String, Pair<EventExecutorGroup, ChannelHandler>> retVal = new LinkedHashMap<>();
-                retVal.put("traffic", new Pair<>(null, traffic));
                 retVal.putAll(map);
+                retVal.put("traffic", new Pair<>(null, traffic));
                 return retVal;
             }
         };
