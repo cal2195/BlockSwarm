@@ -80,6 +80,8 @@ public class Node
         
         setupIncomingHandler();
         
+        loadSettings();
+        
         bootstrap("morebetterengineering.com");
         
         setupTracker();
@@ -89,6 +91,12 @@ public class Node
         setupCluster();
         
         setupProxyServer();
+    }
+    
+    public void loadSettings()
+    {
+        trafficLimiter.setWriteLimit(getDatabase().getSettings().getInt("uploadLimit", "0"));
+        trafficLimiter.setReadLimit(getDatabase().getSettings().getInt("downloadLimit", "0"));
     }
     
     public void setupProxyServer()

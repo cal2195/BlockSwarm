@@ -61,6 +61,16 @@ public class SettingsDatabase
             return defaultValue;
         }
     }
+    
+    public int getInt(String key, String defaultValue)
+    {
+        return Integer.parseInt(get(key, defaultValue));
+    }
+    
+    public double getDouble(String key, String defaultValue)
+    {
+        return Double.parseDouble(get(key, defaultValue));
+    }
 
     private void setup()
     {
