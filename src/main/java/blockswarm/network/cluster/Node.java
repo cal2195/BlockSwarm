@@ -3,6 +3,7 @@ package blockswarm.network.cluster;
 import blockswarm.blocksites.ProxyServer;
 import blockswarm.database.Database;
 import blockswarm.gui.FXMLController;
+import blockswarm.network.cluster.traffic.TrafficLimiter;
 import blockswarm.stats.NetworkStats;
 import blockswarm.workers.GUIWorker;
 import blockswarm.workers.PeerRequestManager;
@@ -10,26 +11,12 @@ import blockswarm.workers.CacheManager;
 import blockswarm.workers.ClusterFileInfoUpdater;
 import blockswarm.workers.FileListUpdater;
 import blockswarm.workers.WorkerPool;
-import io.netty.channel.ChannelHandler;
-import io.netty.handler.traffic.GlobalChannelTrafficCounter;
-import io.netty.handler.traffic.GlobalTrafficShapingHandler;
-import io.netty.handler.traffic.TrafficCounter;
-import io.netty.util.concurrent.EventExecutorGroup;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.net.Inet4Address;
 import java.net.InetAddress;
-import java.util.LinkedHashMap;
-import java.util.Map;
 import java.util.Random;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.swing.Timer;
-import net.tomp2p.connection.PipelineFilter;
 import net.tomp2p.futures.FutureBootstrap;
 import net.tomp2p.futures.FutureDirect;
 import net.tomp2p.futures.FutureDiscover;
@@ -37,7 +24,6 @@ import net.tomp2p.p2p.Peer;
 import net.tomp2p.p2p.PeerBuilder;
 import net.tomp2p.peers.Number160;
 import net.tomp2p.peers.PeerAddress;
-import net.tomp2p.utils.Pair;
 
 /**
  *
@@ -60,6 +46,7 @@ public class Node
     PeerRequestManager peerRequestManager;
     NetworkStats networkStats = new NetworkStats();
     ProxyServer proxyServer;
+    TrafficLimiter trafficLimiter = new TrafficLimiter();
     
     int TIMEOUT = 60 * 1000;
     int PORT = 44446;
@@ -198,37 +185,11 @@ public class Node
         try
         {
             Random r = new Random();
-            ScheduledExecutorService executor = Executors.newScheduledThreadPool(5);
-            GlobalTrafficShapingHandler traffic = new GlobalTrafficShapingHandler(executor, 100 * 1000, 100 * 1000, 60 * 1000);
-            new Timer(1000, new ActionListener()
-            {
-                @Override
-                public void actionPerformed(ActionEvent e)
-                {
-                    System.out.println(traffic.trafficCounter().toString());
-                }
-            }).start();
-            peer = new PeerBuilder(new Number160(r)).channelClientConfiguration(PeerBuilder.createDefaultChannelClientConfiguration().pipelineFilter(new PipelineFilter()
-            {
-                @Override
-                public Map<String, Pair<EventExecutorGroup, ChannelHandler>> filter(Map<String, Pair<EventExecutorGroup, ChannelHandler>> map, boolean bln, boolean bln1)
-                {
-                    Map<String, Pair<EventExecutorGroup, ChannelHandler>> retVal = new LinkedHashMap<String, Pair<EventExecutorGroup, ChannelHandler>>();
-                    retVal.put("traffic", new Pair<EventExecutorGroup, ChannelHandler>(null, traffic));
-                    retVal.putAll(map);
-                    return retVal;
-                }
-            })).channelServerConfiguration(PeerBuilder.createDefaultChannelServerConfiguration().pipelineFilter(new PipelineFilter()
-            {
-                @Override
-                public Map<String, Pair<EventExecutorGroup, ChannelHandler>> filter(Map<String, Pair<EventExecutorGroup, ChannelHandler>> map, boolean bln, boolean bln1)
-                {
-                    Map<String, Pair<EventExecutorGroup, ChannelHandler>> retVal = new LinkedHashMap<String, Pair<EventExecutorGroup, ChannelHandler>>();
-                    retVal.put("traffic", new Pair<EventExecutorGroup, ChannelHandler>(null, traffic));
-                    retVal.putAll(map);
-                    return retVal;
-                }
-            }).connectionTimeoutTCPMillis(TIMEOUT).idleTCPMillis(TIMEOUT).idleUDPMillis(TIMEOUT).heartBeatMillis(TIMEOUT)).ports(PORT).start();
+            
+            peer = new PeerBuilder(new Number160(r)).channelClientConfiguration(PeerBuilder.createDefaultChannelClientConfiguration().pipelineFilter(trafficLimiter.getPipelineFilter()))
+                    .channelServerConfiguration(PeerBuilder.createDefaultChannelServerConfiguration().pipelineFilter(trafficLimiter.getPipelineFilter())
+                    .connectionTimeoutTCPMillis(TIMEOUT).idleTCPMillis(TIMEOUT).idleUDPMillis(TIMEOUT).heartBeatMillis(TIMEOUT)).ports(PORT).start();
+            
             peer.objectDataReply(incomingHandler);
             InetAddress address = Inet4Address.getByName(supernode);
             System.out.println("address visible to outside is " + peer.peerAddress());
