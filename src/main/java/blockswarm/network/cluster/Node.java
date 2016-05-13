@@ -104,6 +104,11 @@ public class Node
         proxyServer = new ProxyServer(this);
     }
     
+    public ProxyServer getProxyServer()
+    {
+        return proxyServer;
+    }
+    
     public void setupWorkerPool()
     {
         workerPool = new WorkerPool();

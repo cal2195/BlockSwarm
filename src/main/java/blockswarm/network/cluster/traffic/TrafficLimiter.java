@@ -22,10 +22,11 @@ public class TrafficLimiter
 
     private final GlobalTrafficShapingHandler traffic;
     private final PipelineFilter pipelineFilter;
+    private final ScheduledExecutorService executor;
 
     public TrafficLimiter()
     {
-        ScheduledExecutorService executor = Executors.newScheduledThreadPool(5);
+        executor = Executors.newScheduledThreadPool(5);
         traffic = new GlobalTrafficShapingHandler(executor, 60 * 1000);
         pipelineFilter = new PipelineFilter()
         {
@@ -38,16 +39,11 @@ public class TrafficLimiter
                 return retVal;
             }
         };
-
-        //Debugging!
-        new Timer(1000, new ActionListener()
-        {
-            @Override
-            public void actionPerformed(ActionEvent e)
-            {
-                System.out.println(traffic.trafficCounter().toString());
-            }
-        }).start();
+    }
+    
+    public void shutdown()
+    {
+        executor.shutdownNow();
     }
 
     public GlobalTrafficShapingHandler getTrafficHandler()

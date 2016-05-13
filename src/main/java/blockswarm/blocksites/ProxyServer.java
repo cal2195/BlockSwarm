@@ -72,6 +72,11 @@ public class ProxyServer
             }
         }).start();
     }
+    
+    public void shutdown()
+    {
+        server.stop();
+    }
 
     private HttpResponse handleRequest(HttpRequest originalRequest)
     {
