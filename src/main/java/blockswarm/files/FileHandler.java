@@ -2,6 +2,7 @@ package blockswarm.files;
 
 import blockswarm.database.entries.FileEntry;
 import blockswarm.files.blocks.Blocker;
+import blockswarm.files.tags.TagGenerator;
 import blockswarm.network.cluster.Node;
 import java.io.File;
 import java.io.FileInputStream;
@@ -34,31 +35,31 @@ public class FileHandler
 
     public void uploadFile(File file)
     {
-        try
-        {
-            String hash = hashFile(file, "SHA-1");
-            LOG.fine(hash);
-            int totalBlocks = Blocker.insertBlocks(file, hash, node.getDatabase());
-
-            FileEntry fileEntry = new FileEntry(hash, file.getName(), totalBlocks, -1);
-            node.getDatabase().getFiles().putFile(fileEntry);
-            
-            node.getDatabase().getUploads().queueUpload(hash);
-
-            ArrayList<FileEntry> fileList = new ArrayList<>();
-            fileList.add(fileEntry);
-
-            node.getCluster().notifyAllOfNewFiles(fileList);
-            if (node.getGui() != null)
-            {
-                node.getGui().updateFileList();
-            }
-            //node.getCluster().superSeed(hash);
-
-        } catch (IOException ex)
-        {
-            Logger.getLogger(FileHandler.class.getName()).log(Level.SEVERE, null, ex);
-        }
+//        try
+//        {
+//            String hash = hashFile(file, "SHA-1");
+//            LOG.fine(hash);
+//            int totalBlocks = Blocker.insertBlocks(file, hash, node.getDatabase());
+//
+//            FileEntry fileEntry = new FileEntry(hash, file.getName(), totalBlocks, -1);
+//            node.getDatabase().getFiles().putFile(fileEntry);
+//            
+//            node.getDatabase().getUploads().queueUpload(hash);
+//
+//            ArrayList<FileEntry> fileList = new ArrayList<>();
+//            fileList.add(fileEntry);
+//
+//            node.getCluster().notifyAllOfNewFiles(fileList);
+//            if (node.getGui() != null)
+//            {
+//                node.getGui().updateFileList();
+//            }
+//            //node.getCluster().superSeed(hash);
+//
+//        } catch (IOException ex)
+//        {
+//            Logger.getLogger(FileHandler.class.getName()).log(Level.SEVERE, null, ex);
+//        }
     }
 
     public void assembleFile(String filehash)

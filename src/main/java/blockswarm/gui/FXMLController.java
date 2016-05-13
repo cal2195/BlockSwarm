@@ -1,6 +1,5 @@
 package blockswarm.gui;
 
-import blockswarm.BlockSwarm;
 import blockswarm.Bootloader;
 import blockswarm.blocksites.SiteGenerator;
 import blockswarm.database.entries.FileEntry;
@@ -41,7 +40,6 @@ import javafx.scene.input.DragEvent;
 import javafx.scene.input.Dragboard;
 import javafx.scene.input.TransferMode;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.text.Font;
 import javafx.stage.Stage;
 import javafx.util.Callback;
 import javax.swing.JFileChooser;
@@ -186,6 +184,7 @@ public class FXMLController implements Initializable
             stage.show();
             
             SettingsController gui = loader.getController();
+            gui.setStage(stage);
             gui.setNode(node);
             gui.updateSettings();
         } catch (IOException ex)
@@ -202,14 +201,35 @@ public class FXMLController implements Initializable
     @FXML
     public void uploadFile()
     {
-        FileHandler fileHandler = new FileHandler(node);
-        JFileChooser filechooser = new JFileChooser();
-        filechooser.setMultiSelectionEnabled(true);
-        filechooser.showOpenDialog(null);
-        for (File file : filechooser.getSelectedFiles())
+        try
         {
-            fileHandler.uploadFile(file);
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/UploadFile.fxml"));
+            
+            Parent root = loader.load();
+            
+            Scene scene = new Scene(root);
+            scene.getStylesheets().add("/styles/Styles.css");
+            
+            Stage stage = new Stage();
+            stage.setTitle("Upload new file - BlockSwarm " + Bootloader.VERSION);
+            stage.setScene(scene);
+            stage.show();
+            
+            UploadFileController gui = loader.getController();
+            gui.setStage(stage);
+            gui.setNode(node);
+        } catch (IOException ex)
+        {
+            Logger.getLogger(FXMLController.class.getName()).log(Level.SEVERE, null, ex);
         }
+//        FileHandler fileHandler = new FileHandler(node);
+//        JFileChooser filechooser = new JFileChooser();
+//        filechooser.setMultiSelectionEnabled(true);
+//        filechooser.showOpenDialog(null);
+//        for (File file : filechooser.getSelectedFiles())
+//        {
+//            fileHandler.uploadFile(file);
+//        }
     }
     
     @FXML

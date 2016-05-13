@@ -109,6 +109,11 @@ public class Node
         workerPool = new WorkerPool();
     }
     
+    public TrafficLimiter getTrafficLimiter()
+    {
+        return trafficLimiter;
+    }
+    
     public WorkerPool getWorkerPool()
     {
         return workerPool;
