@@ -17,11 +17,12 @@ public class Bootloader
 {
 
     public static final String VERSION =    "prealpha-0.05";
-    public static final String RELEASE =    "Be lost, be strange, be what those other people won't do\n" +
-                                            "You know, you're right\n" +
-                                            "Here you will know your might\n" +
-                                            "Don't feel too weird\n" +
-                                            "They're dumb for second guessing who's you";
+    public static final String RELEASE =    "Oh, her eyes, her eyes\n" +
+                                            "Make the stars look like they're not shinin'\n" +
+                                            "Her hair, her hair\n" +
+                                            "Falls perfectly without her trying\n" +
+                                            "She's so beautiful\n" +
+                                            "And I tell her everyday...";
 
     public static void main(String[] args)
     {
