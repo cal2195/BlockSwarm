@@ -7,11 +7,12 @@ package blockswarm.gui;
  */
 public class UploadNewFileRow
 {
-    private String uploadFilename, tags;
+    private String uploadFilename, filepath, tags;
 
-    public UploadNewFileRow(String uploadFilename, String tags)
+    public UploadNewFileRow(String uploadFilename, String filepath, String tags)
     {
         this.uploadFilename = uploadFilename;
+        this.filepath = filepath;
         this.tags = tags;
     }
 
@@ -23,6 +24,16 @@ public class UploadNewFileRow
     public void setUploadFilename(String uploadFilename)
     {
         this.uploadFilename = uploadFilename;
+    }
+
+    public String getFilepath()
+    {
+        return filepath;
+    }
+
+    public void setFilepath(String filepath)
+    {
+        this.filepath = filepath;
     }
 
     public String getTags()

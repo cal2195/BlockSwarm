@@ -2,9 +2,11 @@ package blockswarm.gui;
 
 import blockswarm.files.tags.TagGenerator;
 import blockswarm.network.cluster.Node;
+import blockswarm.workers.FileUploadWorker;
 import java.io.File;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.ResourceBundle;
@@ -48,15 +50,13 @@ public class UploadFileController implements Initializable
     @FXML
     public void addFiles()
     {
-//        TagGenerator.generateTags(file.getAbsolutePath());
-//        FileHandler fileHandler = new FileHandler(node);
         List list = new ArrayList();
         JFileChooser filechooser = new JFileChooser();
         filechooser.setMultiSelectionEnabled(true);
         filechooser.showOpenDialog(null);
         for (File file : filechooser.getSelectedFiles())
         {
-            list.add(new UploadNewFileRow(file.getName(), TagGenerator.generateTags(file.getAbsolutePath())));
+            list.add(new UploadNewFileRow(file.getName(), file.getAbsolutePath(), TagGenerator.generateTags(file.getAbsolutePath())));
         }
         uploadNewFileTable.getItems().addAll(FXCollections.observableList(list));
     }
@@ -64,6 +64,12 @@ public class UploadFileController implements Initializable
     @FXML
     public void okayPressed()
     {
+        for (Iterator iterator = uploadNewFileTable.getItems().iterator(); iterator.hasNext();)
+        {
+            UploadNewFileRow next = (UploadNewFileRow) iterator.next();
+            System.out.println("Queuing upload " + next.getFilepath());
+            node.getWorkerPool().addWorker(new FileUploadWorker(new File(next.getFilepath()), node));
+        }
         stage.close();
     }
 
