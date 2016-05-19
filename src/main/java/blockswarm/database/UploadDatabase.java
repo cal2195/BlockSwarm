@@ -1,6 +1,5 @@
 package blockswarm.database;
 
-import blockswarm.info.NodeFileInfo;
 import blockswarm.network.cluster.Node;
 import java.sql.Connection;
 import java.sql.PreparedStatement;

@@ -4,7 +4,6 @@ import blockswarm.info.NodeFileInfo;
 import blockswarm.network.cluster.Node;
 import blockswarm.network.cluster.PeerRequestKey;
 import java.util.HashMap;
-import java.util.Objects;
 import net.tomp2p.peers.PeerAddress;
 
 /**

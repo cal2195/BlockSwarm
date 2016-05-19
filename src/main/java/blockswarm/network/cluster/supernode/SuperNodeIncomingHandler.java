@@ -2,15 +2,12 @@ package blockswarm.network.cluster.supernode;
 
 import blockswarm.workers.FileEntryWorker;
 import blockswarm.workers.FileListWorker;
-import blockswarm.workers.GetFileInfoWorker;
 import blockswarm.workers.InsertBlockWorker;
 import blockswarm.workers.PutFileInfoWorker;
 import blockswarm.workers.RequestWorker;
-import blockswarm.info.NodeFileInfo;
 import blockswarm.network.packets.BlockPacket;
 import blockswarm.network.packets.BlockRequestPacket;
 import blockswarm.network.packets.FileInfoPacket;
-import blockswarm.network.packets.FileInfoRequestPacket;
 import blockswarm.network.packets.FileListPacket;
 import blockswarm.network.packets.FileListRequestPacket;
 import java.util.logging.Logger;

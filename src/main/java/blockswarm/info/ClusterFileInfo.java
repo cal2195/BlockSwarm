@@ -68,7 +68,7 @@ public class ClusterFileInfo implements Comparable<ClusterFileInfo>
     public double getAvailability()
     {
         int least = getLeastAvailableBlockCount();
-        return (double) least + ((double) (blockCount.length - getTotalBlocksOf(least)) / blockCount.length);
+        return least + ((double) (blockCount.length - getTotalBlocksOf(least)) / blockCount.length);
     }
 
     public NodeFileInfo getBlocksUnder(int minimum)

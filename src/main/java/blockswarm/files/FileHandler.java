@@ -2,6 +2,7 @@ package blockswarm.files;
 
 import blockswarm.database.entries.FileEntry;
 import blockswarm.files.blocks.Blocker;
+import blockswarm.files.tags.TagGenerator;
 import blockswarm.network.cluster.Node;
 import java.io.File;
 import java.io.FileInputStream;
@@ -32,7 +33,7 @@ public class FileHandler
         LOG.info("Watching folder: " + folder.getAbsolutePath());
     }
 
-    public void uploadFile(File file)
+    public void uploadFile(File file, String tags)
     {
         try
         {
@@ -40,7 +41,7 @@ public class FileHandler
             LOG.fine(hash);
             int totalBlocks = Blocker.insertBlocks(file, hash, node.getDatabase());
 
-            FileEntry fileEntry = new FileEntry(hash, file.getName(), totalBlocks, -1);
+            FileEntry fileEntry = new FileEntry(hash, file.getName(), tags, totalBlocks, -1);
             node.getDatabase().getFiles().putFile(fileEntry);
             
             node.getDatabase().getUploads().queueUpload(hash);
@@ -72,7 +73,7 @@ public class FileHandler
         }
     }
 
-    private static String hashFile(File file, String algorithm)
+    public static String hashFile(File file, String algorithm)
     {
         try (FileInputStream inputStream = new FileInputStream(file))
         {

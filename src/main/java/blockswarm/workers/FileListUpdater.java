@@ -32,6 +32,7 @@ public class FileListUpdater extends Worker implements Runnable
         try
         {
             node.getCluster().collectFileLists();
+            node.getCluster().collectBlockSites();
         } catch (Exception e)
         {
             e.printStackTrace();

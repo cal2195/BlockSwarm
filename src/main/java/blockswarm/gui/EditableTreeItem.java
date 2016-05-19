@@ -41,7 +41,7 @@ public class EditableTreeItem extends TreeCell<String>
     public void cancelEdit()
     {
         super.cancelEdit();
-        setText((String) getItem());
+        setText(getItem());
         setGraphic(getTreeItem().getGraphic());
     }
 

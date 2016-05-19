@@ -3,7 +3,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>cal.martin</groupId>
   <artifactId>BlockSwarm</artifactId>
-  <version>prealpha-0.04</version>
+  <version>prealpha-0.05</version>
   <build>
     <plugins>
       <plugin>
@@ -21,6 +21,16 @@
                   <mainClass>blockswarm.Bootloader</mainClass>
                 </transformer>
               </transformers>
+              <filters>
+                <filter>
+                  <artifact>*:*</artifact>
+                  <excludes>
+                    <exclude>META-INF/*.SF</exclude>
+                    <exclude>META-INF/*.DSA</exclude>
+                    <exclude>META-INF/*.RSA</exclude>
+                  </excludes>
+                </filter>
+              </filters>
             </configuration>
           </execution>
         </executions>

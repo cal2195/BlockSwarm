@@ -5,16 +5,6 @@
  */
 package blockswarm.database;
 
-import blockswarm.BlockSwarm;
-import blockswarm.Bootloader;
-import blockswarm.database.entries.FileEntry;
-import java.io.File;
-import java.util.Arrays;
-import java.util.logging.Level;
-import org.junit.Test;
-import static org.junit.Assert.*;
-import org.junit.Before;
-
 /**
  *
  * @author cal

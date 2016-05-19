@@ -1,12 +1,13 @@
 package blockswarm.gui;
 
-import blockswarm.BlockSwarm;
 import blockswarm.Bootloader;
+import blockswarm.blocksites.SiteGenerator;
 import blockswarm.database.entries.FileEntry;
 import blockswarm.files.FileHandler;
 import blockswarm.info.NodeFileInfo;
 import blockswarm.network.cluster.Node;
 import java.io.File;
+import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.BitSet;
@@ -14,17 +15,20 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.ResourceBundle;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
-import javafx.collections.ObservableList;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.SelectionMode;
 import javafx.scene.control.TableColumn;
-import javafx.scene.control.TablePosition;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
@@ -34,12 +38,12 @@ import javafx.scene.control.TreeView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.DragEvent;
 import javafx.scene.input.Dragboard;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.input.TransferMode;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.text.Font;
+import javafx.stage.Stage;
 import javafx.util.Callback;
 import javax.swing.JFileChooser;
+import javax.swing.JOptionPane;
 
 public class FXMLController implements Initializable
 {
@@ -65,7 +69,7 @@ public class FXMLController implements Initializable
         for (FileEntry file : files)
         {
             NodeFileInfo current = node.getDatabase().getFiles().getFileInfo(file.filehash);
-            list.add(new SearchFileRow(file.filename, file.filehash, current.blocks.cardinality() + "/" + file.totalBlocks, "" + file.availability, file.totalBlocks + "MB", "?", "" + node.getNetworkStats().blocksReceived(file.filehash) + "MB/s", "" + node.getNetworkStats().blocksSent(file.filehash) + "MB/s"));
+            list.add(new SearchFileRow(file.filename, file.filehash, current.blocks.cardinality() + "/" + file.totalBlocks, "" + file.availability, file.totalBlocks + "MB", "?", "" + node.getNetworkStats().blocksReceived(file.filehash) + "MB/s", "" + node.getNetworkStats().blocksSent(file.filehash) + "MB/s", file.tags));
         }
         BitSet toSelect = (BitSet) selection.clone();
         searchTable.getItems().clear();
@@ -129,7 +133,7 @@ public class FXMLController implements Initializable
             TreeItem parent = current;
             while ((parent = parent.getParent()) != null)
             {
-                if (!((String) parent.getValue()).equals("*"))
+                if (!parent.getValue().equals("*"))
                 {
                     searchTerms.add((String) parent.getValue());
                 }
@@ -161,6 +165,33 @@ public class FXMLController implements Initializable
         {
         }
     }
+    
+    @FXML
+    public void showSettings()
+    {
+        try
+        {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/Settings.fxml"));
+            
+            Parent root = loader.load();
+            
+            Scene scene = new Scene(root);
+            scene.getStylesheets().add("/styles/Styles.css");
+            
+            Stage stage = new Stage();
+            stage.setTitle("BlockSwarm " + Bootloader.VERSION);
+            stage.setScene(scene);
+            stage.show();
+            
+            SettingsController gui = loader.getController();
+            gui.setStage(stage);
+            gui.setNode(node);
+            gui.updateSettings();
+        } catch (IOException ex)
+        {
+            Logger.getLogger(FXMLController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
 
     public void setNode(Node node)
     {
@@ -170,14 +201,36 @@ public class FXMLController implements Initializable
     @FXML
     public void uploadFile()
     {
-        FileHandler fileHandler = new FileHandler(node);
-        JFileChooser filechooser = new JFileChooser();
-        filechooser.setMultiSelectionEnabled(true);
-        filechooser.showOpenDialog(null);
-        for (File file : filechooser.getSelectedFiles())
+        try
         {
-            fileHandler.uploadFile(file);
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/UploadFile.fxml"));
+            
+            Parent root = loader.load();
+            
+            Scene scene = new Scene(root);
+            scene.getStylesheets().add("/styles/Styles.css");
+            
+            Stage stage = new Stage();
+            stage.setTitle("Upload new file - BlockSwarm " + Bootloader.VERSION);
+            stage.setScene(scene);
+            stage.show();
+            
+            UploadFileController gui = loader.getController();
+            gui.setStage(stage);
+            gui.setNode(node);
+        } catch (IOException ex)
+        {
+            Logger.getLogger(FXMLController.class.getName()).log(Level.SEVERE, null, ex);
         }
+    }
+    
+    @FXML
+    public void uploadSite()
+    {
+        JFileChooser filechooser = new JFileChooser();
+        filechooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+        filechooser.showOpenDialog(null);
+        new SiteGenerator(node).uploadSite(filechooser.getSelectedFile().getAbsolutePath(), JOptionPane.showInputDialog("Please enter a domain:"));
     }
 
     @FXML
@@ -193,8 +246,6 @@ public class FXMLController implements Initializable
     @Override
     public void initialize(URL url, ResourceBundle rb)
     {
-        System.out.println(Font.loadFont(BlockSwarm.class.getResource("/bitstream.ttf").toExternalForm(), 10).getName());
-        
         searchTable.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
         searchTable.getSelectionModel().getSelectedIndices().addListener(new ListChangeListener<Integer>()
         {
@@ -241,7 +292,7 @@ public class FXMLController implements Initializable
                     for (File file : db.getFiles())
                     {
                         System.out.println("Uploading " + file.getName());
-                        fileHandler.uploadFile(file);
+                        fileHandler.uploadFile(file, "");
                     }
                 }
                 event.setDropCompleted(success);

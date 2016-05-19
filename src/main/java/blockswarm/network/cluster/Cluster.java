@@ -4,13 +4,13 @@ import blockswarm.database.entries.FileEntry;
 import blockswarm.info.ClusterFileInfo;
 import blockswarm.info.NodeFileInfo;
 import blockswarm.network.packets.BlockRequestPacket;
+import blockswarm.network.packets.BlockSitePacket;
+import blockswarm.network.packets.BlockSitesInfoRequestPacket;
 import blockswarm.network.packets.FileListPacket;
 import blockswarm.network.packets.FileListRequestPacket;
 import blockswarm.workers.FileAssemblyWorker;
-import blockswarm.workers.RequestWorker;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Random;
 import java.util.logging.Logger;
 import net.tomp2p.peers.PeerAddress;
@@ -128,6 +128,15 @@ public class Cluster
             node.send(pa, new FileListRequestPacket(files));
         }
     }
+    
+    public void collectBlockSites()
+    {
+        for (PeerAddress pa : node.peer.peerBean().peerMap().all())
+        {
+            LOG.fine("Asking " + pa + " for their blocksite list!");
+            node.send(pa, new BlockSitesInfoRequestPacket());
+        }
+    }
 
     public void notifyAllOfNewFiles(ArrayList<FileEntry> files)
     {
@@ -136,6 +145,15 @@ public class Cluster
         {
             LOG.fine("Telling " + pa + " about new files!");
             node.send(pa, filePacket);
+        }
+    }
+    
+    public void notifyAllOfNewSite(BlockSitePacket packet)
+    {
+        for (PeerAddress pa : node.peer.peerBean().peerMap().all())
+        {
+            LOG.fine("Telling " + pa + " about new site!");
+            node.send(pa, packet);
         }
     }
     private static final Logger LOG = Logger.getLogger(Cluster.class.getName());

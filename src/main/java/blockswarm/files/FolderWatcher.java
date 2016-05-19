@@ -10,7 +10,6 @@ import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import static java.nio.file.StandardWatchEventKinds.ENTRY_CREATE;
-import static java.nio.file.StandardWatchEventKinds.ENTRY_MODIFY;
 import java.nio.file.WatchEvent;
 import java.nio.file.WatchKey;
 import java.nio.file.WatchService;
@@ -69,7 +68,7 @@ public class FolderWatcher implements Runnable
                     {
                         Path dir = (Path) key.watchable();
                         Path fullPath = dir.resolve((Path) event.context());
-                        fileHandler.uploadFile(fullPath.toFile());
+                        fileHandler.uploadFile(fullPath.toFile(), "folder watcher upload");
                     }
                 }
                 key.reset();

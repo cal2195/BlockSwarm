@@ -15,8 +15,6 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.PriorityQueue;
-import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import net.tomp2p.peers.PeerAddress;
@@ -73,7 +71,7 @@ public class PeerDatabase
             }
         }
         Collections.sort(files);
-        return Arrays.copyOfRange((ClusterFileInfo[]) files.toArray(new ClusterFileInfo[0]), 0, 20);
+        return Arrays.copyOfRange(files.toArray(new ClusterFileInfo[0]), 0, 20);
     }
 
     public ClusterFileInfo getClusterFileInfo(String filehash)

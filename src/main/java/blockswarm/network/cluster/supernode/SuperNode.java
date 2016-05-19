@@ -1,27 +1,16 @@
 package blockswarm.network.cluster.supernode;
 
-import blockswarm.database.Database;
 import blockswarm.network.cluster.Cluster;
 import blockswarm.network.cluster.Node;
-import blockswarm.workers.CacheManager;
-import blockswarm.workers.ClusterFileInfoUpdater;
 import blockswarm.workers.FileListUpdater;
-import blockswarm.workers.PeerRequestManager;
 import blockswarm.workers.supernode.ClusterFileInfoWorker;
 import java.io.IOException;
 import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import net.tomp2p.connection.Bindings;
-import net.tomp2p.connection.ChannelCreator;
-import net.tomp2p.connection.DefaultConnectionConfiguration;
-import net.tomp2p.futures.FutureChannelCreator;
-import net.tomp2p.futures.FutureResponse;
-import net.tomp2p.nat.PeerBuilderNAT;
-import net.tomp2p.nat.PeerNAT;
 import net.tomp2p.p2p.PeerBuilder;
 import net.tomp2p.peers.Number160;
-import net.tomp2p.peers.PeerAddress;
 
 /**
  *

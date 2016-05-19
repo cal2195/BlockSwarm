@@ -9,14 +9,15 @@ import java.util.Objects;
  */
 public class FileEntry implements Serializable
 {
-    public final String filehash, filename;
+    public final String filehash, filename, tags;
     public final int totalBlocks;
     public final double availability;
 
-    public FileEntry(String filehash, String filename, int totalBlocks, double availability)
+    public FileEntry(String filehash, String filename, String tags, int totalBlocks, double availability)
     {
         this.filehash = filehash;
         this.filename = filename;
+        this.tags = tags;
         this.totalBlocks = totalBlocks;
         this.availability = availability;
     }
