@@ -192,7 +192,7 @@ public class FileDatabase
         String sql = "SELECT * FROM files";
         for (int i = 0; i < searches.size(); i++)
         {
-            sql += ((i == 0) ? " WHERE " : " AND ") + "LOWER(file_name) LIKE LOWER('%" + searches.get(i) + "%')";
+            sql += ((i == 0) ? " WHERE " : " AND ") + "(LOWER(file_name) LIKE LOWER('%" + searches.get(i) + "%') OR LOWER(tags) LIKE LOWER('%" + searches.get(i) + "%'))";
         }
         System.out.println("Looking for " + sql);
         try (PreparedStatement stmt = conn.prepareStatement(sql))
