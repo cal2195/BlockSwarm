@@ -73,9 +73,10 @@
                                                       <TableColumn fx:id="searchFilesize" minWidth="9.0" prefWidth="79.0" text="Filesize" />
                                                       <TableColumn fx:id="searchBlocks" minWidth="9.0" prefWidth="123.0" text="Blocks" />
                                                       <TableColumn fx:id="searchAvailability" minWidth="0.0" prefWidth="139.0" text="Availability" />
-                                                      <TableColumn fx:id="searchPeers" minWidth="0.0" prefWidth="79.0" text="Peers" />
+                                                      <TableColumn fx:id="searchPeers" minWidth="0.0" prefWidth="79.0" text="Peers" visible="false" />
                                                       <TableColumn fx:id="searchDownloadSpeed" prefWidth="90.0" text="DwnSpd" />
                                                       <TableColumn fx:id="searchUploadSpeed" prefWidth="109.0" text="UpSpd" />
+                                                      <TableColumn fx:id="searchTags" prefWidth="75.0" text="Tags" />
                                                    </columns>
                                                    <contextMenu>
                                                       <ContextMenu>

@@ -39,7 +39,7 @@ public class SiteGenerator
             File newFile = new File(".sites/" + hash + ".bsite");
             new File(".sites/tmp.zip").renameTo(newFile);
 
-            new FileHandler(node).uploadFile(newFile);
+            new FileHandler(node).uploadFile(newFile, "blocksite");
 
             KeyPair keys = SignatureRSA.loadKeyPair(node.getDatabase().getSettings().get("keyStoreLocation", ".keys"));
 

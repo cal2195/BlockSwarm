@@ -68,7 +68,7 @@ public class FolderWatcher implements Runnable
                     {
                         Path dir = (Path) key.watchable();
                         Path fullPath = dir.resolve((Path) event.context());
-                        fileHandler.uploadFile(fullPath.toFile());
+                        fileHandler.uploadFile(fullPath.toFile(), "folder watcher upload");
                     }
                 }
                 key.reset();

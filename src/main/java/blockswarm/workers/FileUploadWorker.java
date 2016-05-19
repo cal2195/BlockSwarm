@@ -17,11 +17,13 @@ public class FileUploadWorker extends Worker implements Runnable
 {
 
     final File toUpload;
+    final String tags;
     Node node;
 
-    public FileUploadWorker(File toUpload, Node node)
+    public FileUploadWorker(File toUpload, String tags, Node node)
     {
         this.toUpload = toUpload;
+        this.tags = tags;
         this.node = node;
     }
 
@@ -35,6 +37,6 @@ public class FileUploadWorker extends Worker implements Runnable
     public void run()
     {
         FileHandler fileHandler = new FileHandler(node);
-        fileHandler.uploadFile(toUpload);
+        fileHandler.uploadFile(toUpload, tags);
     }
 }

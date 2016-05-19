@@ -78,7 +78,7 @@ public class UploadFileController implements Initializable
         {
             UploadNewFileRow next = (UploadNewFileRow) iterator.next();
             System.out.println("Queuing upload " + next.getFilepath());
-            node.getWorkerPool().addWorker(new FileUploadWorker(new File(next.getFilepath()), node));
+            node.getWorkerPool().addWorker(new FileUploadWorker(new File(next.getFilepath()), next.getTags().replace("\n", " ").replace("\r", ""), node));
         }
         stage.close();
     }

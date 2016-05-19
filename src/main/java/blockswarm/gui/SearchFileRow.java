@@ -11,9 +11,9 @@ package blockswarm.gui;
  */
 public class SearchFileRow
 {
-    private String searchFilename, searchFilehash, searchBlocks, searchAvailability, searchFilesize, searchPeers, searchDownloadSpeed, searchUploadSpeed;
+    private String searchFilename, searchFilehash, searchBlocks, searchAvailability, searchFilesize, searchPeers, searchDownloadSpeed, searchUploadSpeed, searchTags;
 
-    public SearchFileRow(String searchFilename, String searchFilehash, String searchBlocks, String searchAvailability, String searchFilesize, String searchPeers, String searchDownloadSpeed, String searchUploadSpeed)
+    public SearchFileRow(String searchFilename, String searchFilehash, String searchBlocks, String searchAvailability, String searchFilesize, String searchPeers, String searchDownloadSpeed, String searchUploadSpeed, String searchTags)
     {
         this.searchFilename = searchFilename;
         this.searchFilehash = searchFilehash;
@@ -23,6 +23,7 @@ public class SearchFileRow
         this.searchPeers = searchPeers;
         this.searchDownloadSpeed = searchDownloadSpeed;
         this.searchUploadSpeed = searchUploadSpeed;
+        this.searchTags = searchTags;
     }
 
     public String getSearchDownloadSpeed()
@@ -104,6 +105,14 @@ public class SearchFileRow
     {
         this.searchPeers = searchPeers;
     }
-    
-    
+
+    public String getSearchTags()
+    {
+        return searchTags;
+    }
+
+    public void setSearchTags(String searchTags)
+    {
+        this.searchTags = searchTags;
+    }
 }

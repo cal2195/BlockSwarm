@@ -33,7 +33,7 @@ public class FileHandler
         LOG.info("Watching folder: " + folder.getAbsolutePath());
     }
 
-    public void uploadFile(File file)
+    public void uploadFile(File file, String tags)
     {
         try
         {
@@ -41,7 +41,7 @@ public class FileHandler
             LOG.fine(hash);
             int totalBlocks = Blocker.insertBlocks(file, hash, node.getDatabase());
 
-            FileEntry fileEntry = new FileEntry(hash, file.getName(), totalBlocks, -1);
+            FileEntry fileEntry = new FileEntry(hash, file.getName(), tags, totalBlocks, -1);
             node.getDatabase().getFiles().putFile(fileEntry);
             
             node.getDatabase().getUploads().queueUpload(hash);

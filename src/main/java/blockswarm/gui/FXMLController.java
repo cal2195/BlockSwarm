@@ -69,7 +69,7 @@ public class FXMLController implements Initializable
         for (FileEntry file : files)
         {
             NodeFileInfo current = node.getDatabase().getFiles().getFileInfo(file.filehash);
-            list.add(new SearchFileRow(file.filename, file.filehash, current.blocks.cardinality() + "/" + file.totalBlocks, "" + file.availability, file.totalBlocks + "MB", "?", "" + node.getNetworkStats().blocksReceived(file.filehash) + "MB/s", "" + node.getNetworkStats().blocksSent(file.filehash) + "MB/s"));
+            list.add(new SearchFileRow(file.filename, file.filehash, current.blocks.cardinality() + "/" + file.totalBlocks, "" + file.availability, file.totalBlocks + "MB", "?", "" + node.getNetworkStats().blocksReceived(file.filehash) + "MB/s", "" + node.getNetworkStats().blocksSent(file.filehash) + "MB/s", file.tags));
         }
         BitSet toSelect = (BitSet) selection.clone();
         searchTable.getItems().clear();
@@ -292,7 +292,7 @@ public class FXMLController implements Initializable
                     for (File file : db.getFiles())
                     {
                         System.out.println("Uploading " + file.getName());
-                        fileHandler.uploadFile(file);
+                        fileHandler.uploadFile(file, "");
                     }
                 }
                 event.setDropCompleted(success);

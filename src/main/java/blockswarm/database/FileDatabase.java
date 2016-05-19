@@ -34,8 +34,8 @@ public class FileDatabase
     public boolean putFile(FileEntry file)
     {
         String sql = "INSERT INTO files "
-                + "(file_hash, file_name, total_blocks) "
-                + "VALUES (?,?,?)";
+                + "(file_hash, file_name, total_blocks, tags) "
+                + "VALUES (?,?,?,?)";
         LOGGER.log(Level.FINE, "Adding file {0}({1}) to database!", new Object[]
         {
             file.filename, file.filehash
@@ -45,6 +45,7 @@ public class FileDatabase
             stmt.setString(1, file.filehash);
             stmt.setString(2, file.filename);
             stmt.setInt(3, file.totalBlocks);
+            stmt.setString(4, file.tags);
             stmt.execute();
             return true;
         } catch (SQLException ex)
@@ -134,9 +135,10 @@ public class FileDatabase
             stmt.setString(1, filehash);
             ResultSet resultSet = stmt.executeQuery();
             resultSet.next();
-            return new FileEntry(resultSet.getString("file_hash"), resultSet.getString("file_name"), resultSet.getInt("total_blocks"), (node == null) ? -1 : node.getDatabase().getPeers().getAvailability(resultSet.getString("file_hash")));
+            return new FileEntry(resultSet.getString("file_hash"), resultSet.getString("file_name"), resultSet.getString("tags"), resultSet.getInt("total_blocks"), (node == null) ? -1 : node.getDatabase().getPeers().getAvailability(resultSet.getString("file_hash")));
         } catch (SQLException ex)
         {
+            ex.printStackTrace();
             LOGGER.log(Level.FINE, "File miss for file {0}!", new Object[]
             {
                 filehash
@@ -174,7 +176,7 @@ public class FileDatabase
             ResultSet resultSet = stmt.executeQuery();
             while (resultSet.next())
             {
-                files.add(new FileEntry(resultSet.getString("file_hash"), resultSet.getString("file_name"), resultSet.getInt("total_blocks"), node.getDatabase().getPeers().getAvailability(resultSet.getString("file_hash"))));
+                files.add(new FileEntry(resultSet.getString("file_hash"), resultSet.getString("file_name"), resultSet.getString("tags"), resultSet.getInt("total_blocks"), node.getDatabase().getPeers().getAvailability(resultSet.getString("file_hash"))));
             }
             return files;
         } catch (SQLException ex)
@@ -198,7 +200,7 @@ public class FileDatabase
             ResultSet resultSet = stmt.executeQuery();
             while (resultSet.next())
             {
-                files.add(new FileEntry(resultSet.getString("file_hash"), resultSet.getString("file_name"), resultSet.getInt("total_blocks"), node.getDatabase().getPeers().getAvailability(resultSet.getString("file_hash"))));
+                files.add(new FileEntry(resultSet.getString("file_hash"), resultSet.getString("file_name"), resultSet.getString("tags"), resultSet.getInt("total_blocks"), node.getDatabase().getPeers().getAvailability(resultSet.getString("file_hash"))));
             }
             return files;
         } catch (SQLException ex)
@@ -219,7 +221,7 @@ public class FileDatabase
             {
                 if (!except.contains(resultSet.getString("file_hash")))
                 {
-                    files.add(new FileEntry(resultSet.getString("file_hash"), resultSet.getString("file_name"), resultSet.getInt("total_blocks"), node.getDatabase().getPeers().getAvailability(resultSet.getString("file_hash"))));
+                    files.add(new FileEntry(resultSet.getString("file_hash"), resultSet.getString("file_name"), resultSet.getString("tags"), resultSet.getInt("total_blocks"), node.getDatabase().getPeers().getAvailability(resultSet.getString("file_hash"))));
                 }
             }
             return files;
@@ -277,6 +279,7 @@ public class FileDatabase
                             + "(file_hash CHAR(40) not NULL UNIQUE, "
                             + " file_name VARCHAR(255),"
                             + " total_blocks INTEGER not NULL,"
+                            + " tags VARCHAR not NULL,"
                             + " `id` INT NOT NULL AUTO_INCREMENT PRIMARY KEY,"
                             + " PRIMARY KEY ( id ))";
                     stmt.executeUpdate(sql);
