@@ -16,7 +16,7 @@ import java.util.logging.Logger;
 public class Bootloader
 {
 
-    public static final String VERSION =    "prealpha-0.05";
+    public static final String VERSION =    "prealpha-0.06";
     public static final String RELEASE =    "Oh, her eyes, her eyes\n" +
                                             "Make the stars look like they're not shinin'\n" +
                                             "Her hair, her hair\n" +
