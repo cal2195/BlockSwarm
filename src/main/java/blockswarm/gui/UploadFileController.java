@@ -15,6 +15,7 @@ import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.SelectionMode;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextArea;
@@ -60,6 +61,15 @@ public class UploadFileController implements Initializable
         }
         uploadNewFileTable.getItems().addAll(FXCollections.observableList(list));
     }
+    
+    @FXML
+    public void removeSelection()
+    {
+        for (Integer row : uploadNewFileTable.getSelectionModel().getSelectedIndices())
+        {
+            uploadNewFileTable.getItems().remove(row.intValue());
+        }
+    }
 
     @FXML
     public void okayPressed()
@@ -86,6 +96,7 @@ public class UploadFileController implements Initializable
         {
             column.setCellValueFactory(new PropertyValueFactory(column.getId()));
         }
+        uploadNewFileTable.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
         uploadNewFileTable.getSelectionModel().selectedItemProperty().addListener(new ChangeListener()
         {
             @Override

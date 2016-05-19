@@ -222,14 +222,6 @@ public class FXMLController implements Initializable
         {
             Logger.getLogger(FXMLController.class.getName()).log(Level.SEVERE, null, ex);
         }
-//        FileHandler fileHandler = new FileHandler(node);
-//        JFileChooser filechooser = new JFileChooser();
-//        filechooser.setMultiSelectionEnabled(true);
-//        filechooser.showOpenDialog(null);
-//        for (File file : filechooser.getSelectedFiles())
-//        {
-//            fileHandler.uploadFile(file);
-//        }
     }
     
     @FXML
