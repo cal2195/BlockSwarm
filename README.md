@@ -5,6 +5,7 @@ An Anonymous Distributed P2P File Sharing Protocol
 ## Prerequisites
 * Minimum **Java 1.8.0_77**
   * Check your Java version `java -version`
+  * Get the latest version here: https://java.com/en/download/
 
 ## How to Contribute
 * Project Files above generated in **Netbeans 8.1**
