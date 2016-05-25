@@ -6,6 +6,7 @@ An Anonymous Distributed P2P File Sharing Protocol
 * Minimum **Java 1.8.0_77**
   * Check your Java version `java -version`
   * Get the latest version here: https://java.com/en/download/
+* Port **44446** Port Forwarded to your client
 
 ## How to Contribute
 * Project Files above generated in **Netbeans 8.1**
