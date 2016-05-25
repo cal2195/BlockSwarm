@@ -12,7 +12,7 @@ An Anonymous Distributed P2P File Sharing Protocol
 * Using **JDK 1.8.0_77**
 
 ## Team Sites
-* Current Plan: https://coggle.it/diagram/VzYOcbFV9UUdzggN/ea02c7b0c56ca0dcd8813bf95fe771098f2d1ce78cbebcc4322b11c1cd93dd32
+* Current Plan: [Coggle.it Mindmap](https://coggle.it/diagram/VzYOcbFV9UUdzggN/ea02c7b0c56ca0dcd8813bf95fe771098f2d1ce78cbebcc4322b11c1cd93dd32)
 * Slack: https://blockswarm.slack.com/
 
 ## Current Features
