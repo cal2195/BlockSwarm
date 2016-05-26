@@ -5,10 +5,16 @@ An Anonymous Distributed P2P File Sharing Protocol
 ## Prerequisites
 * Minimum **Java 1.8.0_77**
   * Check your Java version `java -version`
+  * Get the latest version here: https://java.com/en/download/
+* Port **44446** Port Forwarded to your client
 
 ## How to Contribute
 * Project Files above generated in **Netbeans 8.1**
 * Using **JDK 1.8.0_77**
+
+## Team Sites
+* Current Plan: [Coggle.it Mindmap](https://coggle.it/diagram/VzYOcbFV9UUdzggN/ea02c7b0c56ca0dcd8813bf95fe771098f2d1ce78cbebcc4322b11c1cd93dd32)
+* Slack: https://blockswarm.slack.com/
 
 ## Current Features
 * Anonymous
@@ -92,8 +98,6 @@ An Anonymous Distributed P2P File Sharing Protocol
 ## F.A.Q.
 
 ##### So what does BlockSwarm do?
-BlockSwarm is the brain-child of Cal Martin (With random bits of idea input from Cillian). It's inspired by the node based P2P network of FreeNet. BlockSwarm will be a new answer to sharing and downloading.
-
 The network will be based on it's users, not a centralised tracker. The network will be almost impossible to collapse.
 
 BlockSwarm will break up files into "Blocks" of a set size (eg. 1mb), and hash tables will maintain a database of what users have what blocks to make up a file. When a new user connects to the network for the first time, they will be connected to an other user and be given a copy of their has table. This will tell the new user all the files that the old user knows to exist. As users connect to eachother, their hash table will grow and so will the files availible to them as they are added to the network.
