@@ -31,7 +31,7 @@ public class CacheManager extends Worker implements Runnable
     public HashMap<PeerRequestKey, NodeFileInfo> getCacheRequests()
     {
         HashMap<PeerRequestKey, NodeFileInfo> requests = new HashMap<>();
-        ClusterFileInfo[] files = node.getDatabase().getPeers().getLowestAvailability();
+        ClusterFileInfo[] files = node.getDatabase().getPeers().getLowestAvailability(40);
         int totalBlocks = 0;
         for (ClusterFileInfo clusterInfo : files)
         {

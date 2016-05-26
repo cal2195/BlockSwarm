@@ -56,25 +56,26 @@ public class PeerDatabase
 
     public double getAvailability(String filehash)
     {
-        return getClusterFileInfo(filehash).getAvailability();
+        return getClusterFileInfo(filehash, false).getAvailability();
     }
 
-    public ClusterFileInfo[] getLowestAvailability()
+    public ClusterFileInfo[] getLowestAvailability(int limit)
     {
         ArrayList<ClusterFileInfo> files = new ArrayList<>();
         for (String hash : node.getDatabase().getFiles().getAllFileHashes())
         {
-            if (!Double.isNaN(getClusterFileInfo(hash).getAvailability()) && getClusterFileInfo(hash).getAvailability() != 0)
+            ClusterFileInfo fileInfo = getClusterFileInfo(hash, true);
+            if (!Double.isNaN(fileInfo.getAvailability()) && fileInfo.getAvailability() != 0)
             {
-                files.add(getClusterFileInfo(hash));
-                System.out.println("Added " + hash + " with " + getClusterFileInfo(hash).getAvailability());
+                files.add(fileInfo);
+                System.out.println("Added " + hash + " with " + fileInfo.getAvailability());
             }
         }
         Collections.sort(files);
-        return Arrays.copyOfRange(files.toArray(new ClusterFileInfo[0]), 0, 20);
+        return Arrays.copyOfRange(files.toArray(new ClusterFileInfo[0]), 0, limit);
     }
 
-    public ClusterFileInfo getClusterFileInfo(String filehash)
+    public ClusterFileInfo getClusterFileInfo(String filehash, boolean includingMe)
     {
         int totalBlocks = node.getDatabase().getFiles().getTotalBlocks(filehash);
         HashMap<PeerRequestKey, NodeFileInfo> nodes = getFileInfo(filehash);
@@ -87,6 +88,10 @@ public class PeerDatabase
         {
             LOGGER.finer(nodeFile.blocks.toString());
             clusterFileInfo.add(nodeFile);
+        }
+        if (includingMe)
+        {
+            clusterFileInfo.add(node.getDatabase().getCache().getFileInfo(filehash));
         }
         LOGGER.finer(clusterFileInfo.toString());
         return clusterFileInfo;

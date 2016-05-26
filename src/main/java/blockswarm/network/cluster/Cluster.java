@@ -68,7 +68,7 @@ public class Cluster
 
     public void cache(String hash)
     {
-        ClusterFileInfo clusterInfo = node.getDatabase().getPeers().getClusterFileInfo(hash);
+        ClusterFileInfo clusterInfo = node.getDatabase().getPeers().getClusterFileInfo(hash, false);
         NodeFileInfo toCache = clusterInfo.getBlocksUnder(2);
         NodeFileInfo iHave = node.getDatabase().getCache().getFileInfo(hash);
         toCache.blocks.andNot(iHave.blocks);
