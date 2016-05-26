@@ -1,6 +1,9 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
+## [unreleased]
+- Fixed travis-ci.
+
 ## [prealpha-0.05] - 2016-05-19
 ### Added
 - A change log! :D

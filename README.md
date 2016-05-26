@@ -1,17 +1,58 @@
 # BlockSwarm [![Build Status](https://travis-ci.com/cal2195/BlockSwarm.svg?token=5T1yEDqMHWZzKFskCP5i&branch=master)](https://travis-ci.com/cal2195/BlockSwarm)
-© Cal Martin & Nicole Diamond & Cillian Roe 2016
 
-**Please note, that until version v1.0 anything may change with no backwards compatibility, so all information on the network may be wiped!**
+An Anonymous Distributed P2P File Sharing Protocol
 
-### Don't forget:
-* Keep it simple.
-* Use **objects**.
-* You're making it too complicated. :)
+## Prerequisites
+* Minimum **Java 1.8.0_77**
+  * Check your Java version `java -version`
 
-ERROR 404:
-README not found...
+## How to Contribute
+* Project Files above generated in **Netbeans 8.1**
+* Using **JDK 1.8.0_77**
 
-### BlockSwarm - Principles
+## Current Features
+* Anonymous
+* Distributed file sharing network - every user helps the network
+* **BlockSites** - Websites served over the BlockSwarm Network
+  * Currently only static sites
+
+
+## How it works
+
+#### Uploading Files
+* Uploaded files are split into 1MB blocks
+* Stored with **SHA1 hash** of original file
+* These blocks are then distributed throughout the network
+
+#### Peers
+* Every Peer has a cache (minimum 10GB)
+* Each Peer attempts to fill up their cache with blocks
+* Uploads and Downloads are also part of the cache
+* Once all the blocks of a file have been cached, they are assembled into the final file
+
+#### Cluster
+* Peers are organised into **Clusters**, with one **SuperNode**
+* When a peer joins a cluster, they start caching to help the network
+
+#### Block Redundancy
+* Current goal is to have **at least 2 copies** of every block
+* Allows for one peer to fail safely
+* Given enough time, the network will heal and another peer can safely fail
+
+#### BlockSites
+* Original author of a BlockSite generates a **Key Pair** for that sites
+* **Public Key** distributed with a **Signature** to verify future updates
+* Updates to that site require new signatures using the original **private key**
+
+## Upcoming Plans
+### Short Term
+* Files must match their hash to confirm download
+* **Dynamic BlockSites** using a sync'd database (Javascript API)
+* **Encryption** - All connections will be encrypted with **AES** backed by **RSA** encrypted keys
+* **Private Files** - Encrypted with private keys
+  * Will have a short lifespan
+
+## BlockSwarm - Principles
 
 #### Mission Statement
 
@@ -48,10 +89,7 @@ README not found...
 * Blocks should only be decryptible once you have the entire file.
 
 
-#### F.A.Q.
-
-##### What is BlockSwarm?
-Blockswarm is... **needs rewrite!**
+## F.A.Q.
 
 ##### So what does BlockSwarm do?
 BlockSwarm is the brain-child of Cal Martin (With random bits of idea input from Cillian). It's inspired by the node based P2P network of FreeNet. BlockSwarm will be a new answer to sharing and downloading.
@@ -66,5 +104,3 @@ The beauty of blockswarm is that there is no central server to which all users m
 
 ##### When will BlockSwarm be ready for use?
 As of writing this (March 18th 2016), BlockSwarm is very much in its infancy stages. There is currently no time frame assigned to the projects completion, but we promise we are passionate about this project and something will be made of it!
-
-

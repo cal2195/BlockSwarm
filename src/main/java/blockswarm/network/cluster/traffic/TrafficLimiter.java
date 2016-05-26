@@ -26,7 +26,7 @@ public class TrafficLimiter
 
     public TrafficLimiter()
     {
-        executor = Executors.newScheduledThreadPool(5);
+        executor = Executors.newScheduledThreadPool(20);
         traffic = new GlobalTrafficShapingHandler(executor, 60 * 1000);
         pipelineFilter = new PipelineFilter()
         {
@@ -53,12 +53,12 @@ public class TrafficLimiter
     
     public void setWriteLimit(int speed)
     {
-        traffic.setWriteLimit(speed);
+        traffic.setWriteLimit(speed * 1024);
     }
     
     public void setReadLimit(int speed)
     {
-        traffic.setReadLimit(speed);
+        traffic.setReadLimit(speed * 1024);
     }
 
     public PipelineFilter getPipelineFilter()
