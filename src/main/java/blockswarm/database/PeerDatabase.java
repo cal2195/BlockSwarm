@@ -102,7 +102,7 @@ public class PeerDatabase
         HashMap<PeerRequestKey, NodeFileInfo> nodes = new HashMap<>();
         String sql = "SELECT * FROM peers "
                 + "WHERE file_hash = ? "
-                + "AND date > TIMESTAMPADD(minute, -2, NOW())";
+                + "AND date > TIMESTAMPADD(minute, -5, NOW())";
         try (PreparedStatement stmt = conn.prepareStatement(sql))
         {
             stmt.setString(1, filehash);

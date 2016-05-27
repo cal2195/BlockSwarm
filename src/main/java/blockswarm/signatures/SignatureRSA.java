@@ -19,7 +19,6 @@ import java.security.spec.PKCS8EncodedKeySpec;
 import java.security.spec.X509EncodedKeySpec;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import sun.misc.BASE64Encoder;
 
 /**
  *
@@ -141,7 +140,6 @@ public class SignatureRSA
             sig.initSign(privateKey);
             sig.update(data);
             byte[] signatureBytes = sig.sign();
-            System.out.println("Singature:" + new BASE64Encoder().encode(signatureBytes));
 
             return signatureBytes;
         } catch (NoSuchAlgorithmException ex)
