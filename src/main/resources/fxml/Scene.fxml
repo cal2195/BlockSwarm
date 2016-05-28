@@ -108,6 +108,13 @@
                                           <TableColumn fx:id="downloadDownSpeed" prefWidth="97.0" text="DwnSpd" />
                                           <TableColumn fx:id="downloadUpSpeed" prefWidth="116.0" text="UpSpd" />
                                        </columns>
+                                       <contextMenu>
+                                          <ContextMenu>
+                                             <items>
+                                                <MenuItem mnemonicParsing="false" onAction="#removeDownloads" text="Cancel Download" />
+                                             </items>
+                                          </ContextMenu>
+                                       </contextMenu>
                                     </TableView>
                                  </center>
                               </BorderPane>

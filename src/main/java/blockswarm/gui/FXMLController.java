@@ -242,6 +242,16 @@ public class FXMLController implements Initializable
             node.getCluster().queueForDownload(file.getSearchFilehash());
         }
     }
+    
+    @FXML
+    public void removeDownloads()
+    {
+        for (Iterator<Map> it = downloadTable.getSelectionModel().getSelectedItems().iterator(); it.hasNext();)
+        {
+            DownloadFileRow file = (DownloadFileRow) it.next();
+            node.getDatabase().getDownloads().removeDownload(file.getDownloadFilehash());
+        }
+    }
 
     @Override
     public void initialize(URL url, ResourceBundle rb)
