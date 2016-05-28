@@ -92,6 +92,7 @@ public class RequestWorker extends Worker implements Runnable
         } catch (Exception e)
         {
             e.printStackTrace();
+            node.getPeerRequestManager().remove(requester, nodeFileInfo);
         }
     }
     private static final Logger LOG = Logger.getLogger(RequestWorker.class.getName());
