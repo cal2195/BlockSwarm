@@ -5,6 +5,9 @@ All notable changes to this project will be documented in this file.
 - Fixed travis-ci.
 - Fixed a bug where speed limits were actually in b/s instead of kb/s.
 - Improved caching policy by taking blocks already cached into account.
+- Increased Peer Information Timeout to 5 Minutes.
+- Fixed possible bug where a crashed thread would ignore future requests.
+- Added a "Cancel Download" option.
 
 ## [prealpha-0.05] - 2016-05-19
 ### Added
