@@ -40,7 +40,7 @@ public class CacheManager extends Worker implements Runnable
                 continue;
             }
             LOG.fine("Going to cache " + clusterInfo.hash + " with avail of " + clusterInfo.getAvailability());
-            NodeFileInfo toCache = clusterInfo.getBlocksUnder(2, clusterInfo.getTotalBlocks() / 4);
+            NodeFileInfo toCache = clusterInfo.getBlocksUnder(3, clusterInfo.getTotalBlocks() / 4);
             HashMap<PeerRequestKey, NodeFileInfo> toDownload = node.getDatabase().getPeers().getDownload(toCache);
             for (NodeFileInfo info : toDownload.values())
             {
