@@ -10,6 +10,7 @@ All notable changes to this project will be documented in this file.
 - Added a "Cancel Download" option.
 - Added cluster block count and total availability to the GUI.
 - Increased default cache size to 40GB.
+- Removed tag generation temporarily.
 
 ## [prealpha-0.05] - 2016-05-19
 ### Added
