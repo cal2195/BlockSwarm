@@ -8,6 +8,7 @@ All notable changes to this project will be documented in this file.
 - Increased Peer Information Timeout to 5 Minutes.
 - Fixed possible bug where a crashed thread would ignore future requests.
 - Added a "Cancel Download" option.
+- Added cluster block count and total availability to the GUI.
 
 ## [prealpha-0.05] - 2016-05-19
 ### Added

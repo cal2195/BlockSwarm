@@ -4,6 +4,7 @@ import blockswarm.Bootloader;
 import blockswarm.blocksites.SiteGenerator;
 import blockswarm.database.entries.FileEntry;
 import blockswarm.files.FileHandler;
+import blockswarm.info.ClusterFileInfo;
 import blockswarm.info.NodeFileInfo;
 import blockswarm.network.cluster.Node;
 import java.io.File;
@@ -69,7 +70,8 @@ public class FXMLController implements Initializable
         for (FileEntry file : files)
         {
             NodeFileInfo current = node.getDatabase().getFiles().getFileInfo(file.filehash);
-            list.add(new SearchFileRow(file.filename, file.filehash, current.blocks.cardinality() + "/" + file.totalBlocks, "" + file.availability, file.totalBlocks + "MB", "?", "" + node.getNetworkStats().blocksReceived(file.filehash) + "MB/s", "" + node.getNetworkStats().blocksSent(file.filehash) + "MB/s", file.tags));
+            ClusterFileInfo peers = node.getDatabase().getPeers().getClusterFileInfo(file.filehash, false);
+            list.add(new SearchFileRow(file.filename, file.filehash, peers.cardinality() + "/" + current.blocks.cardinality() + "/" + file.totalBlocks, "" + String.format("%.2f", file.availability) + " (" + String.format("%.2f", node.getDatabase().getPeers().getClusterFileInfo(file.filehash, true).getAvailability()) + ")", file.totalBlocks + "MB", "?", "" + node.getNetworkStats().blocksReceived(file.filehash) + "MB/s", "" + node.getNetworkStats().blocksSent(file.filehash) + "MB/s", file.tags));
         }
         BitSet toSelect = (BitSet) selection.clone();
         searchTable.getItems().clear();

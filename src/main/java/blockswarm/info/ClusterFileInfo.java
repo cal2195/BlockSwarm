@@ -28,6 +28,11 @@ public class ClusterFileInfo implements Comparable<ClusterFileInfo>
             blockCount[i]++;
         }
     }
+    
+    public int cardinality()
+    {
+        return blockCount.length - getTotalBlocksOf(0);
+    }
 
     public int getTotalBlocks()
     {
