@@ -54,7 +54,7 @@ public class RequestWorker extends Worker implements Runnable
                 nodeFileInfo.hash, nodeFileInfo.blocks.toString()
             });
             int sent = 0;
-            for (int i = myBlocks.blocks.nextSetBit(0); i >= 0 && sent++ < 10; i = myBlocks.blocks.nextSetBit(i + 1))
+            for (int i = myBlocks.blocks.nextSetBit(0); i >= 0 && sent++ < 10 && !connectionLost; i = myBlocks.blocks.nextSetBit(i + 1))
             {
                 LOG.log(Level.FINE, "Sending block {0}:{1} to {2}", new Object[]
                 {
