@@ -37,7 +37,7 @@ public class SettingsController implements Initializable
     {
         downloadLimit.getValueFactory().setValue(node.getDatabase().getSettings().getInt("downloadLimit", "0"));
         uploadLimit.getValueFactory().setValue(node.getDatabase().getSettings().getInt("uploadLimit", "0"));
-        cacheLimit.getValueFactory().setValue(node.getDatabase().getSettings().getInt("cacheLimit", "10000"));
+        cacheLimit.getValueFactory().setValue(node.getDatabase().getSettings().getInt("cacheLimit", "40000"));
     }
 
     @FXML

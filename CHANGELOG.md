@@ -9,6 +9,7 @@ All notable changes to this project will be documented in this file.
 - Fixed possible bug where a crashed thread would ignore future requests.
 - Added a "Cancel Download" option.
 - Added cluster block count and total availability to the GUI.
+- Increased default cache size to 40GB.
 
 ## [prealpha-0.05] - 2016-05-19
 ### Added
