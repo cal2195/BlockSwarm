@@ -26,8 +26,13 @@ import javax.net.ssl.SSLException;
  */
 public class Server {
     boolean SSL = false;
-    int PORT = 1234;
+    final int PORT;
     Node node;
+    
+    public Server(int port)
+    {
+        this.PORT = port;
+    }
     
     public void setupServer() throws CertificateException, SSLException, InterruptedException {
         // Configure SSL.

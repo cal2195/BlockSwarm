@@ -5,6 +5,7 @@ import blockswarm.database.Database;
 import blockswarm.gui.FXMLController;
 import blockswarm.network.cluster.traffic.TrafficLimiter;
 import blockswarm.network.connections.ConnectionManager;
+import blockswarm.network.connections.Server;
 import blockswarm.stats.NetworkStats;
 import blockswarm.workers.GUIWorker;
 import blockswarm.workers.PeerRequestManager;
@@ -15,9 +16,11 @@ import blockswarm.workers.WorkerPool;
 import java.io.IOException;
 import java.net.Inet4Address;
 import java.net.InetAddress;
+import java.security.cert.CertificateException;
 import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.net.ssl.SSLException;
 
 /**
  *
@@ -30,7 +33,7 @@ public class Node
     final boolean USING_GUI;
     
     public WorkerPool workerPool;
-    public Peer peer;
+    public Server server;
     ConnectionManager connectionManager;
     DHT dht;
     Database database;
@@ -181,71 +184,19 @@ public class Node
         return cluster;
     }
     
-    public void bootstrap(String supernode)
+    public void bootstrap(PeerAddress supernode)
     {
+        server = new Server(PORT);
         try
         {
-            Random r = new Random();
-            
-            peer = new PeerBuilder(new Number160(r)).channelClientConfiguration(PeerBuilder.createDefaultChannelClientConfiguration().pipelineFilter(trafficLimiter.getPipelineFilter()))
-                    .channelServerConfiguration(PeerBuilder.createDefaultChannelServerConfiguration().pipelineFilter(trafficLimiter.getPipelineFilter())
-                    .connectionTimeoutTCPMillis(TIMEOUT).idleTCPMillis(TIMEOUT).idleUDPMillis(TIMEOUT).heartBeatMillis(TIMEOUT)).ports(PORT).start();
-            
-            peer.objectDataReply(incomingHandler);
-            InetAddress address = Inet4Address.getByName(supernode);
-            System.out.println("address visible to outside is " + peer.peerAddress());
-            
-            int masterPort = 44444;
-            PeerAddress pa = new PeerAddress(Number160.ZERO, address, masterPort, masterPort);
-            
-            System.out.println("PeerAddress: " + pa);
-
-            // Future Discover
-            FutureDiscover futureDiscover = peer.discover().expectManualForwarding().inetAddress(address).ports(masterPort).start();
-            futureDiscover.awaitUninterruptibly();
-
-//            PeerNAT peerNAT = new PeerBuilderNAT(peer).start();
-//
-//            if (futureDiscover.isFailed())
-//            {
-//                final FutureNAT futureNAT = peerNAT.startSetupPortforwarding(futureDiscover);
-//                futureNAT.awaitUninterruptibly();
-////                if (futureNAT.isFailed())
-////                {
-////                    FutureRelayNAT futureRelayNAT = peerNAT.startRelay(new TCPRelayClientConfig(), futureDiscover, futureNAT);
-////                    futureRelayNAT.awaitUninterruptibly();
-////                    System.out.println("Relay NAT: " + futureRelayNAT.failedReason());
-////                }
-//
-//                if (futureNAT.isSuccess())
-//                {
-//                    System.out.println("NAT success: " + futureNAT.peerAddress());
-//                } else
-//                {
-//                    System.out.println("NAT failed: " + futureNAT.failedReason());
-//                    //this is enough time to print out the status of the relay search
-//                    Thread.sleep(5000);
-//                }
-////                FutureNAT futureNAT = peerNAT.startSetupPortforwarding(futureDiscover);
-////                futureNAT.awaitUninterruptibly();
-////                System.out.println(futureNAT.failedReason());
-////
-////                FutureRelayNAT futureRelayNAT = peerNAT.startRelay(new TCPRelayClientConfig(), futureDiscover, futureNAT);
-////                futureRelayNAT.awaitUninterruptibly();
-////                System.out.println(futureRelayNAT.failedReason());
-//            }
-            // Future Bootstrap - slave
-            FutureBootstrap futureBootstrap = peer.bootstrap().inetAddress(address).ports(masterPort).start();
-            futureBootstrap.awaitUninterruptibly();
-            
-            if (futureDiscover.isSuccess())
-            {
-                System.out.println("found that my outside address is " + futureDiscover.peerAddress());
-            } else
-            {
-                System.out.println("failed " + futureDiscover.failedReason());
-            }
-        } catch (IOException ex)
+            server.setupServer();
+        } catch (CertificateException ex)
+        {
+            Logger.getLogger(Node.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (SSLException ex)
+        {
+            Logger.getLogger(Node.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (InterruptedException ex)
         {
             Logger.getLogger(Node.class.getName()).log(Level.SEVERE, null, ex);
         }

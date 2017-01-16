@@ -7,6 +7,7 @@ package blockswarm.network.connections;
 
 import blockswarm.network.cluster.Node;
 import blockswarm.network.cluster.NodeIncomingHandler;
+import blockswarm.network.cluster.PeerAddress;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelInitializer;
@@ -30,11 +31,17 @@ import javax.net.ssl.SSLException;
 public class Connection
 {
 
-    public String HOST = "";
-    public int PORT = 1234;
+    final String HOST;
+    final int PORT;
     boolean SSL = false;
     Node node;
     Channel channel;
+    
+    public Connection(PeerAddress pa)
+    {
+        HOST = pa.inetAddress().getAddress().getHostAddress();
+        PORT = pa.inetAddress().getPort();
+    }
 
     public void setupConnection() throws SSLException, InterruptedException
     {

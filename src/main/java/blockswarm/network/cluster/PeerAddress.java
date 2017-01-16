@@ -20,8 +20,8 @@ public class PeerAddress {
         this.address = address;
     }
     
-    public InetAddress inetAddress()
+    public InetSocketAddress inetAddress()
     {
-        return address.getAddress();
+        return address;
     }
 }

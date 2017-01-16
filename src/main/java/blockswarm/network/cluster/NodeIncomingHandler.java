@@ -37,7 +37,7 @@ public class NodeIncomingHandler extends ChannelInboundHandlerAdapter {
         PeerAddress pa = new PeerAddress((InetSocketAddress) ctx.channel().remoteAddress());
 
         if (packet instanceof BlockPacket) {
-            LOG.fine("Received block packet from " + pa.inetAddress().getHostAddress());
+            LOG.fine("Received block packet from " + pa.inetAddress().getAddress().getHostAddress());
             node.getWorkerPool().addWorker(new InsertBlockWorker((BlockPacket) packet, node));
             node.getNetworkStats().blockReceived(((BlockPacket) packet).filehash);
         } else if (packet instanceof BlockRequestPacket) {
@@ -64,7 +64,7 @@ public class NodeIncomingHandler extends ChannelInboundHandlerAdapter {
             LOG.fine("Received a blocksite info request packet!");
             node.getWorkerPool().addWorker(new GetAllBlockSitesWorker(pa, node));
         } else {
-            LOG.fine("UNKNOWN BLOCK RECEIVED FROM " + pa.inetAddress().getHostAddress());
+            LOG.fine("UNKNOWN BLOCK RECEIVED FROM " + pa.inetAddress().getAddress().getHostAddress());
         }
     }
     private static final Logger LOG = Logger.getLogger(NodeIncomingHandler.class.getName());
