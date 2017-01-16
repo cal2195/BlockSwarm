@@ -17,7 +17,7 @@
             <artifactId>h2</artifactId>
             <version>1.4.191</version>
         </dependency>
-        <dependency>
+        <!--<dependency>
             <groupId>net.tomp2p</groupId>
             <artifactId>tomp2p-all</artifactId>
             <version>5.0-Beta8</version>
@@ -31,7 +31,7 @@
                     <artifactId>netty-transport</artifactId>
                 </exclusion>
             </exclusions>
-        </dependency>
+        </dependency>-->
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>

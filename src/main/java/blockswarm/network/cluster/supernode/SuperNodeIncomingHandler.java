@@ -1,5 +1,6 @@
 package blockswarm.network.cluster.supernode;
 
+import blockswarm.network.cluster.PeerAddress;
 import blockswarm.workers.FileEntryWorker;
 import blockswarm.workers.FileListWorker;
 import blockswarm.workers.InsertBlockWorker;
@@ -11,8 +12,6 @@ import blockswarm.network.packets.FileInfoPacket;
 import blockswarm.network.packets.FileListPacket;
 import blockswarm.network.packets.FileListRequestPacket;
 import java.util.logging.Logger;
-import net.tomp2p.peers.PeerAddress;
-import net.tomp2p.rpc.ObjectDataReply;
 
 /**
  *

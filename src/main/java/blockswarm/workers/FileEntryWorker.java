@@ -7,8 +7,8 @@ package blockswarm.workers;
 
 import blockswarm.database.entries.FileEntry;
 import blockswarm.network.cluster.Node;
+import blockswarm.network.cluster.PeerAddress;
 import java.util.ArrayList;
-import net.tomp2p.peers.PeerAddress;
 
 /**
  *

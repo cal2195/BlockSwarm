@@ -4,6 +4,7 @@ import blockswarm.blocksites.ProxyServer;
 import blockswarm.database.Database;
 import blockswarm.gui.FXMLController;
 import blockswarm.network.cluster.traffic.TrafficLimiter;
+import blockswarm.network.connections.ConnectionManager;
 import blockswarm.stats.NetworkStats;
 import blockswarm.workers.GUIWorker;
 import blockswarm.workers.PeerRequestManager;
@@ -17,13 +18,6 @@ import java.net.InetAddress;
 import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import net.tomp2p.futures.FutureBootstrap;
-import net.tomp2p.futures.FutureDirect;
-import net.tomp2p.futures.FutureDiscover;
-import net.tomp2p.p2p.Peer;
-import net.tomp2p.p2p.PeerBuilder;
-import net.tomp2p.peers.Number160;
-import net.tomp2p.peers.PeerAddress;
 
 /**
  *
@@ -37,8 +31,7 @@ public class Node
     
     public WorkerPool workerPool;
     public Peer peer;
-    NodeIncomingHandler incomingHandler;
-    Tracker tracker;
+    ConnectionManager connectionManager;
     DHT dht;
     Database database;
     public Cluster cluster;
@@ -136,11 +129,6 @@ public class Node
         incomingHandler = new NodeIncomingHandler(this);
     }
     
-    protected void setupTracker()
-    {
-        tracker = new Tracker(peer);
-    }
-    
     protected void setupDHT()
     {
         dht = new DHT(peer);
@@ -186,11 +174,6 @@ public class Node
     public PeerRequestManager getPeerRequestManager()
     {
         return peerRequestManager;
-    }
-    
-    public Tracker getTracker()
-    {
-        return tracker;
     }
     
     public Cluster getCluster()
@@ -268,8 +251,9 @@ public class Node
         }
     }
     
-    public FutureDirect send(PeerAddress pa, Object o)
+    public void send(PeerAddress pa, Object o)
     {
-        return peer.sendDirect(pa).connectionTimeoutTCPMillis(TIMEOUT).idleTCPMillis(TIMEOUT).idleUDPMillis(TIMEOUT).object(o).start();
+        connectionManager.getConnection(pa).send(o);
+        //return peer.sendDirect(pa).connectionTimeoutTCPMillis(TIMEOUT).idleTCPMillis(TIMEOUT).idleUDPMillis(TIMEOUT).object(o).start();
     }
 }

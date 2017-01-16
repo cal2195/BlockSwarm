@@ -1,9 +1,9 @@
 package blockswarm.workers;
 
 import blockswarm.info.NodeFileInfo;
+import blockswarm.network.cluster.PeerAddress;
 import blockswarm.network.cluster.supernode.SuperNode;
 import java.util.HashMap;
-import net.tomp2p.peers.PeerAddress;
 
 /**
  *

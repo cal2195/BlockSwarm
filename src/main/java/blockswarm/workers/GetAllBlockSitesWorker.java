@@ -1,10 +1,10 @@
 package blockswarm.workers;
 
 import blockswarm.network.cluster.Node;
+import blockswarm.network.cluster.PeerAddress;
 import blockswarm.network.packets.BlockSiteCollectionPacket;
 import blockswarm.network.packets.BlockSitePacket;
 import java.util.ArrayList;
-import net.tomp2p.peers.PeerAddress;
 
 /**
  *

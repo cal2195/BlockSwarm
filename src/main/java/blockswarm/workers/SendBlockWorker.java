@@ -1,9 +1,8 @@
 package blockswarm.workers;
 
+import blockswarm.network.cluster.PeerAddress;
 import blockswarm.network.packets.BlockPacket;
-import net.tomp2p.futures.BaseFutureAdapter;
-import net.tomp2p.futures.FutureDirect;
-import net.tomp2p.peers.PeerAddress;
+
 
 /**
  *

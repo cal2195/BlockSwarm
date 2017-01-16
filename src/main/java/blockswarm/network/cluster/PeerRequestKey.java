@@ -3,7 +3,6 @@ package blockswarm.network.cluster;
 
 import blockswarm.info.NodeFileInfo;
 import java.util.Objects;
-import net.tomp2p.peers.PeerAddress;
 
 public class PeerRequestKey
 {
