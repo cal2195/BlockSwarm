@@ -5,21 +5,23 @@
  */
 package blockswarm.network.cluster;
 
-import java.net.InetAddress;
+import java.io.Serializable;
 import java.net.InetSocketAddress;
 
 /**
  *
  * @author cal
  */
-public class PeerAddress {
+public class PeerAddress implements Serializable
+{
+
     InetSocketAddress address;
-    
+
     public PeerAddress(InetSocketAddress address)
     {
         this.address = address;
     }
-    
+
     public InetSocketAddress inetAddress()
     {
         return address;
