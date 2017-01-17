@@ -3,6 +3,7 @@ package blockswarm.database;
 import blockswarm.info.ClusterFileInfo;
 import blockswarm.info.NodeFileInfo;
 import blockswarm.network.cluster.Node;
+import blockswarm.network.cluster.PeerAddress;
 import blockswarm.network.cluster.PeerRequestKey;
 import java.sql.Connection;
 import java.sql.PreparedStatement;

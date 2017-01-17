@@ -85,4 +85,10 @@ public class Connection
     {
         channel.writeAndFlush(message);
     }
+    
+    public void shutdown()
+    {
+        channel.disconnect();
+        channel.close();
+    }
 }

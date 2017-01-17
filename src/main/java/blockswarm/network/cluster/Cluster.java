@@ -13,7 +13,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Random;
 import java.util.logging.Logger;
-import net.tomp2p.peers.PeerAddress;
 
 /**
  *
@@ -41,7 +40,7 @@ public class Cluster
         HashMap<PeerRequestKey, NodeFileInfo> peers = node.getDatabase().getPeers().getDownload(filehash);
         for (PeerRequestKey pa : peers.keySet())
         {
-            LOG.fine("Asking " + pa.requester.inetAddress().getHostAddress() + " for " + peers.get(pa).blocks.toString());
+            LOG.fine("Asking " + pa.requester.inetAddress().getAddress().getHostAddress()+ " for " + peers.get(pa).blocks.toString());
             node.send(pa.requester, new BlockRequestPacket(peers.get(pa)));
         }
     }

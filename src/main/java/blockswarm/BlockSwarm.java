@@ -53,7 +53,7 @@ public class BlockSwarm extends Application
         node.getWorkerPool().shutdown();
         node.getProxyServer().shutdown();
         node.getTrafficLimiter().shutdown();
-        node.getPeer().shutdown();
+        node.getConnectionManager().shutdown();
         node.getDatabase().disconnect();
     }
 }

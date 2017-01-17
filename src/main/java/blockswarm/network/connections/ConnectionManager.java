@@ -42,4 +42,12 @@ public class ConnectionManager
             return connection;
         }
     }
+    
+    public void shutdown()
+    {
+        for (Connection con : connectionMap.values())
+        {
+            con.shutdown();
+        }
+    }
 }

@@ -79,9 +79,7 @@ public class Node
         loadSettings();
         
         bootstrap("morebetterengineering.com");
-        
-        setupTracker();
-        
+                
         setupDHT();
         
         setupCluster();
@@ -103,6 +101,11 @@ public class Node
     public ProxyServer getProxyServer()
     {
         return proxyServer;
+    }
+    
+    public ConnectionManager getConnectionManager()
+    {
+        return connectionManager;
     }
     
     public void setupWorkerPool()
