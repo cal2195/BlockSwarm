@@ -130,11 +130,6 @@ public class Node
         workerPool.addRepeatedWorker(new GUIWorker(this), 5);
     }
     
-    protected void setupIncomingHandler()
-    {
-        incomingHandler = new NodeIncomingHandler(this);
-    }
-    
     protected void setupDHT()
     {
         dht = new DHT(peer);
@@ -170,11 +165,6 @@ public class Node
     public Database getDatabase()
     {
         return database;
-    }
-    
-    public Peer getPeer()
-    {
-        return peer;
     }
     
     public PeerRequestManager getPeerRequestManager()

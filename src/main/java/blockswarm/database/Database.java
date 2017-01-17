@@ -19,7 +19,7 @@ public class Database
     private Connection conn;
     private CacheDatabase cacheDatabase;
     private FileDatabase fileDatabase;
-    private PeerDatabase peerDatabase;
+    private PeerFileDatabase peerDatabase;
     private DownloadDatabase downloadDatabase;
     private UploadDatabase uploadDatabase;
     private SettingsDatabase settingsDatabase;
@@ -62,7 +62,7 @@ public class Database
     {
         fileDatabase = new FileDatabase(conn, node);
         cacheDatabase = new CacheDatabase(conn, node);
-        peerDatabase = new PeerDatabase(conn, node);
+        peerDatabase = new PeerFileDatabase(conn, node);
         downloadDatabase = new DownloadDatabase(conn, node);
         uploadDatabase = new UploadDatabase(conn, node);
         settingsDatabase = new SettingsDatabase(conn, node);
@@ -89,7 +89,7 @@ public class Database
         return fileDatabase;
     }
 
-    public PeerDatabase getPeers()
+    public PeerFileDatabase getPeers()
     {
         return peerDatabase;
     }
