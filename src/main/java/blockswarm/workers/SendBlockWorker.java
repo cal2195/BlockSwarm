@@ -28,20 +28,20 @@ public class SendBlockWorker extends Worker implements Runnable
     @Override
     public void run()
     {
-        if (worker.nodeFileInfo.blocks.get(blockID))
-        {
-            byte[] block = worker.node.getDatabase().getCache().getBlock(filehash, blockID);
-            worker.node.send(requester, new BlockPacket(filehash, blockID, block)).addListener(new BaseFutureAdapter<FutureDirect>() {
-                @Override
-                public void operationComplete(FutureDirect f) throws Exception
-                {
-                    if (f.isSuccess())
-                    {
-                        worker.nodeFileInfo.blocks.clear(blockID);
-                    }
-                }
-            });
-        }
+//        if (worker.nodeFileInfo.blocks.get(blockID))
+//        {
+//            byte[] block = worker.node.getDatabase().getCache().getBlock(filehash, blockID);
+//            worker.node.send(requester, new BlockPacket(filehash, blockID, block)).addListener(new BaseFutureAdapter<FutureDirect>() {
+//                @Override
+//                public void operationComplete(FutureDirect f) throws Exception
+//                {
+//                    if (f.isSuccess())
+//                    {
+//                        worker.nodeFileInfo.blocks.clear(blockID);
+//                    }
+//                }
+//            });
+//        }
     }
     
     public SendBlockWorker setPriority(int priority)

@@ -8,9 +8,6 @@ import java.io.IOException;
 import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import net.tomp2p.connection.Bindings;
-import net.tomp2p.p2p.PeerBuilder;
-import net.tomp2p.peers.Number160;
 
 /**
  *
@@ -39,7 +36,7 @@ public class SuperNode extends Node
 
         serve();
 
-        setupTracker();
+//        setupTracker();
         
         setupDHT();
 
@@ -48,7 +45,7 @@ public class SuperNode extends Node
         setupClusterInfo();
     }
 
-    @Override
+//    @Override
     protected void setupIncomingHandler()
     {
         incomingHandler = new SuperNodeIncomingHandler(this);
@@ -73,18 +70,18 @@ public class SuperNode extends Node
 
     public void serve()
     {
-        try
-        {
-            Random r = new Random();
-            Bindings bindings = new Bindings().addInterface("eth0");
-            peer = new PeerBuilder(new Number160(r)).ports(44444).bindings(bindings).start();
-            //PeerNAT peerNAT = new PeerBuilderNAT(peer).start();
-            System.out.println("address visible to outside is " + peer.peerAddress());
-            LOGGER.info("Listening for connections...");
-            peer.objectDataReply(incomingHandler);
-        } catch (IOException ex)
-        {
-            Logger.getLogger(SuperNode.class.getName()).log(Level.SEVERE, null, ex);
-        }
+//        try
+//        {
+//            Random r = new Random();
+//            Bindings bindings = new Bindings().addInterface("eth0");
+//            peer = new PeerBuilder(new Number160(r)).ports(44444).bindings(bindings).start();
+//            //PeerNAT peerNAT = new PeerBuilderNAT(peer).start();
+//            System.out.println("address visible to outside is " + peer.peerAddress());
+//            LOGGER.info("Listening for connections...");
+//            peer.objectDataReply(incomingHandler);
+//        } catch (IOException ex)
+//        {
+//            Logger.getLogger(SuperNode.class.getName()).log(Level.SEVERE, null, ex);
+//        }
     }
 }

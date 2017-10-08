@@ -17,7 +17,7 @@ import java.util.logging.Logger;
  *
  * @author cal
  */
-public class SuperNodeIncomingHandler implements ObjectDataReply
+public class SuperNodeIncomingHandler //implements ObjectDataReply
 {
     SuperNode node;
 
@@ -26,7 +26,7 @@ public class SuperNodeIncomingHandler implements ObjectDataReply
         this.node = node;
     }
     
-    @Override
+//    @Override
     public Object reply(PeerAddress pa, Object packet)
     {
         if (packet instanceof BlockPacket)

@@ -5,33 +5,12 @@
     <artifactId>BlockSwarm</artifactId>
     <version>prealpha-0.06</version>
     <packaging>jar</packaging>
-    <repositories>
-        <repository>
-            <id>tomp2p.net</id>
-            <url>http://tomp2p.net/dev/mvn/</url>
-        </repository>
-    </repositories>
     <dependencies>
         <dependency>
             <groupId>com.h2database</groupId>
             <artifactId>h2</artifactId>
             <version>1.4.191</version>
         </dependency>
-        <!--<dependency>
-            <groupId>net.tomp2p</groupId>
-            <artifactId>tomp2p-all</artifactId>
-            <version>5.0-Beta8</version>
-            <exclusions>
-                <exclusion>
-                    <groupId>io.netty</groupId>
-                    <artifactId>netty-buffer</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>io.netty</groupId>
-                    <artifactId>netty-transport</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>-->
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
@@ -58,7 +37,7 @@
         <dependency>
             <groupId>io.netty</groupId>
             <artifactId>netty-all</artifactId>
-            <version>4.1.7.Final</version>
+            <version>4.1.16.Final</version>
         </dependency>
         <dependency>
             <groupId>org.littleshoot</groupId>

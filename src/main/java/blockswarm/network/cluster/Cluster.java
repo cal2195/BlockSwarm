@@ -60,8 +60,8 @@ public class Cluster
     {
         if (needed.blocks.cardinality() > 0)
         {
-            PeerAddress pa = node.peer.peerBean().peerMap().all().get(random.nextInt(node.peer.peerBean().peerMap().all().size()));
-            node.send(pa, new BlockRequestPacket(needed));
+//            PeerAddress pa = node.peer.peerBean().peerMap().all().get(random.nextInt(node.peer.peerBean().peerMap().all().size()));
+//            node.send(pa, new BlockRequestPacket(needed));
         }
     }
 
@@ -120,40 +120,40 @@ public class Cluster
 
     public void collectFileLists()
     {
-        ArrayList<String> files = node.getDatabase().getFiles().getAllFileHashes();
-        for (PeerAddress pa : node.peer.peerBean().peerMap().all())
-        {
-            LOG.fine("Asking " + pa + " for their file list!");
-            node.send(pa, new FileListRequestPacket(files));
-        }
+//        ArrayList<String> files = node.getDatabase().getFiles().getAllFileHashes();
+//        for (PeerAddress pa : node.peer.peerBean().peerMap().all())
+//        {
+//            LOG.fine("Asking " + pa + " for their file list!");
+//            node.send(pa, new FileListRequestPacket(files));
+//        }
     }
     
     public void collectBlockSites()
     {
-        for (PeerAddress pa : node.peer.peerBean().peerMap().all())
-        {
-            LOG.fine("Asking " + pa + " for their blocksite list!");
-            node.send(pa, new BlockSitesInfoRequestPacket());
-        }
+//        for (PeerAddress pa : node.peer.peerBean().peerMap().all())
+//        {
+//            LOG.fine("Asking " + pa + " for their blocksite list!");
+//            node.send(pa, new BlockSitesInfoRequestPacket());
+//        }
     }
 
     public void notifyAllOfNewFiles(ArrayList<FileEntry> files)
     {
-        FileListPacket filePacket = new FileListPacket(files);
-        for (PeerAddress pa : node.peer.peerBean().peerMap().all())
-        {
-            LOG.fine("Telling " + pa + " about new files!");
-            node.send(pa, filePacket);
-        }
+//        FileListPacket filePacket = new FileListPacket(files);
+//        for (PeerAddress pa : node.peer.peerBean().peerMap().all())
+//        {
+//            LOG.fine("Telling " + pa + " about new files!");
+//            node.send(pa, filePacket);
+//        }
     }
     
     public void notifyAllOfNewSite(BlockSitePacket packet)
     {
-        for (PeerAddress pa : node.peer.peerBean().peerMap().all())
-        {
-            LOG.fine("Telling " + pa + " about new site!");
-            node.send(pa, packet);
-        }
+//        for (PeerAddress pa : node.peer.peerBean().peerMap().all())
+//        {
+//            LOG.fine("Telling " + pa + " about new site!");
+//            node.send(pa, packet);
+//        }
     }
     private static final Logger LOG = Logger.getLogger(Cluster.class.getName());
 }

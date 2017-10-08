@@ -155,17 +155,17 @@ public class FXMLController implements Initializable
 
     public void updateStats()
     {
-        try
-        {
-            statTextArea.setText("Cache Size: " + node.getDatabase().getCache().cacheSize() + " \tTotal Dwn: " + node.getNetworkStats().totalReceived() + "MB/s\tTotal Up: " + node.getNetworkStats().totalSent() + "MB/s\n"
-                    + "Thread Pool Size: " + node.getWorkerPool().queue.size() + "\n"
-                    + "Scheduled Pool Size: " + node.getWorkerPool().scheduledThreadPool.getQueue().size() + "\n"
-                    + "Cluster Size (Verified): " + node.getPeer().peerBean().peerMap().all().size() + "\n"
-                    + "Cluster Size (Unverified): " + node.getPeer().peerBean().peerMap().allOverflow().size() + "\n"
-                    + "Peers: \n" + node.getPeer().peerBean().peerMap().all().toString() + "\n");
-        } catch (Exception e)
-        {
-        }
+//        try
+//        {
+//            statTextArea.setText("Cache Size: " + node.getDatabase().getCache().cacheSize() + " \tTotal Dwn: " + node.getNetworkStats().totalReceived() + "MB/s\tTotal Up: " + node.getNetworkStats().totalSent() + "MB/s\n"
+//                    + "Thread Pool Size: " + node.getWorkerPool().queue.size() + "\n"
+//                    + "Scheduled Pool Size: " + node.getWorkerPool().scheduledThreadPool.getQueue().size() + "\n"
+//                    + "Cluster Size (Verified): " + node.getPeer().peerBean().peerMap().all().size() + "\n"
+//                    + "Cluster Size (Unverified): " + node.getPeer().peerBean().peerMap().allOverflow().size() + "\n"
+//                    + "Peers: \n" + node.getPeer().peerBean().peerMap().all().toString() + "\n");
+//        } catch (Exception e)
+//        {
+//        }
     }
     
     @FXML

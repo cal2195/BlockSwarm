@@ -64,8 +64,8 @@ public class SettingsController implements Initializable
     
     public void updateNodeSettings()
     {
-        node.getTrafficLimiter().setWriteLimit(node.getDatabase().getSettings().getInt("uploadLimit", "0"));
-        node.getTrafficLimiter().setReadLimit(node.getDatabase().getSettings().getInt("downloadLimit", "0"));
+//        node.getTrafficLimiter().setWriteLimit(node.getDatabase().getSettings().getInt("uploadLimit", "0"));
+//        node.getTrafficLimiter().setReadLimit(node.getDatabase().getSettings().getInt("downloadLimit", "0"));
     }
 
     @Override

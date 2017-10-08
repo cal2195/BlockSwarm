@@ -74,11 +74,11 @@ public class Node
             setupGui();
         }
         
-        setupIncomingHandler();
+//        setupIncomingHandler();
         
         loadSettings();
         
-        bootstrap("morebetterengineering.com");
+//        bootstrap("morebetterengineering.com");
                 
         setupDHT();
         
@@ -89,8 +89,8 @@ public class Node
     
     public void loadSettings()
     {
-        trafficLimiter.setWriteLimit(getDatabase().getSettings().getInt("uploadLimit", "0"));
-        trafficLimiter.setReadLimit(getDatabase().getSettings().getInt("downloadLimit", "0"));
+//        trafficLimiter.setWriteLimit(getDatabase().getSettings().getInt("uploadLimit", "0"));
+//        trafficLimiter.setReadLimit(getDatabase().getSettings().getInt("downloadLimit", "0"));
     }
     
     public void setupProxyServer()
@@ -132,7 +132,7 @@ public class Node
     
     protected void setupDHT()
     {
-        dht = new DHT(peer);
+//        dht = new DHT(peer);
     }
     
     protected void setupCluster()

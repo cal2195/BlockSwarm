@@ -35,64 +35,64 @@ public class RequestWorker extends Worker implements Runnable
     @Override
     public void run()
     {
-        try
-        {
-            boolean connectionLost = false;
-            NodeFileInfo myBlocks = node.getDatabase().getCache().getFileInfo(nodeFileInfo.hash);
-            LOG.log(Level.FINE, "I have {0}:{1}", new Object[]
-            {
-                myBlocks.hash, myBlocks.blocks.toString()
-            });
-            myBlocks.blocks.and(nodeFileInfo.blocks);
-            LOG.log(Level.FINE, "I should send {0}:{1}", new Object[]
-            {
-                myBlocks.hash, myBlocks.blocks.toString()
-            });
-            LOG.log(Level.FINE, "Got request for {0}:{1}", new Object[]
-            {
-                nodeFileInfo.hash, nodeFileInfo.blocks.toString()
-            });
-            int sent = 0;
-            for (int i = myBlocks.blocks.nextSetBit(0); i >= 0 && sent++ < 10 && !connectionLost; i = myBlocks.blocks.nextSetBit(i + 1))
-            {
-                LOG.log(Level.FINE, "Sending block {0}:{1} to {2}", new Object[]
-                {
-                    nodeFileInfo.hash, i, requester.inetAddress()
-                });
-                
-                byte[] block = node.getDatabase().getCache().getBlock(nodeFileInfo.hash, i);
-                FutureDirect fut;
-                if ((fut = node.send(requester, new BlockPacket(nodeFileInfo.hash, i, block))).awaitUninterruptibly().isSuccess())
-                {
-                    nodeFileInfo.blocks.clear(i);
-                } else
-                {
-                    LOG.fine(fut.failedReason());
-                    if (fut.failedReason().contains("Connection refused"))
-                    {
-                        connectionLost = true;
-                    }
-                }
-                node.getNetworkStats().blockSent(myBlocks.hash);
-
-                //node.getWorkerPool().addWorker(new SendBlockWorker(nodeFileInfo.hash, i, requester, this));
-                if (i == Integer.MAX_VALUE)
-                {
-                    break; // or (i+1) would overflow
-                }
-            }
-            if (myBlocks.blocks.cardinality() != 0 && !connectionLost)
-            {
-                node.getWorkerPool().addDelayedWorker(this, 10);
-            } else
-            {
-                node.getPeerRequestManager().remove(requester, nodeFileInfo);
-            }
-        } catch (Exception e)
-        {
-            node.getPeerRequestManager().remove(requester, nodeFileInfo);
-            e.printStackTrace();
-        }
+//        try
+//        {
+//            boolean connectionLost = false;
+//            NodeFileInfo myBlocks = node.getDatabase().getCache().getFileInfo(nodeFileInfo.hash);
+//            LOG.log(Level.FINE, "I have {0}:{1}", new Object[]
+//            {
+//                myBlocks.hash, myBlocks.blocks.toString()
+//            });
+//            myBlocks.blocks.and(nodeFileInfo.blocks);
+//            LOG.log(Level.FINE, "I should send {0}:{1}", new Object[]
+//            {
+//                myBlocks.hash, myBlocks.blocks.toString()
+//            });
+//            LOG.log(Level.FINE, "Got request for {0}:{1}", new Object[]
+//            {
+//                nodeFileInfo.hash, nodeFileInfo.blocks.toString()
+//            });
+//            int sent = 0;
+//            for (int i = myBlocks.blocks.nextSetBit(0); i >= 0 && sent++ < 10 && !connectionLost; i = myBlocks.blocks.nextSetBit(i + 1))
+//            {
+//                LOG.log(Level.FINE, "Sending block {0}:{1} to {2}", new Object[]
+//                {
+//                    nodeFileInfo.hash, i, requester.inetAddress()
+//                });
+//
+//                byte[] block = node.getDatabase().getCache().getBlock(nodeFileInfo.hash, i);
+//                FutureDirect fut;
+//                if ((fut = node.send(requester, new BlockPacket(nodeFileInfo.hash, i, block))).awaitUninterruptibly().isSuccess())
+//                {
+//                    nodeFileInfo.blocks.clear(i);
+//                } else
+//                {
+//                    LOG.fine(fut.failedReason());
+//                    if (fut.failedReason().contains("Connection refused"))
+//                    {
+//                        connectionLost = true;
+//                    }
+//                }
+//                node.getNetworkStats().blockSent(myBlocks.hash);
+//
+//                //node.getWorkerPool().addWorker(new SendBlockWorker(nodeFileInfo.hash, i, requester, this));
+//                if (i == Integer.MAX_VALUE)
+//                {
+//                    break; // or (i+1) would overflow
+//                }
+//            }
+//            if (myBlocks.blocks.cardinality() != 0 && !connectionLost)
+//            {
+//                node.getWorkerPool().addDelayedWorker(this, 10);
+//            } else
+//            {
+//                node.getPeerRequestManager().remove(requester, nodeFileInfo);
+//            }
+//        } catch (Exception e)
+//        {
+//            node.getPeerRequestManager().remove(requester, nodeFileInfo);
+//            e.printStackTrace();
+//        }
     }
     private static final Logger LOG = Logger.getLogger(RequestWorker.class.getName());
 
