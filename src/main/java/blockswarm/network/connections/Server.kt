@@ -48,7 +48,7 @@ class Server(private val PORT: Int) : Runnable {
         try {
             val b = ServerBootstrap()
             b.group(bossGroup, workerGroup)
-                    .channel(NioServerSocketChannel::class.java!!)
+                    .channel(NioServerSocketChannel::class.java)
                     .handler(LoggingHandler(LogLevel.INFO))
                     .childHandler(object : ChannelInitializer<SocketChannel>() {
                         @Throws(Exception::class)
@@ -82,6 +82,5 @@ class Server(private val PORT: Int) : Runnable {
         } catch (e: InterruptedException) {
             e.printStackTrace()
         }
-
     }
 }
