@@ -24,7 +24,7 @@ import javax.net.ssl.SSLException;
  *
  * @author cal
  */
-public class Server {
+public class Server implements Runnable {
     boolean SSL = false;
     final int PORT;
     Node node;
@@ -32,9 +32,10 @@ public class Server {
     public Server(int port)
     {
         this.PORT = port;
+        new Thread(this, "Server Thread").start();
     }
     
-    public void setupServer() throws CertificateException, SSLException, InterruptedException {
+    private void setupServer() throws CertificateException, SSLException, InterruptedException {
         // Configure SSL.
         final SslContext sslCtx;
         if (SSL) {
@@ -70,6 +71,15 @@ public class Server {
         } finally {
             bossGroup.shutdownGracefully();
             workerGroup.shutdownGracefully();
+        }
+    }
+
+    @Override
+    public void run() {
+        try {
+            setupServer();
+        } catch (CertificateException | SSLException | InterruptedException e) {
+            e.printStackTrace();
         }
     }
 }

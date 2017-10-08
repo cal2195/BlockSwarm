@@ -78,7 +78,7 @@ public class Node
         
         loadSettings();
         
-//        bootstrap("morebetterengineering.com");
+        bootstrap(null);
                 
         setupDHT();
         
@@ -180,19 +180,6 @@ public class Node
     public void bootstrap(PeerAddress supernode)
     {
         server = new Server(PORT);
-        try
-        {
-            server.setupServer();
-        } catch (CertificateException ex)
-        {
-            Logger.getLogger(Node.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (SSLException ex)
-        {
-            Logger.getLogger(Node.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (InterruptedException ex)
-        {
-            Logger.getLogger(Node.class.getName()).log(Level.SEVERE, null, ex);
-        }
     }
     
     public void send(PeerAddress pa, Object o)
