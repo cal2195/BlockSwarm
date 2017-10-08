@@ -87,6 +87,11 @@
                     </execution>
                 </executions>
             </plugin>
+            <plugin>
+                <groupId>org.jetbrains.kotlin</groupId>
+                <artifactId>kotlin-maven-plugin</artifactId>
+                <version>1.1.51</version>
+            </plugin>
         </plugins>
     </build>
 </project>
