@@ -156,7 +156,7 @@ public class Node {
     }
 
     public void bootstrap(PeerAddress supernode) {
-        server = new Server(PORT);
+        server = new Server(PORT, this);
     }
 
     public void send(PeerAddress pa, Object o) {

@@ -4,8 +4,6 @@ import blockswarm.network.cluster.Node
 import blockswarm.network.cluster.NodeIncomingHandler
 import io.netty.bootstrap.ServerBootstrap
 import io.netty.channel.ChannelInitializer
-import io.netty.channel.ChannelPipeline
-import io.netty.channel.EventLoopGroup
 import io.netty.channel.nio.NioEventLoopGroup
 import io.netty.channel.socket.SocketChannel
 import io.netty.channel.socket.nio.NioServerSocketChannel
@@ -24,9 +22,8 @@ import javax.net.ssl.SSLException
  *
  * @author cal
  */
-class Server(private val PORT: Int) : Runnable {
+class Server(private val PORT: Int, private val node: Node) : Runnable {
     private var SSL = false
-    internal var node: Node? = null
 
     init {
         Thread(this, "Server Thread").start()
