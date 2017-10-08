@@ -22,6 +22,9 @@ public class ConnectionManager
 
     public Connection getConnection(PeerAddress peerAddress)
     {
+        if (peerAddress == null)
+            return null;
+
         if (connectionMap.containsKey(peerAddress))
         {
             return connectionMap.get(peerAddress);

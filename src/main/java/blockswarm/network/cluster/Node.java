@@ -13,6 +13,7 @@ import blockswarm.workers.CacheManager;
 import blockswarm.workers.ClusterFileInfoUpdater;
 import blockswarm.workers.FileListUpdater;
 import blockswarm.workers.WorkerPool;
+
 import java.io.IOException;
 import java.net.Inet4Address;
 import java.net.InetAddress;
@@ -23,15 +24,13 @@ import java.util.logging.Logger;
 import javax.net.ssl.SSLException;
 
 /**
- *
  * @author cal
  */
-public class Node
-{
-    
+public class Node {
+
     private static final Logger LOGGER = Logger.getLogger(Node.class.getName());
     final boolean USING_GUI;
-    
+
     public WorkerPool workerPool;
     public Server server;
     ConnectionManager connectionManager;
@@ -43,100 +42,85 @@ public class Node
     NetworkStats networkStats = new NetworkStats();
     ProxyServer proxyServer;
     TrafficLimiter trafficLimiter = new TrafficLimiter();
-    
+
     int TIMEOUT = 60 * 1000;
     int PORT = 44448;
-    
-    public Node()
-    {
+
+    public Node() {
         USING_GUI = false;
     }
-    
-    public Node(FXMLController gui)
-    {
+
+    public Node(FXMLController gui) {
         USING_GUI = true;
         this.gui = gui;
     }
-    
-    public FXMLController getGui()
-    {
+
+    public FXMLController getGui() {
         return gui;
     }
-    
-    public void setupNode()
-    {
+
+    public void setupNode() {
         setupDatabase();
-        
+
         setupWorkerPool();
-        
-        if (USING_GUI)
-        {
+
+        if (USING_GUI) {
             setupGui();
         }
-        
+
 //        setupIncomingHandler();
-        
+
         loadSettings();
-        
+
         bootstrap(null);
-                
+
         setupDHT();
-        
+
         setupCluster();
-        
+
         setupProxyServer();
     }
-    
-    public void loadSettings()
-    {
+
+    public void loadSettings() {
 //        trafficLimiter.setWriteLimit(getDatabase().getSettings().getInt("uploadLimit", "0"));
 //        trafficLimiter.setReadLimit(getDatabase().getSettings().getInt("downloadLimit", "0"));
     }
-    
-    public void setupProxyServer()
-    {
+
+    public void setupProxyServer() {
         proxyServer = new ProxyServer(this);
     }
-    
-    public ProxyServer getProxyServer()
-    {
+
+    public ProxyServer getProxyServer() {
         return proxyServer;
     }
-    
-    public ConnectionManager getConnectionManager()
-    {
+
+    public ConnectionManager getConnectionManager() {
         return connectionManager;
     }
-    
-    public void setupWorkerPool()
-    {
+
+    public void setupWorkerPool() {
         workerPool = new WorkerPool();
     }
-    
-    public TrafficLimiter getTrafficLimiter()
-    {
+
+    public TrafficLimiter getTrafficLimiter() {
         return trafficLimiter;
     }
-    
-    public WorkerPool getWorkerPool()
-    {
+
+    public WorkerPool getWorkerPool() {
         return workerPool;
     }
-    
-    protected void setupGui()
-    {
+
+    protected void setupGui() {
         gui.setNode(this);
         gui.updateFileList();
         workerPool.addRepeatedWorker(new GUIWorker(this), 5);
     }
-    
-    protected void setupDHT()
-    {
+
+    protected void setupDHT() {
 //        dht = new DHT(peer);
     }
-    
-    protected void setupCluster()
-    {
+
+    protected void setupCluster() {
         cluster = new Cluster(this);
         workerPool.addRepeatedWorker(new CacheManager(this), 60);
         peerRequestManager = new PeerRequestManager(this);
@@ -144,46 +128,38 @@ public class Node
         networkStats = new NetworkStats();
         workerPool.addRepeatedWorker(new FileListUpdater(this), 120);
     }
-    
-    protected void setupDatabase()
-    {
+
+    protected void setupDatabase() {
         database = new Database(this);
         database.connect();
         database.initialise();
     }
-    
-    public NetworkStats getNetworkStats()
-    {
+
+    public NetworkStats getNetworkStats() {
         return networkStats;
     }
-    
-    public DHT getDHT()
-    {
+
+    public DHT getDHT() {
         return dht;
     }
-    
-    public Database getDatabase()
-    {
+
+    public Database getDatabase() {
         return database;
     }
-    
-    public PeerRequestManager getPeerRequestManager()
-    {
+
+    public PeerRequestManager getPeerRequestManager() {
         return peerRequestManager;
     }
-    
-    public Cluster getCluster()
-    {
+
+    public Cluster getCluster() {
         return cluster;
     }
-    
-    public void bootstrap(PeerAddress supernode)
-    {
+
+    public void bootstrap(PeerAddress supernode) {
         server = new Server(PORT);
     }
-    
-    public void send(PeerAddress pa, Object o)
-    {
+
+    public void send(PeerAddress pa, Object o) {
         connectionManager.getConnection(pa).send(o);
         //return peer.sendDirect(pa).connectionTimeoutTCPMillis(TIMEOUT).idleTCPMillis(TIMEOUT).idleUDPMillis(TIMEOUT).object(o).start();
     }
