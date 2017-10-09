@@ -6,8 +6,6 @@ import blockswarm.network.cluster.PeerAddress
 import io.netty.bootstrap.Bootstrap
 import io.netty.channel.Channel
 import io.netty.channel.ChannelInitializer
-import io.netty.channel.ChannelPipeline
-import io.netty.channel.EventLoopGroup
 import io.netty.channel.nio.NioEventLoopGroup
 import io.netty.channel.socket.SocketChannel
 import io.netty.channel.socket.nio.NioSocketChannel
@@ -23,12 +21,11 @@ import javax.net.ssl.SSLException
  *
  * @author cal
  */
-class Connection(pa: PeerAddress) {
+class Connection(pa: PeerAddress, internal var node: Node) {
 
     internal val HOST: String = pa.inetAddress().address.hostAddress
     internal val PORT: Int = pa.inetAddress().port
     private var SSL = false
-    internal var node: Node? = null
     lateinit var channel: Channel
 
     init {

@@ -1,16 +1,14 @@
 package blockswarm.network.connections
 
+import blockswarm.network.cluster.Node
 import blockswarm.network.cluster.PeerAddress
 import java.util.HashMap
-import java.util.logging.Level
-import java.util.logging.Logger
-import javax.net.ssl.SSLException
 
 /**
  *
  * @author cal
  */
-class ConnectionManager {
+class ConnectionManager(val node: Node) {
 
     private var connectionMap = HashMap<PeerAddress, Connection>()
 
@@ -21,7 +19,7 @@ class ConnectionManager {
         return if (connectionMap.containsKey(peerAddress)) {
             connectionMap[peerAddress]
         } else {
-            val connection = Connection(peerAddress)
+            val connection = Connection(peerAddress, node)
             connectionMap.put(peerAddress, connection)
             connection
         }

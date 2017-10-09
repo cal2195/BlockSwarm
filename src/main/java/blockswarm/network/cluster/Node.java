@@ -33,7 +33,7 @@ public class Node {
 
     public WorkerPool workerPool;
     public Server server;
-    ConnectionManager connectionManager;
+    ConnectionManager connectionManager = new ConnectionManager(this);
     DHT dht;
     Database database;
     public Cluster cluster;
