@@ -21,7 +21,7 @@ public class InsertBlockWorker extends Worker implements Runnable
     @Override
     public void run()
     {
-        node.getDatabase().getCache().putBlock(blockPacket.filehash, blockPacket.blockID, blockPacket.block);
+        node.getDatabase().getCache().putBlock(blockPacket.getFilehash(), blockPacket.getBlockID(), blockPacket.getBlock());
     }
 
     @Override

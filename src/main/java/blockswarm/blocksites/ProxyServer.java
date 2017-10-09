@@ -164,7 +164,7 @@ public class ProxyServer
         String data = "";
         for (BlockSitePacket site : node.getDatabase().getSites().getAllBlockSites())
         {
-            data += site.filehash + " <a href='http://" + site.domain + "'>" + site.domain + "</a> (v" + site.version + ")<br/>";
+            data += site.getFilehash() + " <a href='http://" + site.getDomain() + "'>" + site.getDomain() + "</a> (v" + site.getVersion() + ")<br/>";
         }
         return data.getBytes();
     }
